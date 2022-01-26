@@ -6,3 +6,4 @@ ios/kaldi-decoder.a filter=lfs diff=lfs merge=lfs -text
 ios/kaldi-lat.a filter=lfs diff=lfs merge=lfs -text
 ios/kaldi-nnet2.a filter=lfs diff=lfs merge=lfs -text
 ios/kaldi-nnet3.a filter=lfs diff=lfs merge=lfs -text
+model_extractor/assets/mfa_aligner.zip filter=lfs diff=lfs merge=lfs -text
