@@ -9,13 +9,45 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		5203BBED27A156D700715D55 /* arc_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEC27A156D700715D55 /* arc_lookahead-fst.a */; };
+		5203BC0B27A156FB00715D55 /* kaldi-gmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEE27A156FA00715D55 /* kaldi-gmm.a */; };
+		5203BC0C27A156FB00715D55 /* kaldi-matrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEF27A156FA00715D55 /* kaldi-matrix.a */; };
+		5203BC0D27A156FB00715D55 /* kaldi-transform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF027A156FA00715D55 /* kaldi-transform.a */; };
+		5203BC0E27A156FB00715D55 /* libfstngram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF127A156FA00715D55 /* libfstngram.a */; };
+		5203BC0F27A156FB00715D55 /* kaldi-base.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF227A156FA00715D55 /* kaldi-base.a */; };
+		5203BC1027A156FB00715D55 /* kaldi-lm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF327A156FA00715D55 /* kaldi-lm.a */; };
+		5203BC1127A156FB00715D55 /* kaldi-sgmm2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF427A156FA00715D55 /* kaldi-sgmm2.a */; };
+		5203BC1227A156FB00715D55 /* ilabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF527A156FA00715D55 /* ilabel_lookahead-fst.a */; };
+		5203BC1327A156FB00715D55 /* kaldi-nnet3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF627A156FA00715D55 /* kaldi-nnet3.a */; };
+		5203BC1427A156FB00715D55 /* kaldi-ivector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF727A156FA00715D55 /* kaldi-ivector.a */; };
+		5203BC1527A156FB00715D55 /* kaldi-nnet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF827A156FA00715D55 /* kaldi-nnet.a */; };
+		5203BC1627A156FB00715D55 /* kaldi-kws.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF927A156FA00715D55 /* kaldi-kws.a */; };
+		5203BC1727A156FB00715D55 /* libfst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFA27A156FA00715D55 /* libfst.a */; };
+		5203BC1827A156FB00715D55 /* kaldi-nnet2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFB27A156FA00715D55 /* kaldi-nnet2.a */; };
+		5203BC1927A156FB00715D55 /* kaldi-fstext.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFC27A156FA00715D55 /* kaldi-fstext.a */; };
+		5203BC1A27A156FB00715D55 /* ngram-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFD27A156FA00715D55 /* ngram-fst.a */; };
+		5203BC1B27A156FB00715D55 /* olabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFE27A156FB00715D55 /* olabel_lookahead-fst.a */; };
+		5203BC1C27A156FB00715D55 /* kaldi-rnnlm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */; };
+		5203BC1D27A156FB00715D55 /* kaldi-online2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0027A156FB00715D55 /* kaldi-online2.a */; };
+		5203BC1E27A156FB00715D55 /* kaldi-decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0127A156FB00715D55 /* kaldi-decoder.a */; };
+		5203BC1F27A156FB00715D55 /* kaldi-chain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0227A156FB00715D55 /* kaldi-chain.a */; };
+		5203BC2027A156FB00715D55 /* kaldi-tree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0327A156FB00715D55 /* kaldi-tree.a */; };
+		5203BC2127A156FB00715D55 /* libfstlookahead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0427A156FB00715D55 /* libfstlookahead.a */; };
+		5203BC2227A156FB00715D55 /* kaldi-feat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0527A156FB00715D55 /* kaldi-feat.a */; };
+		5203BC2327A156FB00715D55 /* kaldi-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0627A156FB00715D55 /* kaldi-util.a */; };
+		5203BC2427A156FB00715D55 /* kaldi-cudamatrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0727A156FB00715D55 /* kaldi-cudamatrix.a */; };
+		5203BC2527A156FB00715D55 /* kaldi-hmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0827A156FB00715D55 /* kaldi-hmm.a */; };
+		5203BC2627A156FB00715D55 /* libfstfar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0927A156FB00715D55 /* libfstfar.a */; };
+		5203BC2727A156FB00715D55 /* kaldi-lat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0A27A156FB00715D55 /* kaldi-lat.a */; };
+		5203BC3727A15FBF00715D55 /* model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3327A15FBE00715D55 /* model.cc */; };
+		5203BC3827A15FBF00715D55 /* language_model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3427A15FBE00715D55 /* language_model.cc */; };
+		5203BC3927A15FBF00715D55 /* bookbot_api.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3527A15FBE00715D55 /* bookbot_api.cc */; };
+		5203BC3A27A15FBF00715D55 /* bookbot_recognizer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3627A15FBE00715D55 /* bookbot_recognizer.cc */; };
 		520A5A53270EBFF700351801 /* model-id-id in Resources */ = {isa = PBXBuildFile; fileRef = 520A5A52270EBFF700351801 /* model-id-id */; };
 		520A5A57270EC00F00351801 /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A54270EC00F00351801 /* SpeechController.swift */; };
 		520A5A58270EC00F00351801 /* VoskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A56270EC00F00351801 /* VoskModel.swift */; };
 		520A5A5B270EC24200351801 /* libkaldiwrap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A5A270EC24200351801 /* libkaldiwrap.a */; };
 		520A5A5D270EC2AD00351801 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A5C270EC2AD00351801 /* libc++.tbd */; };
-		520A5A60270EC4C100351801 /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A5E270EC4C000351801 /* libc++.1.tbd */; };
-		520A5A61270EC4C100351801 /* libc++abi.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A5F270EC4C000351801 /* libc++abi.tbd */; };
 		520A5A78270EC71500351801 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A77270EC71500351801 /* Accelerate.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -40,9 +72,45 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		5203BBEC27A156D700715D55 /* arc_lookahead-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "arc_lookahead-fst.a"; sourceTree = "<group>"; };
+		5203BBEE27A156FA00715D55 /* kaldi-gmm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-gmm.a"; sourceTree = "<group>"; };
+		5203BBEF27A156FA00715D55 /* kaldi-matrix.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-matrix.a"; sourceTree = "<group>"; };
+		5203BBF027A156FA00715D55 /* kaldi-transform.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-transform.a"; sourceTree = "<group>"; };
+		5203BBF127A156FA00715D55 /* libfstngram.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfstngram.a; sourceTree = "<group>"; };
+		5203BBF227A156FA00715D55 /* kaldi-base.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-base.a"; sourceTree = "<group>"; };
+		5203BBF327A156FA00715D55 /* kaldi-lm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-lm.a"; sourceTree = "<group>"; };
+		5203BBF427A156FA00715D55 /* kaldi-sgmm2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-sgmm2.a"; sourceTree = "<group>"; };
+		5203BBF527A156FA00715D55 /* ilabel_lookahead-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "ilabel_lookahead-fst.a"; sourceTree = "<group>"; };
+		5203BBF627A156FA00715D55 /* kaldi-nnet3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-nnet3.a"; sourceTree = "<group>"; };
+		5203BBF727A156FA00715D55 /* kaldi-ivector.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-ivector.a"; sourceTree = "<group>"; };
+		5203BBF827A156FA00715D55 /* kaldi-nnet.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-nnet.a"; sourceTree = "<group>"; };
+		5203BBF927A156FA00715D55 /* kaldi-kws.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-kws.a"; sourceTree = "<group>"; };
+		5203BBFA27A156FA00715D55 /* libfst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfst.a; sourceTree = "<group>"; };
+		5203BBFB27A156FA00715D55 /* kaldi-nnet2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-nnet2.a"; sourceTree = "<group>"; };
+		5203BBFC27A156FA00715D55 /* kaldi-fstext.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-fstext.a"; sourceTree = "<group>"; };
+		5203BBFD27A156FA00715D55 /* ngram-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "ngram-fst.a"; sourceTree = "<group>"; };
+		5203BBFE27A156FB00715D55 /* olabel_lookahead-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "olabel_lookahead-fst.a"; sourceTree = "<group>"; };
+		5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-rnnlm.a"; sourceTree = "<group>"; };
+		5203BC0027A156FB00715D55 /* kaldi-online2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-online2.a"; sourceTree = "<group>"; };
+		5203BC0127A156FB00715D55 /* kaldi-decoder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-decoder.a"; sourceTree = "<group>"; };
+		5203BC0227A156FB00715D55 /* kaldi-chain.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-chain.a"; sourceTree = "<group>"; };
+		5203BC0327A156FB00715D55 /* kaldi-tree.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-tree.a"; sourceTree = "<group>"; };
+		5203BC0427A156FB00715D55 /* libfstlookahead.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfstlookahead.a; sourceTree = "<group>"; };
+		5203BC0527A156FB00715D55 /* kaldi-feat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-feat.a"; sourceTree = "<group>"; };
+		5203BC0627A156FB00715D55 /* kaldi-util.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-util.a"; sourceTree = "<group>"; };
+		5203BC0727A156FB00715D55 /* kaldi-cudamatrix.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-cudamatrix.a"; sourceTree = "<group>"; };
+		5203BC0827A156FB00715D55 /* kaldi-hmm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-hmm.a"; sourceTree = "<group>"; };
+		5203BC0927A156FB00715D55 /* libfstfar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfstfar.a; sourceTree = "<group>"; };
+		5203BC0A27A156FB00715D55 /* kaldi-lat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "kaldi-lat.a"; sourceTree = "<group>"; };
+		5203BC3027A15FBE00715D55 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = model.h; path = ../../android/app/src/main/cpp/model.h; sourceTree = "<group>"; };
+		5203BC3127A15FBE00715D55 /* language_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = language_model.h; path = ../../android/app/src/main/cpp/language_model.h; sourceTree = "<group>"; };
+		5203BC3227A15FBE00715D55 /* bookbot_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bookbot_api.h; path = ../../android/app/src/main/cpp/bookbot_api.h; sourceTree = "<group>"; };
+		5203BC3327A15FBE00715D55 /* model.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cc; path = ../../android/app/src/main/cpp/model.cc; sourceTree = "<group>"; };
+		5203BC3427A15FBE00715D55 /* language_model.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = language_model.cc; path = ../../android/app/src/main/cpp/language_model.cc; sourceTree = "<group>"; };
+		5203BC3527A15FBE00715D55 /* bookbot_api.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bookbot_api.cc; path = ../../android/app/src/main/cpp/bookbot_api.cc; sourceTree = "<group>"; };
+		5203BC3627A15FBE00715D55 /* bookbot_recognizer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bookbot_recognizer.cc; path = ../../android/app/src/main/cpp/bookbot_recognizer.cc; sourceTree = "<group>"; };
 		520A5A52270EBFF700351801 /* model-id-id */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "model-id-id"; path = "../android/models/src/main/assets/model-id-id"; sourceTree = "<group>"; };
 		520A5A54270EC00F00351801 /* SpeechController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpeechController.swift; path = ../../swift/SpeechController.swift; sourceTree = "<group>"; };
-		520A5A55270EC00F00351801 /* vosk_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vosk_api.h; path = ../../swift/vosk_api.h; sourceTree = "<group>"; };
 		520A5A56270EC00F00351801 /* VoskModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VoskModel.swift; path = ../../swift/VoskModel.swift; sourceTree = "<group>"; };
 		520A5A5A270EC24200351801 /* libkaldiwrap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libkaldiwrap.a; sourceTree = "<group>"; };
 		520A5A5C270EC2AD00351801 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -66,11 +134,39 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				520A5A78270EC71500351801 /* Accelerate.framework in Frameworks */,
-				520A5A60270EC4C100351801 /* libc++.1.tbd in Frameworks */,
-				520A5A61270EC4C100351801 /* libc++abi.tbd in Frameworks */,
-				520A5A5D270EC2AD00351801 /* libc++.tbd in Frameworks */,
+				5203BC0B27A156FB00715D55 /* kaldi-gmm.a in Frameworks */,
+				5203BC0C27A156FB00715D55 /* kaldi-matrix.a in Frameworks */,
+				5203BC0D27A156FB00715D55 /* kaldi-transform.a in Frameworks */,
+				5203BC0E27A156FB00715D55 /* libfstngram.a in Frameworks */,
+				5203BC0F27A156FB00715D55 /* kaldi-base.a in Frameworks */,
+				5203BC1027A156FB00715D55 /* kaldi-lm.a in Frameworks */,
+				5203BC1127A156FB00715D55 /* kaldi-sgmm2.a in Frameworks */,
+				5203BC1227A156FB00715D55 /* ilabel_lookahead-fst.a in Frameworks */,
+				5203BC1327A156FB00715D55 /* kaldi-nnet3.a in Frameworks */,
+				5203BC1427A156FB00715D55 /* kaldi-ivector.a in Frameworks */,
+				5203BC1527A156FB00715D55 /* kaldi-nnet.a in Frameworks */,
+				5203BC1627A156FB00715D55 /* kaldi-kws.a in Frameworks */,
+				5203BC1727A156FB00715D55 /* libfst.a in Frameworks */,
+				5203BC1827A156FB00715D55 /* kaldi-nnet2.a in Frameworks */,
+				5203BC1927A156FB00715D55 /* kaldi-fstext.a in Frameworks */,
+				5203BC1A27A156FB00715D55 /* ngram-fst.a in Frameworks */,
+				5203BC1B27A156FB00715D55 /* olabel_lookahead-fst.a in Frameworks */,
+				5203BC1C27A156FB00715D55 /* kaldi-rnnlm.a in Frameworks */,
+				5203BC1D27A156FB00715D55 /* kaldi-online2.a in Frameworks */,
+				5203BC1E27A156FB00715D55 /* kaldi-decoder.a in Frameworks */,
+				5203BC1F27A156FB00715D55 /* kaldi-chain.a in Frameworks */,
+				5203BC2027A156FB00715D55 /* kaldi-tree.a in Frameworks */,
+				5203BC2127A156FB00715D55 /* libfstlookahead.a in Frameworks */,
+				5203BC2227A156FB00715D55 /* kaldi-feat.a in Frameworks */,
+				5203BC2327A156FB00715D55 /* kaldi-util.a in Frameworks */,
+				5203BC2427A156FB00715D55 /* kaldi-cudamatrix.a in Frameworks */,
+				5203BC2527A156FB00715D55 /* kaldi-hmm.a in Frameworks */,
+				5203BC2627A156FB00715D55 /* libfstfar.a in Frameworks */,
+				5203BC2727A156FB00715D55 /* kaldi-lat.a in Frameworks */,
+				5203BBED27A156D700715D55 /* arc_lookahead-fst.a in Frameworks */,
 				520A5A5B270EC24200351801 /* libkaldiwrap.a in Frameworks */,
+				520A5A78270EC71500351801 /* Accelerate.framework in Frameworks */,
+				520A5A5D270EC2AD00351801 /* libc++.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +176,36 @@
 		520A5A59270EC24100351801 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5203BBF527A156FA00715D55 /* ilabel_lookahead-fst.a */,
+				5203BBF227A156FA00715D55 /* kaldi-base.a */,
+				5203BC0227A156FB00715D55 /* kaldi-chain.a */,
+				5203BC0727A156FB00715D55 /* kaldi-cudamatrix.a */,
+				5203BC0127A156FB00715D55 /* kaldi-decoder.a */,
+				5203BC0527A156FB00715D55 /* kaldi-feat.a */,
+				5203BBFC27A156FA00715D55 /* kaldi-fstext.a */,
+				5203BBEE27A156FA00715D55 /* kaldi-gmm.a */,
+				5203BC0827A156FB00715D55 /* kaldi-hmm.a */,
+				5203BBF727A156FA00715D55 /* kaldi-ivector.a */,
+				5203BBF927A156FA00715D55 /* kaldi-kws.a */,
+				5203BC0A27A156FB00715D55 /* kaldi-lat.a */,
+				5203BBF327A156FA00715D55 /* kaldi-lm.a */,
+				5203BBEF27A156FA00715D55 /* kaldi-matrix.a */,
+				5203BBF827A156FA00715D55 /* kaldi-nnet.a */,
+				5203BBFB27A156FA00715D55 /* kaldi-nnet2.a */,
+				5203BBF627A156FA00715D55 /* kaldi-nnet3.a */,
+				5203BC0027A156FB00715D55 /* kaldi-online2.a */,
+				5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */,
+				5203BBF427A156FA00715D55 /* kaldi-sgmm2.a */,
+				5203BBF027A156FA00715D55 /* kaldi-transform.a */,
+				5203BC0327A156FB00715D55 /* kaldi-tree.a */,
+				5203BC0627A156FB00715D55 /* kaldi-util.a */,
+				5203BBFA27A156FA00715D55 /* libfst.a */,
+				5203BC0927A156FB00715D55 /* libfstfar.a */,
+				5203BC0427A156FB00715D55 /* libfstlookahead.a */,
+				5203BBF127A156FA00715D55 /* libfstngram.a */,
+				5203BBFD27A156FA00715D55 /* ngram-fst.a */,
+				5203BBFE27A156FB00715D55 /* olabel_lookahead-fst.a */,
+				5203BBEC27A156D700715D55 /* arc_lookahead-fst.a */,
 				520A5A77270EC71500351801 /* Accelerate.framework */,
 				520A5A5E270EC4C000351801 /* libc++.1.tbd */,
 				520A5A5F270EC4C000351801 /* libc++abi.tbd */,
@@ -122,8 +248,14 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				5203BC3527A15FBE00715D55 /* bookbot_api.cc */,
+				5203BC3227A15FBE00715D55 /* bookbot_api.h */,
+				5203BC3627A15FBE00715D55 /* bookbot_recognizer.cc */,
+				5203BC3427A15FBE00715D55 /* language_model.cc */,
+				5203BC3127A15FBE00715D55 /* language_model.h */,
+				5203BC3327A15FBE00715D55 /* model.cc */,
+				5203BC3027A15FBE00715D55 /* model.h */,
 				520A5A54270EC00F00351801 /* SpeechController.swift */,
-				520A5A55270EC00F00351801 /* vosk_api.h */,
 				520A5A56270EC00F00351801 /* VoskModel.swift */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -235,7 +367,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -244,9 +376,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5203BC3A27A15FBF00715D55 /* bookbot_recognizer.cc in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				520A5A58270EC00F00351801 /* VoskModel.swift in Sources */,
+				5203BC3827A15FBF00715D55 /* language_model.cc in Sources */,
+				5203BC3927A15FBF00715D55 /* bookbot_api.cc in Sources */,
+				5203BC3727A15FBF00715D55 /* model.cc in Sources */,
 				520A5A57270EC00F00351801 /* SpeechController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,10 +469,20 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -346,11 +492,21 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Flutter",
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"--std=c++17",
+					"-v",
+					"-fmodules",
+					"-fcxx-modules",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bookbot.speechRecognizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../android/app/src/main/cpp/include";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
@@ -478,10 +634,20 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -491,12 +657,22 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Flutter",
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"--std=c++17",
+					"-v",
+					"-fmodules",
+					"-fcxx-modules",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bookbot.speechRecognizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../android/app/src/main/cpp/include";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -505,10 +681,20 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -518,11 +704,21 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Flutter",
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"--std=c++17",
+					"-v",
+					"-fmodules",
+					"-fcxx-modules",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bookbot.speechRecognizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../android/app/src/main/cpp/include";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

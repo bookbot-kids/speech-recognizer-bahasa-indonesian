@@ -1,0 +1,8 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+ios/libkaldiwrap.a filter=lfs diff=lfs merge=lfs -text
+ios/kaldi-chain.a filter=lfs diff=lfs merge=lfs -text
+ios/kaldi-decoder.a filter=lfs diff=lfs merge=lfs -text
+ios/kaldi-lat.a filter=lfs diff=lfs merge=lfs -text
+ios/kaldi-nnet2.a filter=lfs diff=lfs merge=lfs -text
+ios/kaldi-nnet3.a filter=lfs diff=lfs merge=lfs -text

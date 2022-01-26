@@ -4,32 +4,46 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import com.bookbot.vosk.StreamWritingVoskService
-import org.vosk.Model
-import org.vosk.Recognizer
-import org.vosk.android.StorageService
+import org.vosk.android.RecognitionListener
+import com.bookbot.Model
+import com.bookbot.Recognizer
+import com.bookbot.vosk.StorageService
 import timber.log.Timber
 import java.util.concurrent.BlockingQueue
+import java.util.concurrent.ArrayBlockingQueue
 
-class VoskSpeechService(private val context: Context, private val language:String, private val exposeAudio:Boolean): SpeechService {
+class VoskSpeechService(private val context: Context, private val language:String, private val bufferAudio:Boolean):
+    SpeechService {
+    
+    private lateinit var model: Model
     private lateinit var listener: SpeechListener
     private var kaldiSpeechService: StreamWritingVoskService? = null
     override var buffer: BlockingQueue<ShortArray>? = null
 
+    ///
+    /// Whether or not the model has been loaded and is ready to be started.
+    ///
     @Volatile
-    private var initializedSpeech = false
+    private var ready = false
 
     override var isRunning:Boolean = false
     get() = kaldiSpeechService?.isRunning ?: false
 
+    ///
+    /// Whether or not the recognition service has been instructed to stop (this is distinct from whether it has actually stopped).
+    ///
     private var stopped = true
+
     private var handler = Handler(Looper.getMainLooper())
     private val kaldiListener = KaldiSpeechListener()
+
+    private val numCandidates = 20
 
     private val models:Map<String,String> = mapOf("en" to "model-en-us", "id" to "model-id-id")
 
     override fun initSpeech(listener: SpeechListener) {
         Timber.i("vosk initSpeech")
-        if(initializedSpeech) {
+        if(ready) {
             return
         }
 
@@ -37,11 +51,39 @@ class VoskSpeechService(private val context: Context, private val language:Strin
         initModel()
     }
 
-    override fun start() {
-        if(!initializedSpeech) {
-          throw Exception("initializedSpeech is not true. Did you wait for initModel to complete?")
+    override fun start(grammar:String) {
+        if(!ready) {
+          throw Exception("VoskSpeechService is not ready, did you wait for initModel to complete?")
         }
-        if(kaldiSpeechService?.startListening(kaldiListener) == false) {
+        var grammarString = "["
+        val split = grammar.split(" ")
+        
+        for(i in 0..split.size - 1) {
+        //     grammarString += "["
+             val item = split[i]
+        //     var endIdx = maxOf(i+3, split.size)
+        //     for(j in i..endIdx) {
+                 grammarString += "\"${item}\""
+                
+        //         if(j != endIdx) {
+        //             grammarString += ","
+        //         }
+        //     }
+        //     grammarString += "]"
+             if(i != split.size - 1) {
+                 grammarString += ","
+             }
+        }
+
+        grammarString += "]"
+        //val grammarString = "[\"$expected\"]";
+        Timber.e("Using grammar string " + grammarString)    
+
+        val recognizer = Recognizer(model!!, 16000.0f, grammarString)
+        //val recognizer = Recognizer(model, 16000.0f)
+        recognizer.setMaxAlternatives(numCandidates)
+        
+        if(kaldiSpeechService!!.startListening(recognizer) == false) {
             Timber.e("Could not start Kaldi speech service, this indicates a decoder thread is already running")    
         }
         stopped = false
@@ -49,56 +91,47 @@ class VoskSpeechService(private val context: Context, private val language:Strin
     }
 
     override fun pause() {
-      if(!stopped && initializedSpeech) {
+      if(!stopped && ready) {
         kaldiSpeechService?.setPause(true)
       }
     }
 
     override fun resume() {
-      if(!stopped && initializedSpeech) {
+      if(!stopped && ready) {
         kaldiSpeechService?.setPause(false)
       }
     }
 
     override fun stop() {
-        if(!initializedSpeech) {
+        if(!ready) {
             return
         }
-
-        isRunning = false
         stopped = true
-        kaldiSpeechService?.stop()
+        kaldiSpeechService?.setPause(true)
         Timber.i("vosk speech stop")
     }
 
     override fun destroy() {
-        if(!initializedSpeech) {
+        if(!ready) {
             return
         }
 
         stop()
         kaldiSpeechService?.shutdown()
-        initializedSpeech = false
+        ready = false
         Timber.i("vosk speech destroy")
     }
 
-    override fun restart(time: Long) {
-        if(!initializedSpeech || stopped) {
+    override fun restart(time: Long, expected:String) {
+        if(!ready || stopped) {
             return
         }
 
         isRunning = false
         handler.postDelayed({
-            start()
+            start(expected)
         }, time)
         Timber.i("vosk speech restart")
-    }
-
-    override fun cancel() {
-        if(!initializedSpeech) {
-            return
-        }
-        kaldiSpeechService?.cancel()
     }
 
     /// 
@@ -107,33 +140,31 @@ class VoskSpeechService(private val context: Context, private val language:Strin
     /// If this causes issues, we will restructure to wait elsewhere.
     ///
     private fun initModel() {
-        initializedSpeech = false
+        ready = false
         Timber.e("Initializing model $language")
         val outputPath = StorageService.sync(context, models[language], models[language])
-        val model = Model(outputPath)
+        model = Model(outputPath)
         Timber.e("Unpacked!")
-        val recognizer =  Recognizer(model, 16000.0f)
-        kaldiSpeechService = StreamWritingVoskService(recognizer, 16000.0f, exposeAudio)
-        buffer = kaldiSpeechService?.buffer
-        initializedSpeech = true
+        if(bufferAudio) {
+            this.buffer = ArrayBlockingQueue(1024);
+        }
+        kaldiSpeechService = StreamWritingVoskService(16000.0f, this.buffer, kaldiListener)
+
+        ready = true
     }
 
-    private inner class KaldiSpeechListener: org.vosk.android.RecognitionListener {
-
+    private inner class KaldiSpeechListener : RecognitionListener {
 
         override fun onPartialResult(result: String?) {
-            processResult(result)
-            Timber.d("vosk onPartialResult [$result]")
+            processResult(result, false)
         }
 
         override fun onResult(result: String?) {
-            processResult(result)
-            Timber.d("vosk onResult [$result]")
+            processResult(result, true)
         }
 
         override fun onFinalResult(result: String?) {
-            processResult(result)
-            Timber.d("vosk onFinalResult [$result]")
+            processResult(result, true)
         }
 
         override fun onError(ex: Exception?) {
@@ -146,8 +177,8 @@ class VoskSpeechService(private val context: Context, private val language:Strin
             Timber.d("vosk onTimeout")
         }
 
-        private fun processResult(result: String?) {
-            result?.let { listener.onSpeechResult(it) }
+        private fun processResult(result: String?, wasEndpoint: Boolean) {
+            result?.let { listener.onSpeechResult(it, wasEndpoint) }
         }
     }
 }

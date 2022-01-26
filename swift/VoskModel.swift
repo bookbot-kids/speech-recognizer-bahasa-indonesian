@@ -28,17 +28,14 @@ public final class VoskModel {
         } else {
             throw VoskError.runtimeError("Unrecognized language string \(language)")
         }
-        
-        // Set to -1 to disable logs
-        vosk_set_log_level(0);
-        
+                
         if let resourcePath = Bundle.main.resourcePath {
-            model = vosk_model_new(resourcePath + modelPath)
+            model = bookbot_model_new(resourcePath + modelPath)
         }
     }
     
     deinit {
-        vosk_model_free(model)
+        bookbot_model_free(model)
     }
     
 }

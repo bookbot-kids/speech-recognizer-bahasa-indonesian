@@ -44,13 +44,18 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
   var _speechText = '';
 
   @override
-  void onResult(Map result) {
-    final text = result['partial'] ?? result['text'] ?? '';
-    if (text.isEmpty) return;
+  void onResult(Map result, bool wasEndpoint) {
+    List<List<String>> candidates = result.containsKey('partial')
+        ? [result['partial'].trim().split(' ')]
+        : result['alternatives']
+            .map((x) => x['text'].trim().split(' ').cast<String>().toList())
+            .toList()
+            .cast<List<String>>();
+    if (candidates.isEmpty) return;
     // ignore: avoid_print
-    print(text);
+    print(candidates);
     setState(() {
-      _speechText += '$text\n';
+      _speechText += '${candidates.join(' ')}\n';
     });
   }
 

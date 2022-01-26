@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 enum AudioSpeechPermission { undetermined, authorized, denied, unknown }
 
 abstract class SpeechListener {
-  void onResult(Map result);
+  void onResult(Map result, bool wasEndPoint);
 }
 
 // initSpeech will setup the speech recognition system for the first time
@@ -66,14 +66,6 @@ class SpeechController {
     }
   }
 
-  Future<void> initAudio() async {
-    await methodChannel.invokeMethod('initAudio');
-  }
-
-  Future<bool> isAudioInitialized() async {
-    return await methodChannel.invokeMethod('isAudioInitialized');
-  }
-
   Future<void> initSpeech(String language) async {
     await methodChannel.invokeMethod('initSpeech', [language]);
     eventChannel
@@ -82,10 +74,11 @@ class SpeechController {
   }
 
   /// Decode JSON transcript stream and send to speech manager to handle
-  void _onEvent(dynamic event) {
-    final jsonData = json.decode(event);
-    for (final listener in listeners) {
-      listener.onResult(jsonData);
+  void _onEvent(Object? event) {
+    final args = event as List<dynamic>;
+    final jsonResult = json.decode(args[0]);
+    for (var listener in listeners) {
+      listener.onResult(jsonResult, args[1] as bool);
     }
   }
 
@@ -109,30 +102,8 @@ class SpeechController {
     await methodChannel.invokeMethod('unmute');
   }
 
-  Future<void> flushSpeech({String toRead = ''}) async {
-    await methodChannel.invokeMethod('flushSpeech', toRead);
-  }
-
-  Future<void> cacheSounds() async {
-    await methodChannel.invokeMethod('cacheSounds');
-  }
-
-  Future<void> playSound(String path,
-      {double start = 0.0, double end = 0.0}) async {
-    await methodChannel
-        .invokeMethod('playSound', [path, start.toString(), end.toString()]);
-  }
-
-  Future<void> endSpeechSound() async {
-    await methodChannel.invokeMethod('endSpeechSound');
-  }
-
-  Future<void> playLoop(String name) async {
-    await methodChannel.invokeMethod('playLoop', name);
-  }
-
-  Future<void> endLoop() async {
-    await methodChannel.invokeMethod('endLoop');
+  Future<void> flushSpeech({String toRead = '', String grammar = ''}) async {
+    await methodChannel.invokeMethod('flushSpeech', [toRead, grammar]);
   }
 
   Future<void> endSpeech() async {

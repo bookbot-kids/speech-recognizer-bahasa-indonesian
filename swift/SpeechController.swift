@@ -18,21 +18,16 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     public var eventSink: FlutterEventSink?
 
     let engine = AVAudioEngine()
-
-    //
-    // Audio playback properties
-    //
     let mixer = AVAudioMixerNode()
-    let soundNode = AVAudioPlayerNode()
-    let speechNode = AVAudioPlayerNode()
-    let loopNode = AVAudioPlayerNode()
-
     let maxLoopNodeVolume:Float = 0.65
     let minLoopNodeVolume:Float = 0.15
     var soundCache:[String: AVAudioPCMBuffer] = [:]
     var sound: AVAudioPCMBuffer?
     var soundChannels: UInt32 = 1
     var isPlayingSpeech = false
+  
+    var expectedSpeech: String?
+    var grammar: String?
   
     //
     // Speech recognition properties
@@ -54,22 +49,13 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         engine.attach(mixer)
         engine.connect(mixer, to: engine.outputNode, format: nil)
 
-        // Add the sound effects and looping node players
-        engine.attach(soundNode)
-        engine.connect(soundNode, to: mixer, format: nil)
-        let format32KHzMono = AVAudioFormat.init(standardFormatWithSampleRate: 32000, channels: 1)
-        engine.attach(speechNode)
-        engine.connect(speechNode, to: mixer, format: format32KHzMono)
-        engine.attach(loopNode)
-        engine.connect(loopNode, to: mixer, format: nil)
-
         let category = AVAudioSession.Category.playAndRecord;
         let options = AVAudioSession.CategoryOptions.defaultToSpeaker
 
         engine.prepare()
 
         do {
-          try AVAudioSession.sharedInstance().setCategory(category, options:options)
+          try AVAudioSession.sharedInstance().setCategory(category, mode: .voiceChat, options: options)
           try engine.start()
         } catch {
           print("Initialization error")
@@ -97,8 +83,8 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    //      print(call.method)
-    //      print(call.arguments ?? "")
+      print(call.method)
+      print(call.arguments ?? "")
       // Handle incoming messages from Flutter
       switch call.method {
         case "audioPermission":
@@ -112,12 +98,11 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
             self.initSpeech(language:language, flutterResult: result)
         // The start of a book when it starts listening
         case "listen":
-          self.startSpeech()
+          self.startListening()
           result(nil)
         // The closing of a book and goiong back to the library
         case "stopListening":
-          self.listen = false
-          self.stopSpeech()
+          self.stopListening()
           result(nil)
         // Mute microphone. Will be muted and unmuted from other actions
         case "mute":
@@ -129,25 +114,8 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
           result(nil)
         // Final process of speech - for when page is turned or text line is touched
         case "flushSpeech":
-          self.flushSpeech(toRead: call.arguments as? String ?? "")
-          result(nil)
-        case "cacheSounds":
-          self.cacheSounds(flutterResult: result)
-        case "playSound":
-          guard let arguments = call.arguments as? [String], let path = arguments[safe:0], let start = Double(arguments[1]), let end = Double(arguments[2]) else {
-            result(nil)
-            return
-          }
-          self.play(path: path, from: start, to: end, flutterResult: result)
-          result(nil)
-        case "endSpeechSound":
-          // Fade out the speech node
-          self.fadeout(node: speechNode, pause: false, flutterResult: result)
-          result(nil)
-        case "playLoop":
-          self.playLoop(path: call.arguments as! String, flutterResult: result)
-        case "endLoop":
-          self.fadeout(node: loopNode, pause: true, flutterResult: result)
+          let args = call.arguments as! Array<Any?>
+          self.flushSpeech(toRead: args[0] as? String ?? "", grammar: args[1] as? String ?? "")
           result(nil)
         default:
           result(FlutterMethodNotImplemented)
@@ -201,17 +169,25 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
 
     func _freeRecognizer() {
         if(recognizer != nil) {
-          vosk_recognizer_free(recognizer);
+          bookbot_recognizer_free(recognizer);
           recognizer = nil;
         }
     }
 
     func _instantiateRecognizer() {
-        guard let m = model, let input = inputFormat else {
+        guard let m = model, let input = inputFormat, let grammar = grammar else {
             return
         }
-
-        recognizer = vosk_recognizer_new(m.model, Float(input.sampleRate))
+        do {
+          let encoder = JSONEncoder()
+          let words = grammar.components(separatedBy: " ")
+          let json  = try encoder.encode(words)
+          let grammar = String(data: json, encoding: .utf8)!
+          recognizer = bookbot_recognizer_new_grm(m.model, Float(input.sampleRate), grammar)
+          bookbot_recognizer_set_max_alternatives(recognizer, 5)
+        } catch {
+          print("Error generating grammar for recognizer")
+        }
     }
 
     /// Speech initialiser
@@ -224,8 +200,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         conversionFormat = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt16, sampleRate: 32000, channels: 1, interleaved: false)!
 
         self.processingQueue.async {
-          self._freeRecognizer()
-          
+
           if(self.model == nil || self.model!.language != language) {
             do {
               self.model = try VoskModel(language: language)
@@ -234,31 +209,37 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
               return
             }
           }
-            
-          self._instantiateRecognizer()
+
         }
 
         // Prepare audio buffer converter
         let formatConverter = AVAudioConverter(from: inputFormat!, to: conversionFormat!)!
         formatConverter.sampleRateConverterAlgorithm = AVSampleRateConverterAlgorithm_Normal
         formatConverter.sampleRateConverterQuality = .max
+        let sampleRateRatio = inputFormat!.sampleRate / conversionFormat!.sampleRate
+
 
         engine.inputNode.removeTap(onBus: 0)
         engine.inputNode.installTap(onBus: 0, bufferSize: UInt32(rawFormat.sampleRate / 10), format: inputFormat!) { buffer, _ in
+            // add one check to prevent tasks from being added to the queue in the first place unnecessarily
+            guard self.listen, !self.isPlayingSpeech, self.recognizer != nil else {
+              return
+            }
             self.processingQueue.async {
+                // add a second check to discard this task if needed immediately after being dequeued
                 guard self.listen, !self.isPlayingSpeech, self.recognizer != nil else {
                   return
                 }
 
                 let dataLen = Int(buffer.frameLength)
                 let channels = UnsafeBufferPointer(start: buffer.int16ChannelData, count: 1)
-                let endOfSpeech = channels[0].withMemoryRebound(to: Int8.self, capacity: dataLen * 2) {
-                  vosk_recognizer_accept_waveform(self.recognizer!, $0, Int32(dataLen))
+                let endOfSpeech = channels[0].withMemoryRebound(to: Int16.self, capacity: dataLen) {
+                  bookbot_recognizer_accept_waveform_s(self.recognizer!, $0, Int32(dataLen))
                 }
-                let res = endOfSpeech == 1 ? vosk_recognizer_result(self.recognizer!) :vosk_recognizer_partial_result(self.recognizer)
+                let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
                 let resultString = String(validatingUTF8: res!)!
-                self.eventSink?(resultString)
-                print("recognize \(resultString)")
+                //print(resultString)
+                self.eventSink?([resultString, endOfSpeech == 1])
             }
         }
         
@@ -275,36 +256,42 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         flutterResult(nil)
     }
 
-    public func startSpeech() {
-        self.processingQueue.async {
-          self.listen = true
-        }
+
+    public func startListening() {
+        self.listen = true
     }
 
-    public func stopSpeech() {
+    public func stopListening() {
+        self.listen = false
         DispatchQueue.main.async {
           self.timer?.invalidate()
         }
-        self.processingQueue.async {
-          self.listen = false
-        }
     }
+    
+    ///
+    /// The [expectedSpeech] is distinct from [grammar] because the former should be used as the audio clip recording transcript, whereas the latter needs to be for the speech recognition model.
+    /// For example, if we expect the word "cat", then [expectedSpeech] is set to "cat" but [grammar] needs to be set to [cat, mat, sat] etc.
+    /// Otherwise, the recognizer will only ever return the word "cat", no matter what was said.
+    ///
+    public func flushSpeech(toRead: String, grammar:String) {
+        self.expectedSpeech = toRead
+        
+        // will immediately stop pushing audio into the recognizer
+        self.stopListening()
+      
+        self.grammar = grammar;
 
-    public func flushSpeech(toRead: String) {
+        // we have to submit a task to the queue to destroy/recreate the recognizer
+        // otherwise this will not be thread-safe and one thread may try to destroy the recognizer while another thread is mid-way through processing an audio segment
         self.processingQueue.async {
-            self.stopSpeech()
-            // print("Stopped")
+            self.stopListening()
             self._freeRecognizer()
-            // print("Freed")
+
             self._instantiateRecognizer()
-            // print("Instantiated")
             DispatchQueue.main.async {
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                 // print("Timer called")
-                  self.processingQueue.async {
-                    self.startSpeech()
-                    // print("Started speech")
-                  }
+                  self.startListening()
                 }
             }
         }
@@ -326,187 +313,6 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
           }
         }
         flutterResult(nil)
-    }
-
-    //
-    // TODO - this really should be treated as 100% async and submitted via a DispatchQueue
-    // to avoid future concurrency/deadlock issues with async callbacks executing when Flutter tries to send another request via a platform channel.
-    // However, currently the timing of various other things (e.g. animation triggers) is tied to the assumption that audio has started playing as soon as
-    // this method returns (this is another TODO that could be fixed).
-    // For now, we will just ensure that all callbacks (mostly fading things out/in) are dispatched.
-    // Theoretically this still exposes the risk of deadlock but the window for this to occur is so small, I think the risk is minimal.
-    //
-    public func play(path: String, from: Double, to: Double, flutterResult: @escaping FlutterResult) {
-      if(!self.engine.isRunning) {
-        do {
-          try engine.start()
-        }
-        catch {
-          flutterResult(FlutterError(code: "audioError", message: "audioError", details: error.localizedDescription))
-        }
-      }
-         
-        let filePath = path.replacingOccurrences(of: "%", with:"%25")
-        let key = self.registrar!.lookupKey(forAsset:filePath);
-        // print("Trying to play asset at \(filePath) under key \(key)")
-        guard let audioPath = Bundle.main.path(forResource: key, ofType: nil) else {
-            print("Couldn't find audio asset @ \(filePath)")
-            flutterResult(FlutterError(code: "asset_not_found", message: "Could not locate asset.", details: filePath))
-            return;
-        }
-
-        // print("Audio path is \(audioPath)")
-        playSound(audioPath: audioPath, from: from, to: to, flutterResult: flutterResult)
-    }
-
-    private func playSound(audioPath: String, from: Double, to: Double, flutterResult: @escaping FlutterResult) {
-        guard let audioUrl = URL.init(string: audioPath.replacingOccurrences(of: "%", with:"%25")) else {
-            flutterResult(FlutterError(code: "asset_not_found", message: "Could not locate asset.", details: audioPath))
-            return;
-        }
-        
-        // print("Audio url is \(audioUrl)")
-        
-        // Guard to see if audio file can be loaded
-        guard let file = try? AVAudioFile(forReading: audioUrl) else {
-          return flutterResult(nil)
-        }
-
-        let soundChannels = file.processingFormat.channelCount
-        let node = soundChannels == 1 ? self.speechNode : self.soundNode
-        self.partialFadeLoopOut()
-        node.stop()
-
-        self.isPlayingSpeech = true
-
-        if from == 0.0 && to == 0.0 {
-          node.scheduleFile(file, at: nil,
-                        completionCallbackType: AVAudioPlayerNodeCompletionCallbackType.dataConsumed,
-                        completionHandler:{ (type:AVAudioPlayerNodeCompletionCallbackType) -> Void in
-                                  DispatchQueue.main.async {
-                                      self.partialFadeLoopIn()
-                                      self.isPlayingSpeech = false
-                                      // print("Stopped")
-                                  }
-                              })
-         
-        } else {
-            let sampleRate = node.outputFormat(forBus: 0).sampleRate
-            let framePosition = AVAudioFramePosition(from * sampleRate)
-            let frames = to == 0.0 ? Double(file.length) : to * sampleRate
-            let frameCount = frames - (from * sampleRate)
-            guard frameCount > 0 else {
-                return flutterResult(nil)
-            }
-              
-            node.scheduleSegment(file, startingFrame: framePosition, frameCount: AVAudioFrameCount(frameCount), at: nil,
-                                     completionCallbackType: AVAudioPlayerNodeCompletionCallbackType.dataConsumed,
-                                     completionHandler:{ (type:AVAudioPlayerNodeCompletionCallbackType) -> Void in
-                                        DispatchQueue.main.async {
-                                            self.partialFadeLoopIn()
-                                            self.isPlayingSpeech = false
-                                            // print("Stopped")
-                                        }
-                                     })
-            }
-        
-        node.play()
-        flutterResult(nil)
-    }
-
-    public func playLoop(path: String, flutterResult: @escaping FlutterResult) {
-
-        guard engine.isRunning else {
-            flutterResult(FlutterError(code: "engine_not_running", message: "Engine has not yet been initialized.", details:nil))
-            return;
-        }
-
-          let key = self.registrar!.lookupKey(forAsset:path);
-
-          let audioPath = Bundle.main.path(forResource: key, ofType: nil);
-
-          if(audioPath == nil) {
-              flutterResult(FlutterError(code: "asset_not_found", message: "Could not locate asset.", details: path))
-              return;
-          }
-
-          let audioUrl = URL.init(string: audioPath!);
-
-          if(audioUrl == nil) {
-              flutterResult(FlutterError(code: "asset_not_found", message: "Could not locate asset.", details: path))
-              return;
-          }
-
-          let audioFile = try! AVAudioFile(forReading: audioUrl!)
-          self.scheduleNextLoop(audioFile: audioFile)
-          self.loopNode.volume = self.minLoopNodeVolume
-
-          self.loopNode.play()
-          self.partialFadeLoopIn()
-          flutterResult(nil)
-
-    }
-
-    public func partialFadeLoopOut() {
-        let partial = self.loopNode.volume / 10;
-
-        if(self.loopNode.volume >= self.minLoopNodeVolume) {
-          self.loopNode.volume -= partial
-
-          if(self.loopNode.volume >= self.minLoopNodeVolume) {
-            DispatchQueue.main.asyncAfter(deadline:.now() + 0.03) {
-              self.partialFadeLoopOut()
-            }
-        }
-        }
-    }
-
-    public func partialFadeLoopIn() {
-        let partial = self.loopNode.volume / 10;
-        // 30 ms
-        if(self.loopNode.volume <= self.maxLoopNodeVolume) {
-            self.loopNode.volume += partial
-
-            if(self.loopNode.volume <= self.maxLoopNodeVolume) {
-              DispatchQueue.main.asyncAfter(deadline:.now() + 0.03) {
-                self.partialFadeLoopIn()
-              }
-            }
-        }
-    }
-
-    func scheduleNextLoop(audioFile: AVAudioFile) {
-        loopNode.scheduleFile(audioFile, at: nil) {
-          DispatchQueue.main.asyncAfter(deadline:.now() + 4.0) {
-            self.scheduleNextLoop(audioFile: audioFile)
-          }
-        }
-    }
-
-    func fadeout(node: AVAudioPlayerNode, pause: Bool = false, flutterResult: @escaping FlutterResult) {
-        fadeout(node: node, pause: pause)
-        flutterResult(nil)
-    }
-
-    func fadeout(node: AVAudioPlayerNode, pause: Bool = false) {
-        let volume = node.volume
-        // print("fadeout current volume \(volume)")
-        let partial = node.volume / 10;
-        for _ in 1...10 {
-            // 30 ms
-            usleep(30000)
-            node.volume -= partial
-        }
-
-        node.volume = 0
-        if pause {
-          node.pause()
-        } else {
-          node.stop()
-        }
-
-        // revert to old volume
-        node.volume = volume
     }
 
     /// eventSink is where to send events back to Flutter
