@@ -75,6 +75,7 @@ class AsrService {
     _isInitialized = true;
   }
 
+  /// Build & extract kaldi model from given words
   Future build(List<String> words, {String language = 'id'}) async {
     if (!_isInitialized) {
       await initialize();
