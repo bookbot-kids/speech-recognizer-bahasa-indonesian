@@ -1,16 +1,15 @@
 # speech_recognizer
 
-The indonesian speech recognizer sample
+The Bahasa Indonesian speech recognizer flutter app. 
+It will read buffer from microphone and recognize speaking words
 
-## Getting Started
+# setup
+- Install flutter sdk
+- Run `git lfs pull` command
+- Run the demo on android/ios/macos
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# structure
+- `lib/speech_recognizer.dart`: this is the interface API to communicate with native platform (android/ios/mac). There are many speech recognizer methods, check `lib/main.dart` to know how to use them.
+- `android/models/src/main/assets/model-id-id`: this is the speech model that shared for all platforms. Replace `model-id-id/graph` to change the model dictionary.
+- `swift/SpeechController.swift`: the native platform channel for speech recognizer on ios/macos. It uses (vosk)[https://github.com/alphacep/vosk-api] with custom model
+- `android/app/src/main/kotlin/com/bookbot/speech_recognizer/SpeechController.kt`: the native platform channel for speech recognizer on android. It uses (vosk)[https://github.com/alphacep/vosk-api] with custom model
