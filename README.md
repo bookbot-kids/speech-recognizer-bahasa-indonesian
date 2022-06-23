@@ -32,7 +32,7 @@ Similarly on iOS/MacOS:
 
 - Open Xcode
 - Navigate to `Info.plist`
-- Add microphone permission `nsmicrophoneusagedescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
+- Add microphone permission `NSMicrophoneUsageDescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
 
 ## How to Use
 
