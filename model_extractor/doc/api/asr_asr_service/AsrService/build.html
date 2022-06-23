@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the build method from the AsrService class, for the Dart programming language.">
+  <title>build method - AsrService class - asr_service library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">model_extractor</a></li>
+    <li><a href="../../asr_asr_service/asr_asr_service-library.html">asr_service</a></li>
+    <li><a href="../../asr_asr_service/AsrService-class.html">AsrService</a></li>
+    <li class="self-crumb">build method</li>
+  </ol>
+  <div class="self-name">build</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">build</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a></span>
+<span class="name ">build</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="build-param-words"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">words</span>, </span></li>
+<li><span class="parameter" id="build-param-language">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">language</span> = <span class="default-value">&#39;id&#39;</span>}</span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Build &amp; extract kaldi model from given words</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future build(List&lt;String&gt; words, {String language = &#39;id&#39;}) async {
+  if (!_isInitialized) {
+    await initialize();
+  }
+
+  &#47;&#47; create a working directory for graph compilation
+  final workDir = Directory(p.join(_workingDirectory.path, language));
+  if (workDir.existsSync()) {
+    workDir.deleteSync(recursive: true);
+  }
+
+  final normalizedWords = words.map((e) =&gt; _cleaner.normalize(e)).toSet();
+
+  &#47;&#47; write all words to file
+  final corpus = File(p.join(workDir.path, &#39;corpus.txt&#39;));
+  if (corpus.existsSync()) {
+    corpus.deleteSync();
+  }
+
+  if (!corpus.parent.existsSync()) {
+    corpus.parent.createSync(recursive: true);
+  }
+
+  final text = normalizedWords.map((word) =&gt; &#39;$word\n&#39;).join();
+  corpus.writeAsStringSync(text);
+
+  &#47;&#47; the build_graph.sh scripts will:
+  &#47;&#47; - build a 0-gram language model from the corpus
+  &#47;&#47; - create words.txt
+  &#47;&#47; - generate lexicon.txt from words.txt using gruut (precompiled into a standalone set of binaries with pyinstaller)
+  &#47;&#47; - create L.fst
+  &#47;&#47; - create Gr.fst
+  &#47;&#47; - merge into HCLr.fst
+
+  final pResult = await Process.run(
+      &quot;kaldi&#47;bin&#47;build_graph.sh&quot;,
+      [
+        corpus.path,
+        Directory(p.join(&quot;kaldi&quot;, _modelDir)).absolute.path,
+        language,
+        _alignerPath
+      ],
+      environment: {
+        &quot;LD_LIBRARY_PATH&quot;: &quot;${_binDir.path}:${_binDir.path}&#47;..&#47;&quot;,
+        &quot;PATH&quot;:
+            &quot;${_binDir.path}:${_binDir.path}&#47;..&#47;:${Platform.environment[&quot;PATH&quot;]}&quot;,
+        &quot;PYTHONIOENCODING&quot;: &quot;utf-8&quot;
+      },
+      runInShell: true);
+  print(pResult.stdout);
+  print(pResult.stderr);
+  if (pResult.exitCode != 0) {
+    throw Exception(pResult.stderr);
+  }
+
+  &#47;&#47; copy to output
+  final outputDir = Directory(p.join(_tempDir.path, &#39;kaldi&#47;$language&#39;));
+  outputDir.renameSync(p.join(_outputDir.path, &#39;model-$language-$language&#39;));
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">model_extractor</a></li>
+  <li><a href="../../asr_asr_service/asr_asr_service-library.html">asr_service</a></li>
+  <li><a href="../../asr_asr_service/AsrService-class.html">AsrService</a></li>
+  <li class="self-crumb">build method</li>
+</ol>
+
+
+    <h5>AsrService class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../asr_asr_service/AsrService-class.html#constructors">Constructors</a></li>
+          <li><a href="../../asr_asr_service/AsrService/AsrService.html">AsrService</a></li>
+
+
+    <li class="section-title">
+      <a href="../../asr_asr_service/AsrService-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../asr_asr_service/AsrService/alignerPath.html">alignerPath</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../asr_asr_service/AsrService-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../asr_asr_service/AsrService/build.html">build</a></li>
+    <li><a href="../../asr_asr_service/AsrService/initialize.html">initialize</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../asr_asr_service/AsrService-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    model_extractor
+      1.0.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
