@@ -109,6 +109,6 @@ class _MyHomePageState implements SpeechListener {
 
 ## Contributors
 
-<a href="https://github.com/bookbot-kids//graphs/contributors">
+<a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=bookbot-kids/speech-recognizer-bahasa-indonesian" />
 </a>
