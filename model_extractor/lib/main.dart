@@ -8,6 +8,7 @@ void main() {
   runApp(const MyApp());
 }
 
+/// The main application
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// The home page of the application
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -42,11 +44,13 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+/// The state of the home page
 class _MyHomePageState extends State<MyHomePage> {
   final _textEditingController = TextEditingController();
   AsrService? _service;
   var _isRunning = false;
 
+  /// Generate model from text field
   Future<void> buildModel() async {
     final text = _textEditingController.text;
     if (text.isEmpty) {

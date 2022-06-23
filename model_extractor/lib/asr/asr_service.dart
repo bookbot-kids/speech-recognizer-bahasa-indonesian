@@ -20,9 +20,11 @@ class AsrService {
   final _cleaner = TextCleaner();
   var _isInitialized = false;
 
+  /// aligner tool path in macos document folder
   Future<String> get alignerPath async =>
       p.join((await getApplicationSupportDirectory()).path, 'mfa_aligner');
 
+  /// Setup the service in the given directory
   AsrService(Directory outputDir) {
     _outputDir = outputDir;
     // create a working directory where all temporary files will be written
