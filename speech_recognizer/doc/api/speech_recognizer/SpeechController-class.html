@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the SpeechController class from the speech_recognizer library, for the Dart programming language.">
+  <title>SpeechController class - speech_recognizer library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">speech_recognizer</a></li>
+    <li><a href="../speech_recognizer/speech_recognizer-library.html">speech_recognizer</a></li>
+    <li class="self-crumb">SpeechController class</li>
+  </ol>
+  <div class="self-name">SpeechController</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-class">SpeechController</span> class 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
+    
+
+
+
+    
+
+    <section class="summary offset-anchor" id="instance-properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="eventChannel" class="property">
+  <span class="name"><a href="../speech_recognizer/SpeechController/eventChannel.html">eventChannel</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/EventChannel-class.html">EventChannel</a></span> 
+
+</dt>
+<dd>
+  
+  <div class="features">final</div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> 
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features">read-only, inherited</div>
+
+</dd>
+
+        <dt id="listeners" class="property">
+  <span class="name"><a href="../speech_recognizer/SpeechController/listeners.html">listeners</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../speech_recognizer/SpeechListener-class.html">SpeechListener</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  
+  <div class="features">final</div>
+
+</dd>
+
+        <dt id="methodChannel" class="property">
+  <span class="name"><a href="../speech_recognizer/SpeechController/methodChannel.html">methodChannel</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/MethodChannel-class.html">MethodChannel</a></span> 
+
+</dt>
+<dd>
+  
+  <div class="features">final</div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span> 
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features">read-only, inherited</div>
+
+</dd>
+
+      </dl>
+    </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="addListener" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/addListener.html">addListener</a></span><span class="signature">(<wbr><span class="parameter" id="addListener-param-listener"><span class="type-annotation"><a href="../speech_recognizer/SpeechListener-class.html">SpeechListener</a></span> <span class="parameter-name">listener</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Register listener for speech events while speaking
+  
+
+</dd>
+
+        <dt id="authorize" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/authorize.html">authorize</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Ask for microphone permission for speech recognition
+  
+
+</dd>
+
+        <dt id="endSpeech" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/endSpeech.html">endSpeech</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  End speech recognition to release resources (just for android)
+  
+
+</dd>
+
+        <dt id="flushSpeech" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/flushSpeech.html">flushSpeech</a></span><span class="signature">(<wbr><span class="parameter" id="flushSpeech-param-toRead">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">toRead</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="flushSpeech-param-grammar"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">grammar</span> = <span class="default-value">&#39;&#39;</span>}</span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  when flushSpeech is called, a string is passed containing the text of what we expect to hear from the user next
+The <code>toRead</code> is distinct from <code>grammar</code> because the former should be used as the audio clip recording transcript, whereas the latter needs to be for the speech recognition model.
+For example, if we expect the word "cat", then <code>toRead</code> is set to "cat" but <code>grammar</code> needs to be set to <code>cat, mat, sat</code> etc.
+Otherwise, the recognizer will only ever return the word "cat", no matter what was said.
+  
+
+</dd>
+
+        <dt id="initSpeech" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/initSpeech.html">initSpeech</a></span><span class="signature">(<wbr><span class="parameter" id="initSpeech-param-language"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">language</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Initialize speech recognition ML model
+  
+
+</dd>
+
+        <dt id="listen" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/listen.html">listen</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Start speech recognition to listen microphone buffer
+  
+
+</dd>
+
+        <dt id="mute" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/mute.html">mute</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Mute the micrphone
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a non-existent method or property is accessed.
+  <div class="features">inherited</div>
+
+</dd>
+
+        <dt id="permissions" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/permissions.html">permissions</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../speech_recognizer/AudioSpeechPermission.html">AudioSpeechPermission</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Detect current permission for speech recognition
+  
+
+</dd>
+
+        <dt id="removeListener" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/removeListener.html">removeListener</a></span><span class="signature">(<wbr><span class="parameter" id="removeListener-param-listener"><span class="type-annotation"><a href="../speech_recognizer/SpeechListener-class.html">SpeechListener</a></span> <span class="parameter-name">listener</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Remove listener for speech events
+  
+
+</dd>
+
+        <dt id="stopListening" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/stopListening.html">stopListening</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Stop speech recognition
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features">inherited</div>
+
+</dd>
+
+        <dt id="unmute" class="callable">
+  <span class="name"><a href="../speech_recognizer/SpeechController/unmute.html">unmute</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Unmute the micrphone
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features">inherited</div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section class="summary offset-anchor" id="static-properties">
+    <h2>Static Properties</h2>
+
+    <dl class="properties">
+        <dt id="shared" class="property">
+  <span class="name"><a href="../speech_recognizer/SpeechController/shared.html">shared</a></span>
+  <span class="signature">&#8596; <a href="../speech_recognizer/SpeechController-class.html">SpeechController</a></span> 
+
+</dt>
+<dd>
+  The singleton instance
+  <div class="features">read / write</div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">speech_recognizer</a></li>
+  <li><a href="../speech_recognizer/speech_recognizer-library.html">speech_recognizer</a></li>
+  <li class="self-crumb">SpeechController class</li>
+</ol>
+
+
+    <h5>speech_recognizer library</h5>
+    <ol>
+  <li class="section-title"><a href="../speech_recognizer/speech_recognizer-library.html#classes">Classes</a></li>
+  <li><a href="../speech_recognizer/SpeechController-class.html">SpeechController</a></li>
+  <li><a href="../speech_recognizer/SpeechListener-class.html">SpeechListener</a></li>
+
+
+
+
+
+
+  <li class="section-title"><a href="../speech_recognizer/speech_recognizer-library.html#enums">Enums</a></li>
+  <li><a href="../speech_recognizer/AudioSpeechPermission.html">AudioSpeechPermission</a></li>
+
+
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <ol>
+
+
+
+    <li class="section-title">
+      <a href="../speech_recognizer/SpeechController-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../speech_recognizer/SpeechController/eventChannel.html">eventChannel</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../speech_recognizer/SpeechController/listeners.html">listeners</a></li>
+    <li><a href="../speech_recognizer/SpeechController/methodChannel.html">methodChannel</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../speech_recognizer/SpeechController-class.html#instance-methods">Methods</a></li>
+    <li><a href="../speech_recognizer/SpeechController/addListener.html">addListener</a></li>
+    <li><a href="../speech_recognizer/SpeechController/authorize.html">authorize</a></li>
+    <li><a href="../speech_recognizer/SpeechController/endSpeech.html">endSpeech</a></li>
+    <li><a href="../speech_recognizer/SpeechController/flushSpeech.html">flushSpeech</a></li>
+    <li><a href="../speech_recognizer/SpeechController/initSpeech.html">initSpeech</a></li>
+    <li><a href="../speech_recognizer/SpeechController/listen.html">listen</a></li>
+    <li><a href="../speech_recognizer/SpeechController/mute.html">mute</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../speech_recognizer/SpeechController/permissions.html">permissions</a></li>
+    <li><a href="../speech_recognizer/SpeechController/removeListener.html">removeListener</a></li>
+    <li><a href="../speech_recognizer/SpeechController/stopListening.html">stopListening</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../speech_recognizer/SpeechController/unmute.html">unmute</a></li>
+
+    <li class="section-title inherited"><a href="../speech_recognizer/SpeechController-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+        <li class="section-title"><a href="../speech_recognizer/SpeechController-class.html#static-properties">Static properties</a></li>
+          <li><a href="../speech_recognizer/SpeechController/shared.html">shared</a></li>
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    speech_recognizer
+      1.0.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

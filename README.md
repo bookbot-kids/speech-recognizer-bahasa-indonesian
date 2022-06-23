@@ -51,8 +51,7 @@ class _MyHomePageState implements SpeechListener {
 - After setup, run the app and press `Start listening` button to listen speech and get the spoken output text in text field.
 - Press `Stop listening` to stop listening
   
-## Installation / Setup
-​
+## Installation / Setup​
 - Install [flutter sdk](https://docs.flutter.dev/get-started/install) base on each platform
 - Run `git lfs pull` command.
 - Install (visual studio code)[https://code.visualstudio.com/]
@@ -65,21 +64,16 @@ class _MyHomePageState implements SpeechListener {
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     ```
 - On iOS/macOS: go to xcode -> Info.plist -> add microphone permission `nsmicrophoneusagedescription` like this https://stackoverflow.com/a/38498347/719212
-## Features
-​
+## Features​
 - Ask user for microphone permission to recognize voice.
 - Convert microphone audio buffer into text by using Machine learning model and display in UI.
 - Training custom Machine learning model for more accuracy with [model extractor ](https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/tree/main/model_extractor)
 - User can start/stop speech recognizer.
 ​
-## References
-​
-### Learn More
-​
+## References​
+### Learn More​
 - [Flutter developer document](https://docs.flutter.dev/)
 - [android developer document](https://developer.android.com/docs)
-- [iOS/macOS developer document](https://developer.apple.com/documentation/)
-​
-### Citation
-​
+- [iOS/macOS developer document](https://developer.apple.com/documentation/)​
+### Citation​
 - None
