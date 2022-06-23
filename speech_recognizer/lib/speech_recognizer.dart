@@ -5,40 +5,51 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-enum AudioSpeechPermission { undetermined, authorized, denied, unknown }
+/// Audio permissions
+enum AudioSpeechPermission {
+  /// undetermined permission
+  undetermined,
 
+  /// user already grant permission
+  authorized,
+
+  // user denied permission
+  denied,
+
+  // unknown current permission
+  unknown
+}
+
+/// Speech event listener
 abstract class SpeechListener {
+  /// Called when speech is recognized from the microphone
+  /// [result] is the recognized text
   void onResult(Map result, bool wasEndPoint);
 }
 
-// initSpeech will setup the speech recognition system for the first time
-// -> by adding the microphone to the audio system. It does not start the speech recognition
-// The microphone is left on once it is turned on
-// This is called when the book is opened
-// The init is then ignored other times the book is opened
-// listen/stop listening is to start/stop the speech recognition
-// the mute/unmute is to pause the microphone, not the speech recognition
-// it’s for when the bot is speaking and saying different things.
-// There is also automatic muting when there is bot speaking
 class SpeechController {
   SpeechController._privateConstructor();
 
+  /// The singleton instance
   static SpeechController shared = SpeechController._privateConstructor();
 
   final methodChannel = const MethodChannel('com.bookbot/control');
   final eventChannel = const EventChannel('com.bookbot/event');
   final listeners = <SpeechListener>[];
 
+  /// Register listener for speech events while speaking
   void addListener(SpeechListener listener) {
     if (!listeners.contains(listener)) {
       listeners.add(listener);
     }
   }
 
+  /// Remove listener for speech events
   void removeListener(SpeechListener listener) {
     listeners.remove(listener);
   }
 
+  /// Detect current permission for speech recognition
   Future<AudioSpeechPermission> permissions() async {
     final audioPermission = await methodChannel.invokeMethod('audioPermission');
 
@@ -57,6 +68,7 @@ class SpeechController {
     return AudioSpeechPermission.unknown;
   }
 
+  /// Ask for microphone permission for speech recognition
   Future<void> authorize() async {
     try {
       final result = await methodChannel.invokeMethod('authorize');
@@ -66,6 +78,7 @@ class SpeechController {
     }
   }
 
+  /// Initialize speech recognition ML model
   Future<void> initSpeech(String language) async {
     await methodChannel.invokeMethod('initSpeech', [language]);
     eventChannel
@@ -82,30 +95,40 @@ class SpeechController {
     }
   }
 
+  /// On speech event error from native
   void _onEventError(Object error) {
     print('Speech error $error');
   }
 
+  /// Start speech recognition to listen microphone buffer
   Future<void> listen() async {
     await methodChannel.invokeMethod('listen');
   }
 
+  /// Stop speech recognition
   Future<void> stopListening() async {
     await methodChannel.invokeMethod('stopListening');
   }
 
+  /// Mute the micrphone
   Future<void> mute() async {
     await methodChannel.invokeMethod('mute');
   }
 
+  /// Unmute the micrphone
   Future<void> unmute() async {
     await methodChannel.invokeMethod('unmute');
   }
 
+  /// when flushSpeech is called, a string is passed containing the text of what we expect to hear from the user next
+  /// The [toRead] is distinct from [grammar] because the former should be used as the audio clip recording transcript, whereas the latter needs to be for the speech recognition model.
+  /// For example, if we expect the word "cat", then [toRead] is set to "cat" but [grammar] needs to be set to [cat, mat, sat] etc.
+  /// Otherwise, the recognizer will only ever return the word "cat", no matter what was said.
   Future<void> flushSpeech({String toRead = '', String grammar = ''}) async {
     await methodChannel.invokeMethod('flushSpeech', [toRead, grammar]);
   }
 
+  /// End speech recognition to release resources (just for android)
   Future<void> endSpeech() async {
     if (Platform.isAndroid) {
       await methodChannel.invokeMethod('endSpeech');
