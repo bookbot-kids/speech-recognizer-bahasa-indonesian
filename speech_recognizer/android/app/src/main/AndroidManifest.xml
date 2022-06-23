@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bookbot.speech_recognizer">
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
    <application
         android:label="speech_recognizer"
         android:icon="@mipmap/ic_launcher">
