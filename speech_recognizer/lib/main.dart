@@ -5,6 +5,7 @@ void main() {
   runApp(const MyApp());
 }
 
+/// The main application
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -21,18 +22,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// The home page of the application
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -43,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
   var _isInitialized = false;
   var _speechText = '';
 
+  /// listen to speech events and print result in UI
   @override
   void onResult(Map result, bool wasEndpoint) {
     List<List<String>> candidates = result.containsKey('partial')
@@ -59,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
     });
   }
 
+  /// Initialize the speech recognizer and start listening
   Future<void> _recognize() async {
     // ask for permission
     final permissions = await SpeechController.shared.permissions();
@@ -80,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
     await SpeechController.shared.listen();
   }
 
+  /// Stop the speech recognizer
   Future<void> _stopRecognize() async {
     if (_isInitialized) {
       await SpeechController.shared.stopListening();
