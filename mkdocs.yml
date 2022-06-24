@@ -22,6 +22,7 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
+    - content.code.annotate
 
 plugins:
   - search

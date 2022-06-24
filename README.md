@@ -42,19 +42,14 @@ Similarly on iOS/MacOS:
 - Speak into the microphone and the corresponding output text will be displayed in the text field.
 - Press `Stop listening` to stop the app from listening.
 
-<details>
-  <summary>Code</summary>
-
-```dart
+```dart title="main.dart"
 import 'package:speech_recognizer/speech_recognizer.dart';
 
-// setup listener by implements SpeechListener in your class
-class _MyHomePageState implements SpeechListener {
+class _MyHomePageState implements SpeechListener { // (1)
   final recognizer = SpeechController.shared;
 
   Future<void> _setup() async {
-    // ask for recording permission
-    final permissions = await recognizer.permissions();
+    final permissions = await recognizer.permissions(); // (2)
     if (permissions == AudioSpeechPermission.undetermined) {
       await recognizer.authorize();
     }
@@ -63,32 +58,32 @@ class _MyHomePageState implements SpeechListener {
       return;
     }
 
-    // initialize recognizer model with indonesian langauge
-    await recognizer.initSpeech('id');
-    // register listener in this class
-    recognizer.addListener(this);
-
-    // start to listen voice on microphone
-    recognizer.listen();
+    await recognizer.initSpeech('id'); // (3)
+    recognizer.addListener(this); // (4)
+    recognizer.listen(); // (5)
   }
 
-  /// This is the output text listener while speaking
   @override
-  void onResult(Map result, bool wasEndpoint) {
-    // normalized result
-    List<List<String>> candidates = result.containsKey('partial')
+  void onResult(Map result, bool wasEndpoint) { // (6)
+    List<List<String>> candidates = result.containsKey('partial') // (7)
         ? [result['partial'].trim().split(' ')]
         : result['alternatives']
             .map((x) => x['text'].trim().split(' ').cast<String>().toList())
             .toList()
             .cast<List<String>>();
-    // print recognized words
-    print(candidates);
+    print(candidates); // (8)
   }
 }
 ```
 
-</details>
+1. Setup listener by implements `SpeechListener` in your class.
+2. Ask for recording permission.
+3. Initialize Indonesian recognizer model.
+4. Register listener in this class.
+5. Start to listen voice on microphone.
+6. Output text listener while speaking.
+7. Normalized result.
+8. Print recognized words.
 
 <!-- TODO: add other platforms -->
 
