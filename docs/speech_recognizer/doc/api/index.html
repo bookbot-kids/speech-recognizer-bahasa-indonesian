@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="generator" content="made with love by dartdoc 5.1.0-dev">
+  <meta name="generator" content="made with love by dartdoc 5.1.2">
   <meta name="description" content="speech_recognizer API docs, for the Dart programming language.">
   <title>speech_recognizer - Dart API docs</title>
 
@@ -22,8 +22,7 @@
 </head>
 
 
-<body data-base-href=""
-      data-using-base-href="false">
+<body data-base-href="" data-using-base-href="false">
 
 <div id="overlay-under-drawer"></div>
 
@@ -47,50 +46,25 @@
   <h1 id="speech-recognizer">Speech Recognizer</h1>
 <p>An Indonesian speech recognizer Flutter app for Android/iOS/MacOS. It will read buffer from microphone and recognize speaking words.</p>
 <h2 id="installation--setup">Installation / Setup</h2>
-<p>​</p>
 <ul>
-<li>Install <a href="https://docs.flutter.dev/get-started/install">flutter sdk</a> base on each platform</li>
+<li>Install <a href="https://docs.flutter.dev/get-started/install">Flutter SDK</a>.</li>
 <li>Run <code>git lfs pull</code> command.</li>
-<li>Install (visual studio code)<code>https://code.visualstudio.com/</code></li>
-<li>Open project in visual studio code, navigate to <code>lib/main.dart</code></li>
-<li>Launch android emulator or ios simulator or connect to real device.</li>
-<li>Run the demo on Android/iOS/MacOS by menu Run -&gt; Start debugging in visual studio code.</li>
-<li>On android: Need to declare microphone permission in <code>AndroidManifest.xml</code>
-<pre class="language-dart"><code>  &lt;uses-feature android:name="android.hardware.microphone" android:required="false"/&gt;
-  &lt;uses-permission android:name="android.permission.RECORD_AUDIO"/&gt;
+<li>Install <a href="https://code.visualstudio.com/">Visual Studio Code</a>.</li>
+<li>Open the project in Visual Studio Code, navigate to <code>lib/main.dart</code>.</li>
+<li>Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.</li>
+<li>Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit <strong>Run</strong>, then <strong>Start Debugging</strong>.</li>
+</ul>
+<h3 id="android">Android</h3>
+<p>On Android, you will need to allow microphone permission in <code>AndroidManifest.xml</code> like so:</p>
+<pre class="language-xml"><code class="language-xml">&lt;uses-feature android:name="android.hardware.microphone" android:required="false"/&gt;
+&lt;uses-permission android:name="android.permission.RECORD_AUDIO"/&gt;
 </code></pre>
-</li>
-<li>On iOS/macOS: go to xcode -&gt; Info.plist -&gt; add microphone permission <code>nsmicrophoneusagedescription</code> like this <a href="https://stackoverflow.com/a/38498347/719212">https://stackoverflow.com/a/38498347/719212</a></li>
-</ul>
-<h2 id="project-structure">Project Structure</h2>
+<h3 id="ios">iOS</h3>
+<p>Similarly on iOS/MacOS:</p>
 <ul>
-<li>
-<p><a href="lib/speech_recognizer.dart"><code>lib/speech_recognizer.dart</code></a></p>
-<ul>
-<li>This is the interface API to communicate with native platform (android/iOS/Mac). There are many speech recognizer methods, check <a href="lib/main.dart"><code>lib/main.dart</code></a> to know how to use them.</li>
-</ul>
-</li>
-<li>
-<p><a href="android/models/src/main/assets/model-id-id/"><code>android/models/src/main/assets/model-id-id</code></a></p>
-<ul>
-<li>This is the speech model that shared for all platforms. Replace <code>model-id-id/graph</code> to change the model dictionary.</li>
-</ul>
-</li>
-<li>
-<p><a href="swift/SpeechController.swift"><code>swift/SpeechController.swift</code></a></p>
-<ul>
-<li>The native platform channel for speech recognizer on iOS/MacOS. It uses <a href="https://github.com/alphacep/vosk-api">Vosk</a> with custom model.</li>
-</ul>
-</li>
-<li>
-<p><a href="android/app/src/main/kotlin/com/bookbot/speech_recognizer/SpeechController.kt"><code>android/app/src/main/kotlin/com/bookbot/speech_recognizer/SpeechController.kt</code></a></p>
-<ul>
-<li>The native platform channel for speech recognizer on android. It uses <a href="https://github.com/alphacep/vosk-api">Vosk</a> with custom model.</li>
-</ul>
-</li>
-<li>
-<p>View <a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/tree/main/speech_recognizer/doc/api/index.html">full documentation</a></p>
-</li>
+<li>Open Xcode</li>
+<li>Navigate to <code>Info.plist</code></li>
+<li>Add microphone permission <code>NSMicrophoneUsageDescription</code>. You can follow this <a href="https://stackoverflow.com/a/38498347/719212">guide</a>.</li>
 </ul>
 </section>
 
@@ -155,7 +129,7 @@
 
 
 <script src="static-assets/highlight.pack.js?v1"></script>
-<script src="static-assets/script.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
 
 
 
