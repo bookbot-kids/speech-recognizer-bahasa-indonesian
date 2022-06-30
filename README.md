@@ -1,10 +1,16 @@
-# Speech Recognizer Bahasa Indonesia
+# Home
 
-A cross platform (Android/iOS/MacOS) Bahasa Indonesia speech recognizer library, written in Flutter. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
+## Children's Speech Recognizer Bahasa Indonesia
+
+A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
+
+!!! note
+
+    Since our built-in default model was trained on children's speech, it may perform poorly on adult's speech.
 
 ## Features
 
-- Indonesian speech-to-text through an automatic speech recognition (ASR) model.
+- Indonesian speech-to-text through an automatic speech recognition (ASR) model, trained on children's speech.
 - Train custom machine learning model with [model extractor](https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/tree/main/model_extractor).
 - Integrate speech-to-text model with mobile and desktop applications.
 

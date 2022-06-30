@@ -1,6 +1,6 @@
 # Speech Recognizer
 
-An Indonesian speech recognizer Flutter app for Android/iOS/MacOS. It will read buffer from microphone and recognize speaking words.
+An Indonesian children's speech recognizer Flutter app for Android/iOS/MacOS. It will read buffer from microphone and recognize speaking words.
 
 ## Installation / Setup
 
