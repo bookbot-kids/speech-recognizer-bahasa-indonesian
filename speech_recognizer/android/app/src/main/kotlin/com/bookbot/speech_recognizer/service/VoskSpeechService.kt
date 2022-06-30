@@ -142,7 +142,8 @@ class VoskSpeechService(private val context: Context, private val language:Strin
     private fun initModel() {
         ready = false
         Timber.e("Initializing model $language")
-        val outputPath = StorageService.sync(context, models[language], models[language])
+        val sourcePath =  models[language] ?: ""
+        val outputPath = StorageService.sync(context, sourcePath, sourcePath)
         model = Model(outputPath)
         Timber.e("Unpacked!")
         if(bufferAudio) {

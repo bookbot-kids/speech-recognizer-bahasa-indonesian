@@ -72,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
     }
 
     await SpeechController.shared.listen();
+    await SpeechController.shared.flushSpeech();
   }
 
   /// Stop the speech recognizer

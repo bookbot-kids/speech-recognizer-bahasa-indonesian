@@ -86,9 +86,13 @@ class SpeechController(context: Activity, private val lifecycle: Lifecycle): Flu
         eventChannel.setStreamHandler(null)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?): Boolean {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ): Boolean {
         if(requestCode == permissionRequestCode) {
-            grantResults?.let {
+            grantResults.let {
                 if(it[0] == PackageManager.PERMISSION_GRANTED) {
                     authorizeMethodResult?.success("authorized")
                 } else {
@@ -206,8 +210,6 @@ class SpeechController(context: Activity, private val lifecycle: Lifecycle): Flu
                 synchronized(lock) {
 
                     val asrLanguage = args[0] ?: ""
-                    val path: String = args[1] ?: ""
-
                     if(speechRecognitionService == null || asrLanguage != this.speechRecognitionLanguage) {
                         // If a profile ID is provided, we pass exposeAudio as true when creating the VoskSpeechService and pass its buffer to a MicrophoneRecorder instance
                         speechRecognitionService?.destroy()
