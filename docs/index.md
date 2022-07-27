@@ -2,6 +2,18 @@
 
 ## Children's Speech Recognizer Bahasa Indonesia
 
+<p align="center">
+    <a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/blob/main/LICENSE.md">
+        <img alt="GitHub" src="https://img.shields.io/github/license/bookbot-kids/speech-recognizer-bahasa-indonesian.svg?color=blue">
+    </a>
+    <a href="https://bookbot-kids.github.io/speech-recognizer-bahasa-indonesian/">
+        <img alt="Documentation" src="https://img.shields.io/website/http/bookbot-kids.github.io/speech-recognizer-bahasa-indonesian.svg?down_color=red&down_message=offline&up_message=online">
+    </a>
+    <a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/blob/main/CODE_OF_CONDUCT.md">
+        <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg">
+    </a>
+</p>
+
 A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
 
 !!! note
