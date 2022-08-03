@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -24,11 +10,10 @@
 #include <memory>
 #include <vector>
 
-#include <fst/types.h>
-
 #include <fst/dfs-visit.h>
 #include <fst/mutable-fst.h>
 #include <fst/union-find.h>
+
 
 namespace fst {
 
@@ -209,10 +194,10 @@ inline void SccVisitor<Arc>::InitVisit(const Fst<Arc> &fst) {
   start_ = fst.Start();
   nstates_ = 0;
   nscc_ = 0;
-  dfnumber_ = fst::make_unique<std::vector<StateId>>();
-  lowlink_ = fst::make_unique<std::vector<StateId>>();
-  onstack_ = fst::make_unique<std::vector<bool>>();
-  scc_stack_ = fst::make_unique<std::vector<StateId>>();
+  dfnumber_.reset(new std::vector<StateId>());
+  lowlink_.reset(new std::vector<StateId>());
+  onstack_.reset(new std::vector<bool>());
+  scc_stack_.reset(new std::vector<StateId>());
 }
 
 template <class Arc>

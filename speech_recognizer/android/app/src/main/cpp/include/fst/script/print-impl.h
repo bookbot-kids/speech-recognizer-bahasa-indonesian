@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -28,6 +14,8 @@
 #include <fst/fstlib.h>
 #include <fst/util.h>
 
+DECLARE_string(fst_field_separator);
+
 namespace fst {
 
 // Print a binary FST in textual format (helper class for fstprint.cc).
@@ -40,24 +28,23 @@ class FstPrinter {
   using Label = typename Arc::Label;
   using Weight = typename Arc::Weight;
 
-  explicit FstPrinter(const Fst<Arc> &fst, const SymbolTable *isyms,
-                      const SymbolTable *osyms, const SymbolTable *ssyms,
-                      bool accept, bool show_weight_one,
-                      const std::string &field_separator,
-                      const std::string &missing_symbol = "")
+  FstPrinter(const Fst<Arc> &fst, const SymbolTable *isyms,
+             const SymbolTable *osyms, const SymbolTable *ssyms, bool accep,
+             bool show_weight_one, const std::string &field_separator,
+             const std::string &missing_symbol = "")
       : fst_(fst),
         isyms_(isyms),
         osyms_(osyms),
         ssyms_(ssyms),
-        accept_(accept && (fst.Properties(kAcceptor, true) == kAcceptor)),
+        accep_(accep && fst.Properties(kAcceptor, true)),
         ostrm_(nullptr),
         show_weight_one_(show_weight_one),
         sep_(field_separator),
         missing_symbol_(missing_symbol) {}
 
   // Prints FST to an output stream.
-  void Print(std::ostream &ostrm, const std::string &dest) {
-    ostrm_ = &ostrm;
+  void Print(std::ostream *ostrm, const std::string &dest) {
+    ostrm_ = ostrm;
     dest_ = dest;
     const auto start = fst_.Start();
     if (start == kNoStateId) return;
@@ -105,7 +92,7 @@ class FstPrinter {
       PrintStateId(arc.nextstate);
       *ostrm_ << sep_;
       PrintILabel(arc.ilabel);
-      if (!accept_) {
+      if (!accep_) {
         *ostrm_ << sep_;
         PrintOLabel(arc.olabel);
       }
@@ -128,7 +115,7 @@ class FstPrinter {
   const SymbolTable *isyms_;    // ilabel symbol table.
   const SymbolTable *osyms_;    // olabel symbol table.
   const SymbolTable *ssyms_;    // slabel symbol table.
-  bool accept_;                 // Print as acceptor when possible?
+  bool accep_;                  // Print as acceptor when possible?
   std::ostream *ostrm_;         // Text FST destination.
   std::string dest_;            // Text FST destination name.
   bool show_weight_one_;        // Print weights equal to Weight::One()?

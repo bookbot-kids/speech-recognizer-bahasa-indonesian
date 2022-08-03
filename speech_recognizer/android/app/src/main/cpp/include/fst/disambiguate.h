@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -26,8 +12,6 @@
 #include <utility>
 #include <vector>
 
-#include <fst/types.h>
-
 #include <fst/arcsort.h>
 #include <fst/compose.h>
 #include <fst/connect.h>
@@ -39,6 +23,7 @@
 #include <fst/state-table.h>
 #include <fst/union-find.h>
 #include <fst/verify.h>
+
 
 namespace fst {
 
@@ -282,7 +267,7 @@ class Disambiguator {
       // Ensures composition is between acceptors.
       const bool trans = ifst.Properties(kNotAcceptor, true);
       const auto *fsa =
-          trans ? new ProjectFst<Arc>(ifst, ProjectType::INPUT) : &ifst;
+          trans ? new ProjectFst<Arc>(ifst, PROJECT_INPUT) : &ifst;
       opts.state_table = new StateTable(*fsa, *fsa);
       const ComposeFst<Arc> cfst(*fsa, *fsa, opts);
       std::vector<bool> coaccess;
@@ -408,8 +393,7 @@ void Disambiguator<Arc>::PreDisambiguate(const ExpandedFst<Arc> &ifst,
                                                    AnyArcFilter<Arc>(),
                                                    &odistance);
       Prune(dfst, ofst, popts);
-      } else */
-    {
+      } else */ {
       *ofst = DeterminizeFst<Arc>(ifst, nopts);
       Prune(ofst, opts.weight_threshold, opts.state_threshold);
     }
@@ -422,7 +406,7 @@ void Disambiguator<Arc>::PreDisambiguate(const ExpandedFst<Arc> &ifst,
 template <class Arc>
 void Disambiguator<Arc>::FindAmbiguities(const ExpandedFst<Arc> &fst) {
   if (fst.Start() == kNoStateId) return;
-  candidates_ = fst::make_unique<ArcIdMap>(ArcIdCompare(head_));
+  candidates_.reset(new ArcIdMap(ArcIdCompare(head_)));
   const auto start_pr = std::make_pair(fst.Start(), fst.Start());
   coreachable_.insert(start_pr);
   queue_.push_back(start_pr);
@@ -463,8 +447,7 @@ void Disambiguator<Arc>::FindAmbiguousPairs(const ExpandedFst<Arc> &fst,
           if (spr.first != spr.second &&
               head_[spr.first] == head_[spr.second]) {
             if (!merge_) {
-              merge_ = fst::make_unique<UnionFind<StateId>>(fst.NumStates(),
-                                                             kNoStateId);
+              merge_.reset(new UnionFind<StateId>(fst.NumStates(), kNoStateId));
               merge_->MakeAllSet(fst.NumStates());
             }
             merge_->Union(spr.first, spr.second);

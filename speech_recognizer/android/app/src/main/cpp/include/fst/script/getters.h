@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -23,7 +9,6 @@
 
 #include <string>
 
-#include <fst/types.h>
 #include <fst/log.h>
 #include <fst/compose.h>         // For ComposeFilter.
 #include <fst/determinize.h>     // For DeterminizeType.
@@ -33,7 +18,6 @@
 #include <fst/push.h>            // For kPushWeights (etc.).
 #include <fst/queue.h>           // For QueueType.
 #include <fst/rational.h>        // For ClosureType.
-#include <fst/string.h>          // For TokenType.
 #include <fst/script/arcsort.h>      // For ArcSortType.
 #include <fst/script/map.h>          // For MapType.
 #include <fst/script/script-impl.h>  // For RandArcSelection.
@@ -51,7 +35,7 @@ bool GetComposeFilter(const std::string &str, ComposeFilter *compose_filter);
 
 bool GetDeterminizeType(const std::string &str, DeterminizeType *det_type);
 
-inline uint8 GetEncodeFlags(bool encode_labels, bool encode_weights) {
+inline uint32 GetEncodeFlags(bool encode_labels, bool encode_weights) {
   return (encode_labels ? kEncodeLabels : 0) |
          (encode_weights ? kEncodeWeights : 0);
 }
@@ -62,11 +46,14 @@ inline EpsNormalizeType GetEpsNormalizeType(bool eps_norm_output) {
 
 bool GetMapType(const std::string &str, MapType *map_type);
 
-bool GetProjectType(const std::string &str, ProjectType *project_type);
+inline ProjectType GetProjectType(bool project_output) {
+  return project_output ? PROJECT_OUTPUT : PROJECT_INPUT;
+}
 
-inline uint8 GetPushFlags(bool push_weights, bool push_labels,
-                          bool remove_total_weight, bool remove_common_affix) {
-  return ((push_weights ? kPushWeights : 0) | (push_labels ? kPushLabels : 0) |
+inline uint32 GetPushFlags(bool push_weights, bool push_labels,
+                           bool remove_total_weight, bool remove_common_affix) {
+  return ((push_weights ? kPushWeights : 0) |
+          (push_labels ? kPushLabels : 0) |
           (remove_total_weight ? kPushRemoveTotalWeight : 0) |
           (remove_common_affix ? kPushRemoveCommonAffix : 0));
 }
@@ -81,8 +68,6 @@ bool GetReplaceLabelType(const std::string &str, bool epsilon_on_replace,
 inline ReweightType GetReweightType(bool to_final) {
   return to_final ? REWEIGHT_TO_FINAL : REWEIGHT_TO_INITIAL;
 }
-
-bool GetTokenType(const std::string &str, TokenType *token_type);
 
 }  // namespace script
 }  // namespace fst

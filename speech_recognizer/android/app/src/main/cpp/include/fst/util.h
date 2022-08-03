@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -20,7 +6,6 @@
 #ifndef FST_UTIL_H_
 #define FST_UTIL_H_
 
-#include <array>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -58,23 +43,23 @@ namespace fst {
 
 // Generic case.
 template <class T,
-          typename std::enable_if<std::is_class<T>::value, T>::type * = nullptr>
+    typename std::enable_if<std::is_class<T>::value, T>::type* = nullptr>
 inline std::istream &ReadType(std::istream &strm, T *t) {
   return t->Read(strm);
 }
 
 // Numeric (boolean, integral, floating-point) case.
-template <class T, typename std::enable_if<std::is_arithmetic<T>::value,
-                                           T>::type * = nullptr>
+template <class T,
+    typename std::enable_if<std::is_arithmetic<T>::value, T>::type* = nullptr>
 inline std::istream &ReadType(std::istream &strm, T *t) {
-  return strm.read(reinterpret_cast<char *>(t), sizeof(T));
+  return strm.read(reinterpret_cast<char *>(t), sizeof(T)); \
 }
 
 // String case.
-inline std::istream &ReadType(std::istream &strm, std::string *s) {
+inline std::istream &ReadType(std::istream &strm, std::string *s) {  // NOLINT
   s->clear();
   int32 ns = 0;
-  ReadType(strm, &ns);
+  strm.read(reinterpret_cast<char *>(&ns), sizeof(ns));
   for (int32 i = 0; i < ns; ++i) {
     char c;
     strm.read(&c, 1);
@@ -129,12 +114,6 @@ std::istream &ReadContainerType(std::istream &strm, C *c, ReserveFn reserve) {
 }
 }  // namespace internal
 
-template <class T, size_t N>
-std::istream &ReadType(std::istream &strm, std::array<T, N> *c) {
-  for (auto &v : *c) ReadType(strm, &v);
-  return strm;
-}
-
 template <class... T>
 std::istream &ReadType(std::istream &strm, std::vector<T...> *c) {
   return internal::ReadContainerType(
@@ -172,23 +151,24 @@ std::istream &ReadType(std::istream &strm, std::unordered_map<T...> *c) {
 
 // Generic case.
 template <class T,
-          typename std::enable_if<std::is_class<T>::value, T>::type * = nullptr>
+    typename std::enable_if<std::is_class<T>::value, T>::type* = nullptr>
 inline std::ostream &WriteType(std::ostream &strm, const T t) {
   t.Write(strm);
   return strm;
 }
 
 // Numeric (boolean, integral, floating-point) case.
-template <class T, typename std::enable_if<std::is_arithmetic<T>::value,
-                                           T>::type * = nullptr>
+template <class T,
+    typename std::enable_if<std::is_arithmetic<T>::value, T>::type* = nullptr>
 inline std::ostream &WriteType(std::ostream &strm, const T t) {
   return strm.write(reinterpret_cast<const char *>(&t), sizeof(T));
 }
 
 // String case.
-inline std::ostream &WriteType(std::ostream &strm, const std::string &s) {
+inline std::ostream &WriteType(std::ostream &strm,  // NOLINT
+                               const std::string &s) {
   int32 ns = s.size();
-  WriteType(strm, ns);
+  strm.write(reinterpret_cast<const char *>(&ns), sizeof(ns));
   return strm.write(s.data(), ns);
 }
 
@@ -196,26 +176,21 @@ inline std::ostream &WriteType(std::ostream &strm, const std::string &s) {
 
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::vector<T...> &c);
-
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::list<T...> &c);
-
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::set<T...> &c);
-
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::map<T...> &c);
-
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::unordered_map<T...> &c);
-
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::unordered_set<T...> &c);
 
 // Pair case.
 template <typename S, typename T>
 inline std::ostream &WriteType(std::ostream &strm,
-                               const std::pair<S, T> &p) {
+                               const std::pair<S, T> &p) {  // NOLINT
   WriteType(strm, p.first);
   WriteType(strm, p.second);
   return strm;
@@ -223,26 +198,15 @@ inline std::ostream &WriteType(std::ostream &strm,
 
 namespace internal {
 template <class C>
-std::ostream &WriteSequence(std::ostream &strm, const C &c) {
+std::ostream &WriteContainer(std::ostream &strm, const C &c) {
+  const int64 n = c.size();
+  WriteType(strm, n);
   for (const auto &e : c) {
     WriteType(strm, e);
   }
   return strm;
 }
-
-template <class C>
-std::ostream &WriteContainer(std::ostream &strm, const C &c) {
-  const int64 n = c.size();
-  WriteType(strm, n);
-  WriteSequence(strm, c);
-  return strm;
-}
 }  // namespace internal
-
-template <class T, size_t N>
-std::ostream &WriteType(std::ostream &strm, const std::array<T, N> &c) {
-  return internal::WriteSequence(strm, c);
-}
 
 template <typename... T>
 std::ostream &WriteType(std::ostream &strm, const std::vector<T...> &c) {
@@ -276,16 +240,17 @@ std::ostream &WriteType(std::ostream &strm, const std::unordered_set<T...> &c) {
 
 // Utilities for converting between int64 or Weight and string.
 
-int64 StrToInt64(const std::string &s, const std::string &source, size_t nline,
+int64 StrToInt64(const std::string &s, const std::string &src, size_t nline,
                  bool allow_negative, bool *error = nullptr);
 
 template <typename Weight>
-Weight StrToWeight(const std::string &s) {
+Weight StrToWeight(const std::string &s, const std::string &src, size_t nline) {
   Weight w;
   std::istringstream strm(s);
   strm >> w;
   if (!strm) {
-    FSTERROR() << "StrToWeight: Bad weight: " << s;
+    FSTERROR() << "StrToWeight: Bad weight = \"" << s << "\", source = " << src
+               << ", line = " << nline;
     return Weight::NoWeight();
   }
   return w;
@@ -299,19 +264,19 @@ void WeightToStr(Weight w, std::string *s) {
   s->append(strm.str().data(), strm.str().size());
 }
 
-// Utilities for reading/writing integer pairs (typically labels).
+// Utilities for reading/writing integer pairs (typically labels)
 
 // Modifies line using a vector of pointers to a buffer beginning with line.
 void SplitString(char *line, const char *delim, std::vector<char *> *vec,
                  bool omit_empty_strings);
 
 template <typename I>
-bool ReadIntPairs(const std::string &source,
+bool ReadIntPairs(const std::string &filename,
                   std::vector<std::pair<I, I>> *pairs,
                   bool allow_negative = false) {
-  std::ifstream strm(source, std::ios_base::in);
+  std::ifstream strm(filename, std::ios_base::in);
   if (!strm) {
-    LOG(ERROR) << "ReadIntPairs: Can't open file: " << source;
+    LOG(ERROR) << "ReadIntPairs: Can't open file: " << filename;
     return false;
   }
   const int kLineLen = 8096;
@@ -326,13 +291,13 @@ bool ReadIntPairs(const std::string &source,
     if (col.empty() || col[0][0] == '\0' || col[0][0] == '#') continue;
     if (col.size() != 2) {
       LOG(ERROR) << "ReadIntPairs: Bad number of columns, "
-                 << "file = " << source << ", line = " << nline;
+                 << "file = " << filename << ", line = " << nline;
       return false;
     }
     bool err;
-    I i1 = StrToInt64(col[0], source, nline, allow_negative, &err);
+    I i1 = StrToInt64(col[0], filename, nline, allow_negative, &err);
     if (err) return false;
-    I i2 = StrToInt64(col[1], source, nline, allow_negative, &err);
+    I i2 = StrToInt64(col[1], filename, nline, allow_negative, &err);
     if (err) return false;
     pairs->emplace_back(i1, i2);
   }
@@ -340,36 +305,41 @@ bool ReadIntPairs(const std::string &source,
 }
 
 template <typename I>
-bool WriteIntPairs(const std::string &source,
+bool WriteIntPairs(const std::string &filename,
                    const std::vector<std::pair<I, I>> &pairs) {
-  std::ofstream fstrm;
-  if (!source.empty()) {
-    fstrm.open(source);
-    if (!fstrm) {
-      LOG(ERROR) << "WriteIntPairs: Can't open file: " << source;
+  std::ostream *strm = &std::cout;
+  if (!filename.empty()) {
+    strm = new std::ofstream(filename);
+    if (!*strm) {
+      LOG(ERROR) << "WriteIntPairs: Can't open file: " << filename;
       return false;
     }
   }
-  std::ostream &ostrm = fstrm.is_open() ? fstrm : std::cout;
-  for (const auto &pair : pairs) {
-    ostrm << pair.first << "\t" << pair.second << "\n";
+  for (ssize_t n = 0; n < pairs.size(); ++n) {
+    *strm << pairs[n].first << "\t" << pairs[n].second << "\n";
   }
-  return !!ostrm;
+  if (!*strm) {
+    LOG(ERROR) << "WriteIntPairs: Write failed: "
+               << (filename.empty() ? "standard output" : filename);
+    return false;
+  }
+  if (strm != &std::cout) delete strm;
+  return true;
 }
 
 // Utilities for reading/writing label pairs.
 
 template <typename Label>
-bool ReadLabelPairs(const std::string &source,
+bool ReadLabelPairs(const std::string &filename,
                     std::vector<std::pair<Label, Label>> *pairs,
                     bool allow_negative = false) {
-  return ReadIntPairs(source, pairs, allow_negative);
+  return ReadIntPairs(filename, pairs, allow_negative);
 }
 
 template <typename Label>
-bool WriteLabelPairs(const std::string &source,
+bool WriteLabelPairs(const std::string &filename,
                      const std::vector<std::pair<Label, Label>> &pairs) {
-  return WriteIntPairs(source, pairs);
+  return WriteIntPairs(filename, pairs);
 }
 
 // Utilities for converting a type name to a legal C symbol.
@@ -393,7 +363,10 @@ class CompactSet {
 
   CompactSet() : min_key_(NoKey), max_key_(NoKey) {}
 
-  CompactSet(const CompactSet &) = default;
+  CompactSet(const CompactSet<Key, NoKey> &compact_set)
+      : set_(compact_set.set_),
+        min_key_(compact_set.min_key_),
+        max_key_(compact_set.max_key_) {}
 
   void Insert(Key key) {
     set_.insert(key);

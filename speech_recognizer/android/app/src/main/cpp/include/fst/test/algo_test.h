@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -20,12 +6,8 @@
 #ifndef FST_TEST_ALGO_TEST_H_
 #define FST_TEST_ALGO_TEST_H_
 
-#include <memory>
-#include <random>
-#include <utility>
-
-#include <fst/types.h>
 #include <fst/log.h>
+
 #include <fst/fstlib.h>
 #include <fst/test/rand-fst.h>
 
@@ -69,8 +51,8 @@ void LookAheadCompose(const Fst<Arc> &ifst1, const Fst<Arc> &ifst2,
 }
 
 // Specialized and epsilon olabel acyclic - lookahead.
-inline void LookAheadCompose(const Fst<StdArc> &ifst1, const Fst<StdArc> &ifst2,
-                             MutableFst<StdArc> *ofst) {
+void LookAheadCompose(const Fst<StdArc> &ifst1, const Fst<StdArc> &ifst2,
+                      MutableFst<StdArc> *ofst) {
   std::vector<StdArc::StateId> order;
   bool acyclic;
   TopOrderVisitor<StdArc> visitor(&order, &acyclic);
@@ -90,18 +72,17 @@ inline void LookAheadCompose(const Fst<StdArc> &ifst1, const Fst<StdArc> &ifst2,
 template <class Arc, class WeightGenerator>
 class WeightedTester {
  public:
-  using Label = typename Arc::Label;
-  using StateId = typename Arc::StateId;
-  using Weight = typename Arc::Weight;
+  typedef typename Arc::Label Label;
+  typedef typename Arc::StateId StateId;
+  typedef typename Arc::Weight Weight;
 
-  WeightedTester(uint64 seed, const Fst<Arc> &zero_fst, const Fst<Arc> &one_fst,
-                 const Fst<Arc> &univ_fst, WeightGenerator weight_generator)
+  WeightedTester(time_t seed, const Fst<Arc> &zero_fst, const Fst<Arc> &one_fst,
+                 const Fst<Arc> &univ_fst, WeightGenerator *weight_generator)
       : seed_(seed),
-        rand_(seed),
         zero_fst_(zero_fst),
         one_fst_(one_fst),
         univ_fst_(univ_fst),
-        generate_(std::move(weight_generator)) {}
+        weight_generator_(weight_generator) {}
 
   void Test(const Fst<Arc> &T1, const Fst<Arc> &T2, const Fst<Arc> &T3) {
     TestRational(T1, T2, T3);
@@ -336,8 +317,8 @@ class WeightedTester {
     {
       VLOG(1) << "Check destructive and delayed projection are equivalent.";
       VectorFst<Arc> P1(T);
-      Project(&P1, ProjectType::INPUT);
-      ProjectFst<Arc> P2(T, ProjectType::INPUT);
+      Project(&P1, PROJECT_INPUT);
+      ProjectFst<Arc> P2(T, PROJECT_INPUT);
       CHECK(Equiv(P1, P2));
     }
 
@@ -353,9 +334,9 @@ class WeightedTester {
       VLOG(1) << "Check Pi_1(T) = Pi_2(T^-1) (destructive).";
       VectorFst<Arc> P1(T);
       VectorFst<Arc> I1(T);
-      Project(&P1, ProjectType::INPUT);
+      Project(&P1, PROJECT_INPUT);
       Invert(&I1);
-      Project(&I1, ProjectType::OUTPUT);
+      Project(&I1, PROJECT_OUTPUT);
       CHECK(Equiv(P1, I1));
     }
 
@@ -363,25 +344,25 @@ class WeightedTester {
       VLOG(1) << "Check Pi_2(T) = Pi_1(T^-1) (destructive).";
       VectorFst<Arc> P1(T);
       VectorFst<Arc> I1(T);
-      Project(&P1, ProjectType::OUTPUT);
+      Project(&P1, PROJECT_OUTPUT);
       Invert(&I1);
-      Project(&I1, ProjectType::INPUT);
+      Project(&I1, PROJECT_INPUT);
       CHECK(Equiv(P1, I1));
     }
 
     {
       VLOG(1) << "Check Pi_1(T) = Pi_2(T^-1) (delayed).";
-      ProjectFst<Arc> P1(T, ProjectType::INPUT);
+      ProjectFst<Arc> P1(T, PROJECT_INPUT);
       InvertFst<Arc> I1(T);
-      ProjectFst<Arc> P2(I1, ProjectType::OUTPUT);
+      ProjectFst<Arc> P2(I1, PROJECT_OUTPUT);
       CHECK(Equiv(P1, P2));
     }
 
     {
       VLOG(1) << "Check Pi_2(T) = Pi_1(T^-1) (delayed).";
-      ProjectFst<Arc> P1(T, ProjectType::OUTPUT);
+      ProjectFst<Arc> P1(T, PROJECT_OUTPUT);
       InvertFst<Arc> I1(T);
-      ProjectFst<Arc> P2(I1, ProjectType::INPUT);
+      ProjectFst<Arc> P2(I1, PROJECT_INPUT);
       CHECK(Equiv(P1, P2));
     }
 
@@ -393,9 +374,7 @@ class WeightedTester {
       for (size_t i = 0; i < kNumLabels; ++i) labelset[i] = i;
       for (size_t i = 0; i < kNumLabels; ++i) {
         using std::swap;
-        const auto index =
-            std::uniform_int_distribution<>(0, kNumLabels - 1)(rand_);
-        swap(labelset[i], labelset[index]);
+        swap(labelset[i], labelset[rand() % kNumLabels]);
       }
 
       std::vector<std::pair<Label, Label>> ipairs1(kNumLabels);
@@ -426,13 +405,9 @@ class WeightedTester {
     {
       VLOG(1) << "Check encoding/decoding (destructive).";
       VectorFst<Arc> D(T);
-      uint8 encode_props = 0;
-      if (std::bernoulli_distribution(.5)(rand_)) {
-        encode_props |= kEncodeLabels;
-      }
-      if (std::bernoulli_distribution(.5)(rand_)) {
-        encode_props |= kEncodeWeights;
-      }
+      uint32 encode_props = 0;
+      if (rand() % 2) encode_props |= kEncodeLabels;
+      if (rand() % 2) encode_props |= kEncodeWeights;
       EncodeMapper<Arc> encoder(encode_props, ENCODE);
       Encode(&D, &encoder);
       Decode(&D, encoder);
@@ -441,13 +416,9 @@ class WeightedTester {
 
     {
       VLOG(1) << "Check encoding/decoding (delayed).";
-      uint8 encode_props = 0;
-      if (std::bernoulli_distribution(.5)(rand_)) {
-        encode_props |= kEncodeLabels;
-      }
-      if (std::bernoulli_distribution(.5)(rand_)) {
-        encode_props |= kEncodeWeights;
-      }
+      uint32 encode_props = 0;
+      if (rand() % 2) encode_props |= kEncodeLabels;
+      if (rand() % 2) encode_props |= kEncodeWeights;
       EncodeMapper<Arc> encoder(encode_props, ENCODE);
       EncodeFst<Arc> E(T, &encoder);
       VectorFst<Arc> Encoded(E);
@@ -468,8 +439,10 @@ class WeightedTester {
 
     {
       VLOG(1) << "Check gallic mappers (delayed).";
-      auto G = MakeArcMapFst(T, ToGallicMapper<Arc>());
-      auto F = MakeArcMapFst(G, FromGallicMapper<Arc>());
+      ToGallicMapper<Arc> to_mapper;
+      FromGallicMapper<Arc> from_mapper;
+      ArcMapFst<Arc, GallicArc<Arc>, ToGallicMapper<Arc>> G(T, to_mapper);
+      ArcMapFst<GallicArc<Arc>, Arc, FromGallicMapper<Arc>> F(G, from_mapper);
       CHECK(Equiv(T, F));
     }
   }
@@ -526,9 +499,9 @@ class WeightedTester {
     VectorFst<Arc> A1(S1);
     VectorFst<Arc> A2(S2);
     VectorFst<Arc> A3(S3);
-    Project(&A1, ProjectType::OUTPUT);
-    Project(&A2, ProjectType::INPUT);
-    Project(&A3, ProjectType::INPUT);
+    Project(&A1, PROJECT_OUTPUT);
+    Project(&A2, PROJECT_INPUT);
+    Project(&A3, PROJECT_INPUT);
 
     {
       VLOG(1) << "Check intersection is commutative.";
@@ -539,7 +512,7 @@ class WeightedTester {
 
     {
       VLOG(1) << "Check all epsilon filters leads to equivalent results.";
-      using M = Matcher<Fst<Arc>>;
+      typedef Matcher<Fst<Arc>> M;
       ComposeFst<Arc> C1(S1, S2);
       ComposeFst<Arc> C2(
           S1, S2, ComposeFstOptions<Arc, M, AltSequenceComposeFilter<M>>());
@@ -634,7 +607,7 @@ class WeightedTester {
     uint64 wprops = Weight::Properties();
 
     VectorFst<Arc> A(T);
-    Project(&A, ProjectType::INPUT);
+    Project(&A, PROJECT_INPUT);
     {
       VLOG(1) << "Check connected FST is equivalent to its input.";
       VectorFst<Arc> C1(T);
@@ -698,7 +671,7 @@ class WeightedTester {
       if ((wprops & (kPath | kCommutative)) == (kPath | kCommutative)) {
         VLOG(1) << "Check pruning in determinization";
         VectorFst<Arc> P;
-        const Weight threshold = generate_();
+        Weight threshold = (*weight_generator_)();
         DeterminizeOptions<Arc> opts;
         opts.weight_threshold = threshold;
         Determinize(A, &P, opts);
@@ -769,7 +742,7 @@ class WeightedTester {
       if ((wprops & (kPath | kCommutative)) == (kPath | kCommutative)) {
         VLOG(1)  << "Check pruning in disambiguation";
         VectorFst<Arc> P;
-        const Weight threshold = generate_();
+        Weight threshold = (*weight_generator_)();
         DisambiguateOptions<Arc> opts;
         opts.weight_threshold = threshold;
         Disambiguate(R, &P, opts);
@@ -784,9 +757,8 @@ class WeightedTester {
       std::vector<Weight> potential;
       VectorFst<Arc> RI(T);
       VectorFst<Arc> RF(T);
-      while (potential.size() < RI.NumStates()) {
-        potential.push_back(generate_());
-      }
+      while (potential.size() < RI.NumStates())
+        potential.push_back((*weight_generator_)());
 
       Reweight(&RI, potential, REWEIGHT_TO_INITIAL);
       CHECK(Equiv(T, RI));
@@ -831,30 +803,30 @@ class WeightedTester {
       VLOG(1) << "Check pruning algorithm";
       {
         VLOG(1) << "Check equiv. of constructive and destructive algorithms";
-        const Weight threshold = generate_();
+        Weight thresold = (*weight_generator_)();
         VectorFst<Arc> P1(T);
-        Prune(&P1, threshold);
+        Prune(&P1, thresold);
         VectorFst<Arc> P2;
-        Prune(T, &P2, threshold);
+        Prune(T, &P2, thresold);
         CHECK(Equiv(P1, P2));
       }
 
       {
         VLOG(1) << "Check prune(reverse) equiv reverse(prune)";
-        const Weight threshold = generate_();
+        Weight thresold = (*weight_generator_)();
         VectorFst<ReverseArc<Arc>> R;
         VectorFst<Arc> P1(T);
         VectorFst<Arc> P2;
-        Prune(&P1, threshold);
+        Prune(&P1, thresold);
         Reverse(T, &R);
-        Prune(&R, threshold.Reverse());
+        Prune(&R, thresold.Reverse());
         Reverse(R, &P2);
         CHECK(Equiv(P1, P2));
       }
       {
         VLOG(1) << "Check: ShortestDistance(A - prune(A))"
                 << " > ShortestDistance(A) times Threshold";
-        const Weight threshold = generate_();
+        Weight threshold = (*weight_generator_)();
         VectorFst<Arc> P;
         Prune(A, &P, threshold);
         CHECK(PruneEquiv(A, P, threshold));
@@ -872,7 +844,7 @@ class WeightedTester {
     uint64 wprops = Weight::Properties();
 
     VectorFst<Arc> A(T);
-    Project(&A, ProjectType::INPUT);
+    Project(&A, PROJECT_INPUT);
 
     if ((wprops & (kPath | kRightSemiring)) == (kPath | kRightSemiring)) {
       VLOG(1) << "Check 1-best weight.";
@@ -886,12 +858,12 @@ class WeightedTester {
     if ((wprops & (kPath | kSemiring)) == (kPath | kSemiring)) {
       VLOG(1) << "Check n-best weights";
       VectorFst<Arc> R(A);
-      RmEpsilon(&R, /*connect=*/true, Arc::Weight::Zero(), kNoStateId, kDelta);
-      const int nshortest = std::uniform_int_distribution<>(
-          0, kNumRandomShortestPaths + 1)(rand_);
+      RmEpsilon(&R, /*connect=*/ true, Arc::Weight::Zero(), kNoStateId,
+                kDelta);
+      int nshortest = rand() % kNumRandomShortestPaths + 2;
       VectorFst<Arc> paths;
-      ShortestPath(R, &paths, nshortest, /*unique=*/true,
-                   /*first_path=*/false, Weight::Zero(), kNumShortestStates,
+      ShortestPath(R, &paths, nshortest, /*unique=*/ true,
+                   /*first_path=*/ false, Weight::Zero(), kNumShortestStates,
                    kDelta);
       std::vector<Weight> distance;
       ShortestDistance(paths, &distance, true, kDelta);
@@ -926,13 +898,13 @@ class WeightedTester {
     CHECK(Verify(fst2));
 
     // Ensures seed used once per instantiation.
-    static const UniformArcSelector<A> uniform_selector(seed_);
-    const RandGenOptions<UniformArcSelector<A>> opts(uniform_selector,
-                                                     kRandomPathLength);
-    return RandEquivalent(fst1, fst2, kNumRandomPaths, opts, kTestDelta, seed_);
+    static UniformArcSelector<A> uniform_selector(seed_);
+    RandGenOptions<UniformArcSelector<A>> opts(uniform_selector,
+                                               kRandomPathLength);
+    return RandEquivalent(fst1, fst2, kNumRandomPaths, kTestDelta, opts);
   }
 
-  // Tests FSA is unambiguous.
+  // Tests FSA is unambiguous
   bool Unambiguous(const Fst<Arc> &fst) {
     VectorFst<StdArc> sfst, dfst;
     VectorFst<LogArc> lfst1, lfst2;
@@ -950,17 +922,17 @@ class WeightedTester {
   bool MinRelated(const Fst<A> &fst1, const Fst<A> &fst2) {
     // Same domain
     VectorFst<Arc> P1(fst1), P2(fst2);
-    Project(&P1, ProjectType::INPUT);
-    Project(&P2, ProjectType::INPUT);
+    Project(&P1, PROJECT_INPUT);
+    Project(&P2, PROJECT_INPUT);
     if (!Equiv(P1, P2)) {
       LOG(ERROR) << "Inputs not equivalent";
       return false;
     }
 
     // Ensures seed used once per instantiation.
-    static const UniformArcSelector<A> uniform_selector(seed_);
-    const RandGenOptions<UniformArcSelector<A>> opts(uniform_selector,
-                                                     kRandomPathLength);
+    static UniformArcSelector<A> uniform_selector(seed_);
+    RandGenOptions<UniformArcSelector<A>> opts(uniform_selector,
+                                               kRandomPathLength);
 
     VectorFst<Arc> path, paths1, paths2;
     for (ssize_t n = 0; n < kNumRandomPaths; ++n) {
@@ -979,7 +951,8 @@ class WeightedTester {
     return true;
   }
 
-  // Tests ShortestDistance(A - P) >= ShortestDistance(A) times Threshold.
+  // Tests ShortestDistance(A - P) >=
+  // ShortestDistance(A) times Threshold.
   template <class A>
   bool PruneEquiv(const Fst<A> &fst, const Fst<A> &pfst, Weight threshold) {
     VLOG(1) << "Check FSTs for sanity (including property bits).";
@@ -987,16 +960,15 @@ class WeightedTester {
     CHECK(Verify(pfst));
 
     DifferenceFst<Arc> D(fst, DeterminizeFst<Arc>(RmEpsilonFst<Arc>(
-                                  MakeArcMapFst(pfst, RmWeightMapper<Arc>()))));
-    const Weight sum1 = Times(ShortestDistance(fst), threshold);
-    const Weight sum2 = ShortestDistance(D);
+                                  ArcMapFst<Arc, Arc, RmWeightMapper<Arc>>(
+                                      pfst, RmWeightMapper<Arc>()))));
+    Weight sum1 = Times(ShortestDistance(fst), threshold);
+    Weight sum2 = ShortestDistance(D);
     return ApproxEqual(Plus(sum1, sum2), sum1, kTestDelta);
   }
 
   // Random seed.
-  uint64 seed_;
-  // Random state (for randomness in this class).
-  std::mt19937_64 rand_;
+  int seed_;
   // FST with no states
   VectorFst<Arc> zero_fst_;
   // FST with one state that accepts epsilon.
@@ -1004,7 +976,7 @@ class WeightedTester {
   // FST with one state that accepts all strings.
   VectorFst<Arc> univ_fst_;
   // Generates weights used in testing.
-  WeightGenerator generate_;
+  WeightGenerator *weight_generator_;
   // Maximum random path length.
   static const int kRandomPathLength;
   // Number of random paths to explore.
@@ -1042,7 +1014,7 @@ template <class Arc>
 class UnweightedTester {
  public:
   UnweightedTester(const Fst<Arc> &zero_fsa, const Fst<Arc> &one_fsa,
-                   const Fst<Arc> &univ_fsa, uint64 seed) {}
+                   const Fst<Arc> &univ_fsa) {}
 
   void Test(const Fst<Arc> &A1, const Fst<Arc> &A2, const Fst<Arc> &A3) {}
 };
@@ -1053,17 +1025,14 @@ class UnweightedTester {
 template <>
 class UnweightedTester<StdArc> {
  public:
-  using Arc = StdArc;
-  using Label = Arc::Label;
-  using StateId = Arc::StateId;
-  using Weight = Arc::Weight;
+  typedef StdArc Arc;
+  typedef Arc::Label Label;
+  typedef Arc::StateId StateId;
+  typedef Arc::Weight Weight;
 
   UnweightedTester(const Fst<Arc> &zero_fsa, const Fst<Arc> &one_fsa,
-                   const Fst<Arc> &univ_fsa, uint64 seed)
-      : zero_fsa_(zero_fsa),
-        one_fsa_(one_fsa),
-        univ_fsa_(univ_fsa),
-        rand_(seed) {}
+                   const Fst<Arc> &univ_fsa)
+      : zero_fsa_(zero_fsa), one_fsa_(one_fsa), univ_fsa_(univ_fsa) {}
 
   void Test(const Fst<Arc> &A1, const Fst<Arc> &A2, const Fst<Arc> &A3) {
     TestRational(A1, A2, A3);
@@ -1072,7 +1041,7 @@ class UnweightedTester<StdArc> {
   }
 
  private:
-  // Tests rational operations with identities.
+  // Tests rational operations with identities
   void TestRational(const Fst<Arc> &A1, const Fst<Arc> &A2,
                     const Fst<Arc> &A3) {
     {
@@ -1095,7 +1064,7 @@ class UnweightedTester<StdArc> {
     {
       VLOG(1) << "Check if A^n c A* (destructive).";
       VectorFst<Arc> C(one_fsa_);
-      const int n = std::uniform_int_distribution<>(0, 4)(rand_);
+      int n = rand() % 5;
       for (int i = 0; i < n; ++i) Concat(&C, A1);
 
       VectorFst<Arc> S(A1);
@@ -1105,7 +1074,7 @@ class UnweightedTester<StdArc> {
 
     {
       VLOG(1) << "Check if A^n c A* (delayed).";
-      const int n = std::uniform_int_distribution<>(0, 4)(rand_);
+      int n = rand() % 5;
       Fst<Arc> *C = new VectorFst<Arc>(one_fsa_);
       for (int i = 0; i < n; ++i) {
         ConcatFst<Arc> *F = new ConcatFst<Arc>(*C, A1);
@@ -1191,7 +1160,7 @@ class UnweightedTester<StdArc> {
     }
   }
 
-  // Tests optimization operations.
+  // Tests optimization operations
   void TestOptimize(const Fst<Arc> &A) {
     {
       VLOG(1) << "Check determinized FSA is equivalent to its input.";
@@ -1220,7 +1189,7 @@ class UnweightedTester<StdArc> {
         n = M.NumStates();
       }
 
-      if (n) {  // Skips test if A is the empty machine.
+      if (n) {  // Skip test if A is the empty machine
         VLOG(1) << "Check that Hopcroft's and Revuz's algorithms lead to the"
                 << " same number of states as Brozozowski's algorithm";
         VectorFst<Arc> R;
@@ -1232,7 +1201,7 @@ class UnweightedTester<StdArc> {
         DeterminizeFst<Arc> DRD(RD);
         VectorFst<Arc> M(DRD);
         CHECK_EQ(n + 1, M.NumStates());  // Accounts for the epsilon transition
-                                         // to the initial state.
+                                         // to the initial state
       }
     }
   }
@@ -1268,7 +1237,7 @@ class UnweightedTester<StdArc> {
     Connect(&ufsa);
     bool equiv2 = ufsa.NumStates() == 0;
 
-    // Checks both equivalence tests match.
+    // Check two equivalence tests match
     CHECK((equiv1 && equiv2) || (!equiv1 && !equiv2));
 
     return equiv1;
@@ -1293,7 +1262,7 @@ class UnweightedTester<StdArc> {
     return Equivalent(dfa1, dfa2);
   }
 
-  // Returns complement FSA.
+  // Returns complement Fsa
   void Complement(const Fst<Arc> &ifsa, MutableFst<Arc> *ofsa) {
     RmEpsilonFst<Arc> rfsa(ifsa);
     DeterminizeFst<Arc> dfa(rfsa);
@@ -1301,14 +1270,14 @@ class UnweightedTester<StdArc> {
     *ofsa = cfsa;
   }
 
-  // FSA with no states.
+  // FSA with no states
   VectorFst<Arc> zero_fsa_;
+
   // FSA with one state that accepts epsilon.
   VectorFst<Arc> one_fsa_;
+
   // FSA with one state that accepts all strings.
   VectorFst<Arc> univ_fsa_;
-  // Random state.
-  std::mt19937_64 rand_;
 };
 
 // This class tests a variety of identities and properties that must
@@ -1318,32 +1287,38 @@ class UnweightedTester<StdArc> {
 template <class Arc, class WeightGenerator>
 class AlgoTester {
  public:
-  using Label = typename Arc::Label;
-  using StateId = typename Arc::StateId;
-  using Weight = typename Arc::Weight;
+  typedef typename Arc::Label Label;
+  typedef typename Arc::StateId StateId;
+  typedef typename Arc::Weight Weight;
 
-  AlgoTester(WeightGenerator generator, uint64 seed)
-      : generate_(std::move(generator)), rand_(seed) {
+  AlgoTester(WeightGenerator generator, int seed)
+      : weight_generator_(generator) {
     one_fst_.AddState();
     one_fst_.SetStart(0);
-    one_fst_.SetFinal(0);
+    one_fst_.SetFinal(0, Weight::One());
 
     univ_fst_.AddState();
     univ_fst_.SetStart(0);
-    univ_fst_.SetFinal(0);
-    for (int i = 0; i < kNumRandomLabels; ++i) univ_fst_.EmplaceArc(0, i, i, 0);
+    univ_fst_.SetFinal(0, Weight::One());
+    for (int i = 0; i < kNumRandomLabels; ++i)
+      univ_fst_.AddArc(0, Arc(i, i, Weight::One(), 0));
 
-    weighted_tester_.reset(new WeightedTester<Arc, WeightGenerator>(
-        seed, zero_fst_, one_fst_, univ_fst_, generate_));
+    weighted_tester_ = new WeightedTester<Arc, WeightGenerator>(
+        seed, zero_fst_, one_fst_, univ_fst_, &weight_generator_);
 
-    unweighted_tester_.reset(
-        new UnweightedTester<Arc>(zero_fst_, one_fst_, univ_fst_, seed));
+    unweighted_tester_ =
+        new UnweightedTester<Arc>(zero_fst_, one_fst_, univ_fst_);
+  }
+
+  ~AlgoTester() {
+    delete weighted_tester_;
+    delete unweighted_tester_;
   }
 
   void MakeRandFst(MutableFst<Arc> *fst) {
     RandFst<Arc, WeightGenerator>(kNumRandomStates, kNumRandomArcs,
-                                  kNumRandomLabels, kAcyclicProb, generate_,
-                                  rand_(), fst);
+                                  kNumRandomLabels, kAcyclicProb,
+                                  &weight_generator_, fst);
   }
 
   void Test() {
@@ -1362,9 +1337,9 @@ class AlgoTester {
       VectorFst<Arc> A1(T1);
       VectorFst<Arc> A2(T2);
       VectorFst<Arc> A3(T3);
-      Project(&A1, ProjectType::OUTPUT);
-      Project(&A2, ProjectType::INPUT);
-      Project(&A3, ProjectType::INPUT);
+      Project(&A1, PROJECT_OUTPUT);
+      Project(&A2, PROJECT_INPUT);
+      Project(&A3, PROJECT_INPUT);
       ArcMap(&A1, rm_weight_mapper_);
       ArcMap(&A2, rm_weight_mapper_);
       ArcMap(&A3, rm_weight_mapper_);
@@ -1374,31 +1349,41 @@ class AlgoTester {
 
  private:
   // Generates weights used in testing.
-  WeightGenerator generate_;
-  // Random state used to seed RandFst.
-  std::mt19937_64 rand_;
+  WeightGenerator weight_generator_;
+
   // FST with no states
   VectorFst<Arc> zero_fst_;
+
   // FST with one state that accepts epsilon.
   VectorFst<Arc> one_fst_;
+
   // FST with one state that accepts all strings.
   VectorFst<Arc> univ_fst_;
+
   // Tests weighted FSTs
-  std::unique_ptr<WeightedTester<Arc, WeightGenerator>> weighted_tester_;
+  WeightedTester<Arc, WeightGenerator> *weighted_tester_;
+
   // Tests unweighted FSTs
-  std::unique_ptr<UnweightedTester<Arc>> unweighted_tester_;
+  UnweightedTester<Arc> *unweighted_tester_;
+
   // Mapper to remove weights from an Fst
   RmWeightMapper<Arc> rm_weight_mapper_;
+
   // Maximum number of states in random test Fst.
   static const int kNumRandomStates;
+
   // Maximum number of arcs in random test Fst.
   static const int kNumRandomArcs;
+
   // Number of alternative random labels.
   static const int kNumRandomLabels;
+
   // Probability to force an acyclic Fst
   static const float kAcyclicProb;
+
   // Maximum random path length.
   static const int kRandomPathLength;
+
   // Number of random paths to explore.
   static const int kNumRandomPaths;
 

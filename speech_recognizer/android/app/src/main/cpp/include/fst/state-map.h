@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -23,16 +9,15 @@
 #define FST_STATE_MAP_H_
 
 #include <algorithm>
-#include <memory>
 #include <string>
 #include <utility>
 
-#include <fst/types.h>
 #include <fst/log.h>
 
 #include <fst/arc-map.h>
 #include <fst/cache.h>
 #include <fst/mutable-fst.h>
+
 
 namespace fst {
 
@@ -41,31 +26,31 @@ namespace fst {
 //
 // class StateMapper {
 //  public:
-//   using FromArc = ...;
-//   using ToArc = ...;
+//   using FromArc = A;
+//   using ToArc = B;
 //
 //   // Typical constructor.
-//   StateMapper(const Fst<FromArc> &fst);
+//   StateMapper(const Fst<A> &fst);
 //
 //   // Required copy constructor that allows updating FST argument;
 //   // pass only if relevant and changed.
-//   StateMapper(const StateMapper &mapper, const Fst<FromArc> *fst = 0);
+//   StateMapper(const StateMapper &mapper, const Fst<A> *fst = 0);
 //
 //   // Specifies initial state of result.
-//   ToArc::StateId Start() const;
+//   B::StateId Start() const;
 //   // Specifies state's final weight in result.
-//   ToArc::Weight Final(ToArc::StateId state) const;
+//   B::Weight Final(B::StateId state) const;
 //
 //   // These methods iterate through a state's arcs in result.
 //
 //   // Specifies state to iterate over.
-//   void SetState(ToArc::StateId state);
+//   void SetState(B::StateId state);
 //
 //   // End of arcs?
 //   bool Done() const;
 //
 //   // Current arc.
-//   const ToArc &Value() const;
+//   const B &Value() const;
 //
 //   // Advances to next arc (when !Done)
 //   void Next();
@@ -177,8 +162,8 @@ class StateMapStateIteratorBase : public StateIteratorBase<B> {
   using Arc = B;
   using StateId = typename Arc::StateId;
 
-  explicit StateMapStateIteratorBase(std::unique_ptr<StateIteratorBase<A>> base)
-      : base_(std::move(base)) {}
+  explicit StateMapStateIteratorBase(StateIteratorBase<A> *base)
+      : base_(base) {}
 
   bool Done() const final { return base_->Done(); }
 
@@ -276,9 +261,8 @@ class StateMapFstImpl : public CacheImpl<B> {
   void InitStateIterator(StateIteratorData<B> *datb) const {
     StateIteratorData<A> data;
     fst_->InitStateIterator(&data);
-    datb->base = data.base ? fst::make_unique<StateMapStateIteratorBase<A, B>>(
-                                 std::move(data.base))
-                           : nullptr;
+    datb->base = data.base ? new StateMapStateIteratorBase<A, B>(data.base)
+        : nullptr;
     datb->nstates = data.nstates;
   }
 
@@ -361,12 +345,12 @@ class StateMapFst : public ImplToFst<internal::StateMapFstImpl<A, B, C>> {
             std::make_shared<Impl>(fst, mapper, StateMapFstOptions())) {}
 
   // See Fst<>::Copy() for doc.
-  StateMapFst(const StateMapFst &fst, bool safe = false)
+  StateMapFst(const StateMapFst<A, B, C> &fst, bool safe = false)
       : ImplToFst<Impl>(fst, safe) {}
 
   // Get a copy of this StateMapFst. See Fst<>::Copy() for further doc.
-  StateMapFst *Copy(bool safe = false) const override {
-    return new StateMapFst(*this, safe);
+  StateMapFst<A, B, C> *Copy(bool safe = false) const override {
+    return new StateMapFst<A, B, C>(*this, safe);
   }
 
   void InitStateIterator(StateIteratorData<B> *data) const override {
@@ -422,7 +406,7 @@ class IdentityStateMapper {
   Weight Final(StateId state) const { return fst_.Final(state); }
 
   void SetState(StateId state) {
-    aiter_ = fst::make_unique<ArcIterator<Fst<Arc>>>(fst_, state);
+    aiter_.reset(new ArcIterator<Fst<Arc>>(fst_, state));
   }
 
   bool Done() const { return aiter_->Done(); }

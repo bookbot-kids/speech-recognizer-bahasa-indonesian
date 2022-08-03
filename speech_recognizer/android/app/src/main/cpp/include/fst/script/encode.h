@@ -1,23 +1,11 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 
 #ifndef FST_SCRIPT_ENCODE_H_
 #define FST_SCRIPT_ENCODE_H_
 
+#include <memory>
+#include <string>
 #include <tuple>
 #include <utility>
 
@@ -28,16 +16,35 @@
 namespace fst {
 namespace script {
 
-using EncodeArgs = std::tuple<MutableFstClass *, EncodeMapperClass *>;
+using EncodeArgs1 =
+    std::tuple<MutableFstClass *, uint32, bool, const std::string &>;
 
 template <class Arc>
-void Encode(EncodeArgs *args) {
+void Encode(EncodeArgs1 *args) {
   MutableFst<Arc> *fst = std::get<0>(*args)->GetMutableFst<Arc>();
-  EncodeMapper<Arc> *mapper = std::get<1>(*args)->GetEncodeMapper<Arc>();
-  Encode(fst, mapper);
+  const std::string &coder_fname = std::get<3>(*args);
+  // If true, reuse encode from disk. If false, make a new encoder and just use
+  // the filename argument as the destination state.
+  std::unique_ptr<EncodeMapper<Arc>> encoder(
+      std::get<2>(*args) ? EncodeMapper<Arc>::Read(coder_fname, ENCODE)
+                         : new EncodeMapper<Arc>(std::get<1>(*args), ENCODE));
+  Encode(fst, encoder.get());
+  if (!std::get<2>(*args)) encoder->Write(coder_fname);
 }
 
-void Encode(MutableFstClass *fst, EncodeMapperClass *mapper);
+using EncodeArgs2 = std::pair<MutableFstClass *, EncodeMapperClass *>;
+
+template <class Arc>
+void Encode(EncodeArgs2 *args) {
+  MutableFst<Arc> *fst = std::get<0>(*args)->GetMutableFst<Arc>();
+  EncodeMapper<Arc> *encoder = std::get<1>(*args)->GetEncodeMapper<Arc>();
+  Encode(fst, encoder);
+}
+
+void Encode(MutableFstClass *fst, uint32 flags, bool reuse_encoder,
+            const std::string &coder_fname);
+
+void Encode(MutableFstClass *fst, EncodeMapperClass *encoder);
 
 }  // namespace script
 }  // namespace fst

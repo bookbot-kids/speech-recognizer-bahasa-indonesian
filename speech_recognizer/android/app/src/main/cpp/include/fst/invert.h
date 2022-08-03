@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -19,8 +5,6 @@
 
 #ifndef FST_INVERT_H_
 #define FST_INVERT_H_
-
-#include <fst/types.h>
 
 #include <fst/arc-map.h>
 #include <fst/mutable-fst.h>
@@ -40,7 +24,9 @@ struct InvertMapper {
     return ToArc(arc.olabel, arc.ilabel, arc.weight, arc.nextstate);
   }
 
-  constexpr MapFinalAction FinalAction() const { return MAP_NO_SUPERFINAL; }
+  constexpr MapFinalAction FinalAction() const {
+     return MAP_NO_SUPERFINAL;
+  }
 
   constexpr MapSymbolsAction InputSymbolsAction() const {
     return MAP_CLEAR_SYMBOLS;
@@ -50,7 +36,9 @@ struct InvertMapper {
     return MAP_CLEAR_SYMBOLS;
   }
 
-  uint64 Properties(uint64 props) const { return InvertProperties(props); }
+  uint64 Properties(uint64 props) const {
+    return InvertProperties(props);
+  }
 };
 
 // Inverts the transduction corresponding to an FST by exchanging the
@@ -111,11 +99,11 @@ class InvertFst : public ArcMapFst<A, A, InvertMapper<A>> {
   }
 
   // See Fst<>::Copy() for doc.
-  InvertFst(const InvertFst &fst, bool safe = false)
+  InvertFst(const InvertFst<Arc> &fst, bool safe = false)
       : ArcMapFst<Arc, Arc, Mapper>(fst, safe) {}
 
   // Get a copy of this InvertFst. See Fst<>::Copy() for further doc.
-  InvertFst *Copy(bool safe = false) const override {
+  InvertFst<Arc> *Copy(bool safe = false) const override {
     return new InvertFst(*this, safe);
   }
 

@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -21,9 +7,6 @@
 #ifndef FST_RANDEQUIVALENT_H_
 #define FST_RANDEQUIVALENT_H_
 
-#include <random>
-
-#include <fst/types.h>
 #include <fst/log.h>
 
 #include <fst/arcsort.h>
@@ -45,9 +28,9 @@ namespace fst {
 // generated path and checks that these two values are within a user-specified
 // delta. Returns optional error value (when FLAGS_error_fatal = false).
 template <class Arc, class ArcSelector>
-bool RandEquivalent(const Fst<Arc> &fst1, const Fst<Arc> &fst2, int32 npath,
+bool RandEquivalent(const Fst<Arc> &fst1, const Fst<Arc> &fst2,
+                    int32 num_paths, float delta,
                     const RandGenOptions<ArcSelector> &opts,
-                    float delta = kDelta, uint64 seed = std::random_device()(),
                     bool *error = nullptr) {
   using Weight = typename Arc::Weight;
   if (error) *error = false;
@@ -69,16 +52,14 @@ bool RandEquivalent(const Fst<Arc> &fst1, const Fst<Arc> &fst2, int32 npath,
   ArcSort(&sfst1, icomp);
   ArcSort(&sfst2, icomp);
   bool result = true;
-  std::mt19937 rand(seed);
-  std::bernoulli_distribution coin(.5);
-  for (int32 n = 0; n < npath; ++n) {
+  for (int32 n = 0; n < num_paths; ++n) {
     VectorFst<Arc> path;
-    const auto &fst = coin(rand) ? sfst1 : sfst2;
+    const auto &fst = rand() % 2 ? sfst1 : sfst2;  // NOLINT
     RandGen(fst, &path, opts);
     VectorFst<Arc> ipath(path);
     VectorFst<Arc> opath(path);
-    Project(&ipath, ProjectType::INPUT);
-    Project(&opath, ProjectType::OUTPUT);
+    Project(&ipath, PROJECT_INPUT);
+    Project(&opath, PROJECT_OUTPUT);
     VectorFst<Arc> cfst1, pfst1;
     Compose(ipath, sfst1, &cfst1);
     ArcSort(&cfst1, ocomp);
@@ -114,18 +95,18 @@ bool RandEquivalent(const Fst<Arc> &fst1, const Fst<Arc> &fst2, int32 npath,
   return result;
 }
 
-// Tests if two FSTs are equivalent by randomly generating a nnpath paths
+// Tests if two FSTs are equivalent by randomly generating a nnum_paths paths
 // (no longer than the path_length) using a user-specified seed, optionally
 // indicating an error setting an optional error argument to true.
 template <class Arc>
-bool RandEquivalent(const Fst<Arc> &fst1, const Fst<Arc> &fst2, int32 npath,
-                    float delta = kDelta, uint64 seed = std::random_device()(),
+bool RandEquivalent(const Fst<Arc> &fst1, const Fst<Arc> &fst2, int32 num_paths,
+                    float delta = kDelta, time_t seed = time(nullptr),
                     int32 max_length = std::numeric_limits<int32>::max(),
                     bool *error = nullptr) {
   const UniformArcSelector<Arc> uniform_selector(seed);
   const RandGenOptions<UniformArcSelector<Arc>> opts(uniform_selector,
                                                      max_length);
-  return RandEquivalent(fst1, fst2, npath, opts, delta, seed, error);
+  return RandEquivalent(fst1, fst2, num_paths, delta, opts, error);
 }
 
 }  // namespace fst
