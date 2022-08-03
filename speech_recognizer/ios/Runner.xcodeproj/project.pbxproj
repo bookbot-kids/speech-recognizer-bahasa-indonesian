@@ -43,17 +43,31 @@
 		5203BC3827A15FBF00715D55 /* language_model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3427A15FBE00715D55 /* language_model.cc */; };
 		5203BC3927A15FBF00715D55 /* bookbot_api.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3527A15FBE00715D55 /* bookbot_api.cc */; };
 		5203BC3A27A15FBF00715D55 /* bookbot_recognizer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3627A15FBE00715D55 /* bookbot_recognizer.cc */; };
-		520A5A57270EC00F00351801 /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A54270EC00F00351801 /* SpeechController.swift */; };
 		520A5A58270EC00F00351801 /* VoskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A56270EC00F00351801 /* VoskModel.swift */; };
-		520A5A5B270EC24200351801 /* libkaldiwrap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A5A270EC24200351801 /* libkaldiwrap.a */; };
 		520A5A5D270EC2AD00351801 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A5C270EC2AD00351801 /* libc++.tbd */; };
 		520A5A78270EC71500351801 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 520A5A77270EC71500351801 /* Accelerate.framework */; };
 		52293C08286DAB3A00A6DFC9 /* model-id-id in Resources */ = {isa = PBXBuildFile; fileRef = 52293C07286DAB3A00A6DFC9 /* model-id-id */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		840AC1782898CB0000F99787 /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A54270EC00F00351801 /* SpeechController.swift */; };
+		840AC1792898CB0D00F99787 /* sample_id.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 840AC1762898CA9B00F99787 /* sample_id.pcm */; };
+		840AC17A2898CB6000F99787 /* RecognitionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840AC1732894C2E100F99787 /* RecognitionTest.swift */; };
+		840AC17C2898DC2200F99787 /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A54270EC00F00351801 /* SpeechController.swift */; };
+		840AC17D2898DF6400F99787 /* VoskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A56270EC00F00351801 /* VoskModel.swift */; };
+		840AC17E2898E27C00F99787 /* sample_id.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 840AC1762898CA9B00F99787 /* sample_id.pcm */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		840AC1672894B1DC00F99787 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
+			remoteInfo = Runner;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
@@ -120,6 +134,10 @@
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		840AC1632894B1DC00F99787 /* speech_recognizerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = speech_recognizerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		840AC1722894C2E000F99787 /* speech_recognizerTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "speech_recognizerTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		840AC1732894C2E100F99787 /* RecognitionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognitionTest.swift; sourceTree = "<group>"; };
+		840AC1762898CA9B00F99787 /* sample_id.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_id.pcm; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +148,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		840AC1602894B1DC00F99787 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -164,7 +189,6 @@
 				5203BC2627A156FB00715D55 /* libfstfar.a in Frameworks */,
 				5203BC2727A156FB00715D55 /* kaldi-lat.a in Frameworks */,
 				5203BBED27A156D700715D55 /* arc_lookahead-fst.a in Frameworks */,
-				520A5A5B270EC24200351801 /* libkaldiwrap.a in Frameworks */,
 				520A5A78270EC71500351801 /* Accelerate.framework in Frameworks */,
 				520A5A5D270EC2AD00351801 /* libc++.tbd in Frameworks */,
 			);
@@ -234,6 +258,7 @@
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				520A5A59270EC24100351801 /* Frameworks */,
+				840AC1722894C2E000F99787 /* speech_recognizerTests-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -241,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
+				840AC1632894B1DC00F99787 /* speech_recognizerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -248,6 +274,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				840AC1762898CA9B00F99787 /* sample_id.pcm */,
 				5203BC3527A15FBE00715D55 /* bookbot_api.cc */,
 				5203BC3227A15FBE00715D55 /* bookbot_api.h */,
 				5203BC3627A15FBE00715D55 /* bookbot_recognizer.cc */,
@@ -255,6 +282,7 @@
 				5203BC3127A15FBE00715D55 /* language_model.h */,
 				5203BC3327A15FBE00715D55 /* model.cc */,
 				5203BC3027A15FBE00715D55 /* model.h */,
+				840AC1732894C2E100F99787 /* RecognitionTest.swift */,
 				520A5A54270EC00F00351801 /* SpeechController.swift */,
 				520A5A56270EC00F00351801 /* VoskModel.swift */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -272,6 +300,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		840AC1622894B1DC00F99787 /* speech_recognizerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 840AC1692894B1DC00F99787 /* Build configuration list for PBXNativeTarget "speech_recognizerTests" */;
+			buildPhases = (
+				840AC15F2894B1DC00F99787 /* Sources */,
+				840AC1602894B1DC00F99787 /* Frameworks */,
+				840AC1612894B1DC00F99787 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				840AC1682894B1DC00F99787 /* PBXTargetDependency */,
+			);
+			name = speech_recognizerTests;
+			productName = speech_recognizerTests;
+			productReference = 840AC1632894B1DC00F99787 /* speech_recognizerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		97C146ED1CF9000F007C117D /* Runner */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
@@ -298,9 +344,15 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1310;
 				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
+					840AC1622894B1DC00F99787 = {
+						CreatedOnToolsVersion = 13.1;
+						LastSwiftMigration = 1310;
+						TestTargetID = 97C146ED1CF9000F007C117D;
+					};
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
@@ -321,11 +373,20 @@
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
+				840AC1622894B1DC00F99787 /* speech_recognizerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		840AC1612894B1DC00F99787 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				840AC1792898CB0D00F99787 /* sample_id.pcm in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EC1CF9000F007C117D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -333,6 +394,7 @@
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
+				840AC17E2898E27C00F99787 /* sample_id.pcm in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				52293C08286DAB3A00A6DFC9 /* model-id-id in Resources */,
 			);
@@ -372,6 +434,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		840AC15F2894B1DC00F99787 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				840AC17D2898DF6400F99787 /* VoskModel.swift in Sources */,
+				840AC1782898CB0000F99787 /* SpeechController.swift in Sources */,
+				840AC17A2898CB6000F99787 /* RecognitionTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,13 +453,21 @@
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				520A5A58270EC00F00351801 /* VoskModel.swift in Sources */,
 				5203BC3827A15FBF00715D55 /* language_model.cc in Sources */,
+				840AC17C2898DC2200F99787 /* SpeechController.swift in Sources */,
 				5203BC3927A15FBF00715D55 /* bookbot_api.cc in Sources */,
 				5203BC3727A15FBF00715D55 /* model.cc in Sources */,
-				520A5A57270EC00F00351801 /* SpeechController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		840AC1682894B1DC00F99787 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 97C146ED1CF9000F007C117D /* Runner */;
+			targetProxy = 840AC1672894B1DC00F99787 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
@@ -414,7 +494,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -446,6 +526,7 @@
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -454,10 +535,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"--std=c++17",
-				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -473,6 +551,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
@@ -496,7 +575,6 @@
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
-					"--std=c++17",
 					"-v",
 					"-fmodules",
 					"-fcxx-modules",
@@ -511,12 +589,120 @@
 			};
 			name = Profile;
 		};
+		840AC16A2894B1DC00F99787 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3MQ7JLSJLD;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				PRODUCT_BUNDLE_IDENTIFIER = "au.com.bookbot.speech-recognizerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "speech_recognizerTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/Runner";
+			};
+			name = Debug;
+		};
+		840AC16B2894B1DC00F99787 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3MQ7JLSJLD;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				PRODUCT_BUNDLE_IDENTIFIER = "au.com.bookbot.speech-recognizerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "speech_recognizerTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/Runner";
+			};
+			name = Release;
+		};
+		840AC16C2894B1DC00F99787 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3MQ7JLSJLD;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				PRODUCT_BUNDLE_IDENTIFIER = "au.com.bookbot.speech-recognizerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "speech_recognizerTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/Runner";
+			};
+			name = Profile;
+		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -563,10 +749,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"--std=c++17",
-				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -577,7 +760,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -609,6 +792,7 @@
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -617,10 +801,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"--std=c++17",
-				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -638,6 +819,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
@@ -661,7 +843,6 @@
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
-					"--std=c++17",
 					"-v",
 					"-fmodules",
 					"-fcxx-modules",
@@ -685,6 +866,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
@@ -708,7 +890,6 @@
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
-					"--std=c++17",
 					"-v",
 					"-fmodules",
 					"-fcxx-modules",
@@ -726,6 +907,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		840AC1692894B1DC00F99787 /* Build configuration list for PBXNativeTarget "speech_recognizerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				840AC16A2894B1DC00F99787 /* Debug */,
+				840AC16B2894B1DC00F99787 /* Release */,
+				840AC16C2894B1DC00F99787 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

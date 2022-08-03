@@ -45,5 +45,7 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Bookbot uses your microphone to listen to your child read out loud.</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
