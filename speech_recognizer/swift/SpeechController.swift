@@ -57,6 +57,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     var timer:Timer? = nil
 
     var inputFormat:AVAudioFormat? = nil
+    var sampleRate:Float = 0
     var conversionFormat:AVAudioFormat? = nil
 
     var registrar: FlutterPluginRegistrar? = nil
@@ -183,28 +184,36 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         #endif
     }
 
-    func _freeRecognizer() {
+    func freeRecognizer() {
         if(recognizer != nil) {
           bookbot_recognizer_free(recognizer);
           recognizer = nil;
         }
     }
 
-    func _instantiateRecognizer() {
-        guard let m = model, let input = inputFormat, let grammar = grammar else {
-            return
+    func instantiateRecognizer()  {
+        guard let m = model else {
+          print("Model not loaded")
+          return
         }
+      if(grammar == nil || grammar!.isEmpty) {
+        recognizer = bookbot_recognizer_new(m.model, self.sampleRate)
+      } else {
         do {
-          let encoder = JSONEncoder()
-          let words = grammar.components(separatedBy: " ")
-          let json  = try encoder.encode(words)
-          let grammar = String(data: json, encoding: .utf8)!
-          recognizer = bookbot_recognizer_new_grm(m.model, Float(input.sampleRate), grammar)
-          bookbot_recognizer_set_max_alternatives(recognizer, 5)
+          recognizer = bookbot_recognizer_new_grm(m.model, self.sampleRate, self.grammar)
+          print("Created recognizer with grammar")
+          //bookbot_recognizer_set_max_alternatives(recognizer, 5)
         } catch {
           print("Error generating grammar for recognizer")
         }
+      }
     }
+  
+    
+   
+  public func loadModel(language:String) throws {
+    self.model = try VoskModel(language: language)
+  }
 
     /// Speech initialiser
     public func initSpeech(language:String, flutterResult: @escaping FlutterResult) {
@@ -213,13 +222,14 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         // Raw format is the format of the bus - but we need to do conversion for the input format for both Kaldi and the recorder
         let rawFormat = engine.inputNode.inputFormat(forBus: 0)
         inputFormat = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt16, sampleRate: rawFormat.sampleRate, channels: 1, interleaved: false)!
+      sampleRate = Float(inputFormat!.sampleRate)
         conversionFormat = AVAudioFormat.init(commonFormat: AVAudioCommonFormat.pcmFormatInt16, sampleRate: 32000, channels: 1, interleaved: false)!
 
         self.processingQueue.async {
 
           if(self.model == nil || self.model!.language != language) {
             do {
-              self.model = try VoskModel(language: language)
+              try self.loadModel(language: language)
             } catch {
               flutterResult(FlutterError(code: "speechError", message: "initSpeech error", details: error))
               return
@@ -301,9 +311,9 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         // otherwise this will not be thread-safe and one thread may try to destroy the recognizer while another thread is mid-way through processing an audio segment
         self.processingQueue.async {
             self.stopListening()
-            self._freeRecognizer()
+            self.freeRecognizer()
 
-            self._instantiateRecognizer()
+            self.instantiateRecognizer()
             DispatchQueue.main.async {
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                 // print("Timer called")
