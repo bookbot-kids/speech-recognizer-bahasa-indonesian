@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -24,11 +10,11 @@
 #include <string>
 #include <vector>
 
-#include <fst/types.h>
 #include <fst/log.h>
 
 #include <fst/fst.h>
 #include <fst/test-properties.h>
+
 
 namespace fst {
 
@@ -64,7 +50,7 @@ class ComplementFstImpl : public FstImpl<A> {
 
   explicit ComplementFstImpl(const Fst<Arc> &fst) : fst_(fst.Copy()) {
     SetType("complement");
-    const auto props = fst.Properties(kILabelSorted, false);
+    uint64 props = fst.Properties(kILabelSorted, false);
     SetProperties(ComplementProperties(props), kCopyProperties);
     SetInputSymbols(fst.InputSymbols());
     SetOutputSymbols(fst.OutputSymbols());
@@ -80,7 +66,7 @@ class ComplementFstImpl : public FstImpl<A> {
 
   StateId Start() const {
     if (Properties(kError)) return kNoStateId;
-    const auto start = fst_->Start();
+    auto start = fst_->Start();
     return start != kNoStateId ? start + 1 : 0;
   }
 
@@ -150,12 +136,12 @@ class ComplementFst : public ImplToFst<internal::ComplementFstImpl<A>> {
   }
 
   // See Fst<>::Copy() for doc.
-  ComplementFst(const ComplementFst &fst, bool safe = false)
+  ComplementFst(const ComplementFst<Arc> &fst, bool safe = false)
       : ImplToFst<Impl>(fst, safe) {}
 
   // Gets a copy of this FST. See Fst<>::Copy() for further doc.
-  ComplementFst *Copy(bool safe = false) const override {
-    return new ComplementFst(*this, safe);
+  ComplementFst<Arc> *Copy(bool safe = false) const override {
+    return new ComplementFst<Arc>(*this, safe);
   }
 
   inline void InitStateIterator(StateIteratorData<Arc> *data) const override;
@@ -213,8 +199,7 @@ class ArcIterator<ComplementFst<Arc>> : public ArcIteratorBase<Arc> {
 
   ArcIterator(const ComplementFst<Arc> &fst, StateId s) : s_(s), pos_(0) {
     if (s_ != 0) {
-      aiter_ =
-          fst::make_unique<ArcIterator<Fst<Arc>>>(*fst.GetImpl()->fst_, s - 1);
+      aiter_.reset(new ArcIterator<Fst<Arc>>(*fst.GetImpl()->fst_, s - 1));
     }
   }
 
@@ -262,9 +247,9 @@ class ArcIterator<ComplementFst<Arc>> : public ArcIteratorBase<Arc> {
     pos_ = a;
   }
 
-  uint8 Flags() const final { return kArcValueFlags; }
+  uint32 Flags() const final { return kArcValueFlags; }
 
-  void SetFlags(uint8, uint8) final {}
+  void SetFlags(uint32, uint32) final {}
 
  private:
   std::unique_ptr<ArcIterator<Fst<Arc>>> aiter_;
@@ -276,13 +261,13 @@ class ArcIterator<ComplementFst<Arc>> : public ArcIteratorBase<Arc> {
 template <class Arc>
 inline void ComplementFst<Arc>::InitStateIterator(
     StateIteratorData<Arc> *data) const {
-  data->base = fst::make_unique<StateIterator<ComplementFst<Arc>>>(*this);
+  data->base = new StateIterator<ComplementFst<Arc>>(*this);
 }
 
 template <class Arc>
-inline void ComplementFst<Arc>::InitArcIterator(
-    StateId s, ArcIteratorData<Arc> *data) const {
-  data->base = fst::make_unique<ArcIterator<ComplementFst<Arc>>>(*this, s);
+inline void ComplementFst<Arc>::InitArcIterator(StateId s,
+    ArcIteratorData<Arc> *data) const {
+  data->base = new ArcIterator<ComplementFst<Arc>>(*this, s);
 }
 
 // Useful alias when using StdArc.

@@ -9,36 +9,6 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		5203BBED27A156D700715D55 /* arc_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEC27A156D700715D55 /* arc_lookahead-fst.a */; };
-		5203BC0B27A156FB00715D55 /* kaldi-gmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEE27A156FA00715D55 /* kaldi-gmm.a */; };
-		5203BC0C27A156FB00715D55 /* kaldi-matrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEF27A156FA00715D55 /* kaldi-matrix.a */; };
-		5203BC0D27A156FB00715D55 /* kaldi-transform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF027A156FA00715D55 /* kaldi-transform.a */; };
-		5203BC0E27A156FB00715D55 /* libfstngram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF127A156FA00715D55 /* libfstngram.a */; };
-		5203BC0F27A156FB00715D55 /* kaldi-base.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF227A156FA00715D55 /* kaldi-base.a */; };
-		5203BC1027A156FB00715D55 /* kaldi-lm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF327A156FA00715D55 /* kaldi-lm.a */; };
-		5203BC1127A156FB00715D55 /* kaldi-sgmm2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF427A156FA00715D55 /* kaldi-sgmm2.a */; };
-		5203BC1227A156FB00715D55 /* ilabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF527A156FA00715D55 /* ilabel_lookahead-fst.a */; };
-		5203BC1327A156FB00715D55 /* kaldi-nnet3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF627A156FA00715D55 /* kaldi-nnet3.a */; };
-		5203BC1427A156FB00715D55 /* kaldi-ivector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF727A156FA00715D55 /* kaldi-ivector.a */; };
-		5203BC1527A156FB00715D55 /* kaldi-nnet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF827A156FA00715D55 /* kaldi-nnet.a */; };
-		5203BC1627A156FB00715D55 /* kaldi-kws.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF927A156FA00715D55 /* kaldi-kws.a */; };
-		5203BC1727A156FB00715D55 /* libfst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFA27A156FA00715D55 /* libfst.a */; };
-		5203BC1827A156FB00715D55 /* kaldi-nnet2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFB27A156FA00715D55 /* kaldi-nnet2.a */; };
-		5203BC1927A156FB00715D55 /* kaldi-fstext.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFC27A156FA00715D55 /* kaldi-fstext.a */; };
-		5203BC1A27A156FB00715D55 /* ngram-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFD27A156FA00715D55 /* ngram-fst.a */; };
-		5203BC1B27A156FB00715D55 /* olabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFE27A156FB00715D55 /* olabel_lookahead-fst.a */; };
-		5203BC1C27A156FB00715D55 /* kaldi-rnnlm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */; };
-		5203BC1D27A156FB00715D55 /* kaldi-online2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0027A156FB00715D55 /* kaldi-online2.a */; };
-		5203BC1E27A156FB00715D55 /* kaldi-decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0127A156FB00715D55 /* kaldi-decoder.a */; };
-		5203BC1F27A156FB00715D55 /* kaldi-chain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0227A156FB00715D55 /* kaldi-chain.a */; };
-		5203BC2027A156FB00715D55 /* kaldi-tree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0327A156FB00715D55 /* kaldi-tree.a */; };
-		5203BC2127A156FB00715D55 /* libfstlookahead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0427A156FB00715D55 /* libfstlookahead.a */; };
-		5203BC2227A156FB00715D55 /* kaldi-feat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0527A156FB00715D55 /* kaldi-feat.a */; };
-		5203BC2327A156FB00715D55 /* kaldi-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0627A156FB00715D55 /* kaldi-util.a */; };
-		5203BC2427A156FB00715D55 /* kaldi-cudamatrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0727A156FB00715D55 /* kaldi-cudamatrix.a */; };
-		5203BC2527A156FB00715D55 /* kaldi-hmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0827A156FB00715D55 /* kaldi-hmm.a */; };
-		5203BC2627A156FB00715D55 /* libfstfar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0927A156FB00715D55 /* libfstfar.a */; };
-		5203BC2727A156FB00715D55 /* kaldi-lat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0A27A156FB00715D55 /* kaldi-lat.a */; };
 		5203BC3727A15FBF00715D55 /* model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3327A15FBE00715D55 /* model.cc */; };
 		5203BC3827A15FBF00715D55 /* language_model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3427A15FBE00715D55 /* language_model.cc */; };
 		5203BC3927A15FBF00715D55 /* bookbot_api.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5203BC3527A15FBE00715D55 /* bookbot_api.cc */; };
@@ -54,6 +24,35 @@
 		840AC17C2898DC2200F99787 /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A54270EC00F00351801 /* SpeechController.swift */; };
 		840AC17D2898DF6400F99787 /* VoskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520A5A56270EC00F00351801 /* VoskModel.swift */; };
 		840AC17E2898E27C00F99787 /* sample_id.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 840AC1762898CA9B00F99787 /* sample_id.pcm */; };
+		840AC17F289A522200F99787 /* kaldi-base.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF227A156FA00715D55 /* kaldi-base.a */; };
+		840AC180289A522200F99787 /* kaldi-chain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0227A156FB00715D55 /* kaldi-chain.a */; };
+		840AC181289A522200F99787 /* kaldi-cudamatrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0727A156FB00715D55 /* kaldi-cudamatrix.a */; };
+		840AC182289A522200F99787 /* kaldi-decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0127A156FB00715D55 /* kaldi-decoder.a */; };
+		840AC183289A522200F99787 /* kaldi-feat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0527A156FB00715D55 /* kaldi-feat.a */; };
+		840AC184289A522200F99787 /* kaldi-fstext.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFC27A156FA00715D55 /* kaldi-fstext.a */; };
+		840AC185289A522200F99787 /* kaldi-gmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEE27A156FA00715D55 /* kaldi-gmm.a */; };
+		840AC186289A522200F99787 /* kaldi-hmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0827A156FB00715D55 /* kaldi-hmm.a */; };
+		840AC187289A522200F99787 /* kaldi-ivector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF727A156FA00715D55 /* kaldi-ivector.a */; };
+		840AC188289A522300F99787 /* kaldi-kws.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF927A156FA00715D55 /* kaldi-kws.a */; };
+		840AC189289A522300F99787 /* kaldi-lat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0A27A156FB00715D55 /* kaldi-lat.a */; };
+		840AC18A289A522300F99787 /* kaldi-lm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF327A156FA00715D55 /* kaldi-lm.a */; };
+		840AC18B289A522300F99787 /* kaldi-matrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEF27A156FA00715D55 /* kaldi-matrix.a */; };
+		840AC18C289A522300F99787 /* kaldi-nnet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF827A156FA00715D55 /* kaldi-nnet.a */; };
+		840AC18D289A522300F99787 /* kaldi-nnet2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFB27A156FA00715D55 /* kaldi-nnet2.a */; };
+		840AC18E289A522300F99787 /* kaldi-nnet3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF627A156FA00715D55 /* kaldi-nnet3.a */; };
+		840AC18F289A522300F99787 /* kaldi-online2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0027A156FB00715D55 /* kaldi-online2.a */; };
+		840AC190289A522300F99787 /* kaldi-rnnlm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */; };
+		840AC191289A522300F99787 /* kaldi-sgmm2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF427A156FA00715D55 /* kaldi-sgmm2.a */; };
+		840AC192289A522300F99787 /* kaldi-transform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF027A156FA00715D55 /* kaldi-transform.a */; };
+		840AC193289A522300F99787 /* kaldi-tree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0327A156FB00715D55 /* kaldi-tree.a */; };
+		840AC194289A522300F99787 /* kaldi-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0627A156FB00715D55 /* kaldi-util.a */; };
+		840AC195289A522300F99787 /* libfst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFA27A156FA00715D55 /* libfst.a */; };
+		840AC196289A522300F99787 /* libfstlookahead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0427A156FB00715D55 /* libfstlookahead.a */; };
+		840AC197289A522300F99787 /* libfstngram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF127A156FA00715D55 /* libfstngram.a */; };
+		840AC19C289A522400F99787 /* libngram-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC198289A522300F99787 /* libngram-fst.a */; };
+		840AC19D289A522400F99787 /* libilabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC199289A522300F99787 /* libilabel_lookahead-fst.a */; };
+		840AC19E289A522400F99787 /* libarc_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC19A289A522300F99787 /* libarc_lookahead-fst.a */; };
+		840AC19F289A522400F99787 /* libolabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC19B289A522400F99787 /* libolabel_lookahead-fst.a */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -138,6 +137,10 @@
 		840AC1722894C2E000F99787 /* speech_recognizerTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "speech_recognizerTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		840AC1732894C2E100F99787 /* RecognitionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognitionTest.swift; sourceTree = "<group>"; };
 		840AC1762898CA9B00F99787 /* sample_id.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_id.pcm; sourceTree = "<group>"; };
+		840AC198289A522300F99787 /* libngram-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libngram-fst.a"; sourceTree = "<group>"; };
+		840AC199289A522300F99787 /* libilabel_lookahead-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libilabel_lookahead-fst.a"; sourceTree = "<group>"; };
+		840AC19A289A522300F99787 /* libarc_lookahead-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libarc_lookahead-fst.a"; sourceTree = "<group>"; };
+		840AC19B289A522400F99787 /* libolabel_lookahead-fst.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libolabel_lookahead-fst.a"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,36 +162,35 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5203BC0B27A156FB00715D55 /* kaldi-gmm.a in Frameworks */,
-				5203BC0C27A156FB00715D55 /* kaldi-matrix.a in Frameworks */,
-				5203BC0D27A156FB00715D55 /* kaldi-transform.a in Frameworks */,
-				5203BC0E27A156FB00715D55 /* libfstngram.a in Frameworks */,
-				5203BC0F27A156FB00715D55 /* kaldi-base.a in Frameworks */,
-				5203BC1027A156FB00715D55 /* kaldi-lm.a in Frameworks */,
-				5203BC1127A156FB00715D55 /* kaldi-sgmm2.a in Frameworks */,
-				5203BC1227A156FB00715D55 /* ilabel_lookahead-fst.a in Frameworks */,
-				5203BC1327A156FB00715D55 /* kaldi-nnet3.a in Frameworks */,
-				5203BC1427A156FB00715D55 /* kaldi-ivector.a in Frameworks */,
-				5203BC1527A156FB00715D55 /* kaldi-nnet.a in Frameworks */,
-				5203BC1627A156FB00715D55 /* kaldi-kws.a in Frameworks */,
-				5203BC1727A156FB00715D55 /* libfst.a in Frameworks */,
-				5203BC1827A156FB00715D55 /* kaldi-nnet2.a in Frameworks */,
-				5203BC1927A156FB00715D55 /* kaldi-fstext.a in Frameworks */,
-				5203BC1A27A156FB00715D55 /* ngram-fst.a in Frameworks */,
-				5203BC1B27A156FB00715D55 /* olabel_lookahead-fst.a in Frameworks */,
-				5203BC1C27A156FB00715D55 /* kaldi-rnnlm.a in Frameworks */,
-				5203BC1D27A156FB00715D55 /* kaldi-online2.a in Frameworks */,
-				5203BC1E27A156FB00715D55 /* kaldi-decoder.a in Frameworks */,
-				5203BC1F27A156FB00715D55 /* kaldi-chain.a in Frameworks */,
-				5203BC2027A156FB00715D55 /* kaldi-tree.a in Frameworks */,
-				5203BC2127A156FB00715D55 /* libfstlookahead.a in Frameworks */,
-				5203BC2227A156FB00715D55 /* kaldi-feat.a in Frameworks */,
-				5203BC2327A156FB00715D55 /* kaldi-util.a in Frameworks */,
-				5203BC2427A156FB00715D55 /* kaldi-cudamatrix.a in Frameworks */,
-				5203BC2527A156FB00715D55 /* kaldi-hmm.a in Frameworks */,
-				5203BC2627A156FB00715D55 /* libfstfar.a in Frameworks */,
-				5203BC2727A156FB00715D55 /* kaldi-lat.a in Frameworks */,
-				5203BBED27A156D700715D55 /* arc_lookahead-fst.a in Frameworks */,
+				840AC19C289A522400F99787 /* libngram-fst.a in Frameworks */,
+				840AC19D289A522400F99787 /* libilabel_lookahead-fst.a in Frameworks */,
+				840AC19E289A522400F99787 /* libarc_lookahead-fst.a in Frameworks */,
+				840AC19F289A522400F99787 /* libolabel_lookahead-fst.a in Frameworks */,
+				840AC17F289A522200F99787 /* kaldi-base.a in Frameworks */,
+				840AC180289A522200F99787 /* kaldi-chain.a in Frameworks */,
+				840AC181289A522200F99787 /* kaldi-cudamatrix.a in Frameworks */,
+				840AC182289A522200F99787 /* kaldi-decoder.a in Frameworks */,
+				840AC183289A522200F99787 /* kaldi-feat.a in Frameworks */,
+				840AC184289A522200F99787 /* kaldi-fstext.a in Frameworks */,
+				840AC185289A522200F99787 /* kaldi-gmm.a in Frameworks */,
+				840AC186289A522200F99787 /* kaldi-hmm.a in Frameworks */,
+				840AC187289A522200F99787 /* kaldi-ivector.a in Frameworks */,
+				840AC188289A522300F99787 /* kaldi-kws.a in Frameworks */,
+				840AC189289A522300F99787 /* kaldi-lat.a in Frameworks */,
+				840AC18A289A522300F99787 /* kaldi-lm.a in Frameworks */,
+				840AC18B289A522300F99787 /* kaldi-matrix.a in Frameworks */,
+				840AC18C289A522300F99787 /* kaldi-nnet.a in Frameworks */,
+				840AC18D289A522300F99787 /* kaldi-nnet2.a in Frameworks */,
+				840AC18E289A522300F99787 /* kaldi-nnet3.a in Frameworks */,
+				840AC18F289A522300F99787 /* kaldi-online2.a in Frameworks */,
+				840AC190289A522300F99787 /* kaldi-rnnlm.a in Frameworks */,
+				840AC191289A522300F99787 /* kaldi-sgmm2.a in Frameworks */,
+				840AC192289A522300F99787 /* kaldi-transform.a in Frameworks */,
+				840AC193289A522300F99787 /* kaldi-tree.a in Frameworks */,
+				840AC194289A522300F99787 /* kaldi-util.a in Frameworks */,
+				840AC195289A522300F99787 /* libfst.a in Frameworks */,
+				840AC196289A522300F99787 /* libfstlookahead.a in Frameworks */,
+				840AC197289A522300F99787 /* libfstngram.a in Frameworks */,
 				520A5A78270EC71500351801 /* Accelerate.framework in Frameworks */,
 				520A5A5D270EC2AD00351801 /* libc++.tbd in Frameworks */,
 			);
@@ -200,6 +202,10 @@
 		520A5A59270EC24100351801 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				840AC19A289A522300F99787 /* libarc_lookahead-fst.a */,
+				840AC199289A522300F99787 /* libilabel_lookahead-fst.a */,
+				840AC198289A522300F99787 /* libngram-fst.a */,
+				840AC19B289A522400F99787 /* libolabel_lookahead-fst.a */,
 				5203BBF527A156FA00715D55 /* ilabel_lookahead-fst.a */,
 				5203BBF227A156FA00715D55 /* kaldi-base.a */,
 				5203BC0227A156FB00715D55 /* kaldi-chain.a */,

@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -20,12 +6,10 @@
 #ifndef FST_STRING_WEIGHT_H_
 #define FST_STRING_WEIGHT_H_
 
+#include <cstdlib>
 #include <list>
-#include <random>
 #include <string>
 #include <vector>
-
-#include <fst/types.h>
 
 #include <fst/product-weight.h>
 #include <fst/union-weight.h>
@@ -38,7 +22,7 @@ constexpr int kStringInfinity = -1;     // Label for the infinite string.
 constexpr int kStringBad = -2;          // Label for a non-string.
 constexpr char kStringSeparator = '_';  // Label separator in strings.
 
-// Determines whether to use left or right string semiring. Includes a
+// Determines whether to use left or right string semiring.  Includes a
 // 'restricted' version that signals an error if proper prefixes/suffixes
 // would otherwise be returned by Plus, useful with various
 // algorithms that require functional transducer input with the
@@ -56,10 +40,10 @@ template <class>
 class StringWeightReverseIterator;
 
 // String semiring: (longest_common_prefix/suffix, ., Infinity, Epsilon)
-template <typename L, StringType S = STRING_LEFT>
+template <typename Label_, StringType S = STRING_LEFT>
 class StringWeight {
  public:
-  using Label = L;
+  using Label = Label_;
   using ReverseWeight = StringWeight<Label, ReverseStringType(S)>;
   using Iterator = StringWeightIterator<StringWeight>;
   using ReverseIterator = StringWeightReverseIterator<StringWeight>;
@@ -70,7 +54,7 @@ class StringWeight {
   StringWeight() {}
 
   template <typename Iterator>
-  StringWeight(const Iterator begin, const Iterator end) {
+  StringWeight(const Iterator &begin, const Iterator &end) {
     for (auto iter = begin; iter != end; ++iter) PushBack(*iter);
   }
 
@@ -483,7 +467,7 @@ inline StringWeight<Label, STRING_LEFT> Divide(
     const StringWeight<Label, STRING_LEFT> &w2, DivideType divide_type) {
   if (divide_type != DIVIDE_LEFT) {
     FSTERROR() << "StringWeight::Divide: Only left division is defined "
-               << "for the left string semiring";
+               << "for the left std::string semiring";
     return StringWeight<Label, STRING_LEFT>::NoWeight();
   }
   return DivideLeft(w1, w2);
@@ -496,7 +480,7 @@ inline StringWeight<Label, STRING_RIGHT> Divide(
     const StringWeight<Label, STRING_RIGHT> &w2, DivideType divide_type) {
   if (divide_type != DIVIDE_RIGHT) {
     FSTERROR() << "StringWeight::Divide: Only right division is defined "
-               << "for the right string semiring";
+               << "for the right std::string semiring";
     return StringWeight<Label, STRING_RIGHT>::NoWeight();
   }
   return DivideRight(w1, w2);
@@ -510,32 +494,30 @@ class WeightGenerate<StringWeight<Label, S>> {
  public:
   using Weight = StringWeight<Label, S>;
 
-  explicit WeightGenerate(uint64 seed = std::random_device()(),
-                          bool allow_zero = true,
+  explicit WeightGenerate(bool allow_zero = true,
                           size_t alphabet_size = kNumRandomWeights,
                           size_t max_string_length = kNumRandomWeights)
-      : rand_(seed),
-        allow_zero_(allow_zero),
+      : allow_zero_(allow_zero),
         alphabet_size_(alphabet_size),
         max_string_length_(max_string_length) {}
 
   Weight operator()() const {
-    const int n = std::uniform_int_distribution<>(
-        0, max_string_length_ + allow_zero_)(rand_);
+    size_t n = rand() % (max_string_length_ + allow_zero_);  // NOLINT
     if (allow_zero_ && n == max_string_length_) return Weight::Zero();
     std::vector<Label> labels;
     labels.reserve(n);
-    for (int i = 0; i < n; ++i) {
-      labels.push_back(
-          std::uniform_int_distribution<>(1, alphabet_size_)(rand_));
+    for (size_t i = 0; i < n; ++i) {
+      labels.push_back(rand() % alphabet_size_ + 1);  // NOLINT
     }
     return Weight(labels.begin(), labels.end());
   }
 
  private:
-  mutable std::mt19937_64 rand_;
+  // Permits Zero() and zero divisors.
   const bool allow_zero_;
+  // Alphabet size for random weights.
   const size_t alphabet_size_;
+  // Number of alternative random weights.
   const size_t max_string_length_;
 };
 
@@ -667,9 +649,7 @@ class WeightGenerate<GallicWeight<Label, W, G>>
   using Generate = WeightGenerate<
       ProductWeight<StringWeight<Label, GallicStringType(G)>, W>>;
 
-  explicit WeightGenerate(uint64 seed = std::random_device()(),
-                          bool allow_zero = true)
-      : generate_(seed, allow_zero) {}
+  explicit WeightGenerate(bool allow_zero = true) : generate_(allow_zero) {}
 
   Weight operator()() const { return Weight(generate_()); }
 
@@ -731,8 +711,7 @@ struct GallicWeight<Label, W, GALLIC>
   GallicWeight() {}
 
   // Copy constructor.
-  // NOLINTNEXTLINE(google-explicit-constructor)
-  GallicWeight(const UW &weight) : UW(weight) {}
+  GallicWeight(const UW &weight) : UW(weight) {}  // NOLINT
 
   // Singleton constructors: create a GALLIC weight containing a single
   // GALLIC_RESTRICT weight. Takes as argument (1) a GALLIC_RESTRICT weight or
@@ -814,9 +793,7 @@ class WeightGenerate<GallicWeight<Label, W, GALLIC>>
       WeightGenerate<UnionWeight<GallicWeight<Label, W, GALLIC_RESTRICT>,
                                  GallicUnionWeightOptions<Label, W>>>;
 
-  explicit WeightGenerate(uint64 seed = std::random_device()(),
-                          bool allow_zero = true)
-      : generate_(seed, allow_zero) {}
+  explicit WeightGenerate(bool allow_zero = true) : generate_(allow_zero) {}
 
   Weight operator()() const { return Weight(generate_()); }
 

@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -22,8 +8,6 @@
 
 #include <algorithm>
 #include <vector>
-
-#include <fst/types.h>
 
 #include <fst/mutable-fst.h>
 #include <fst/rational.h>
@@ -60,7 +44,7 @@ void Closure(MutableFst<Arc> *fst, ClosureType closure_type) {
     const auto nstart = fst->AddState();
     fst->SetStart(nstart);
     fst->SetFinal(nstart);
-    if (start != kNoStateId) fst->AddArc(nstart, Arc(0, 0, start));
+    if (start != kNoLabel) fst->AddArc(nstart, Arc(0, 0, start));
   }
   fst->SetProperties(ClosureProperties(props, closure_type == CLOSURE_STAR),
                      kFstProperties);
@@ -76,8 +60,8 @@ void Closure(RationalFst<Arc> *fst, ClosureType closure_type) {
 struct ClosureFstOptions : RationalFstOptions {
   ClosureType type;
 
-  explicit ClosureFstOptions(const RationalFstOptions &opts,
-                             ClosureType type = CLOSURE_STAR)
+  ClosureFstOptions(const RationalFstOptions &opts,
+                    ClosureType type = CLOSURE_STAR)
       : RationalFstOptions(opts), type(type) {}
 
   explicit ClosureFstOptions(ClosureType type = CLOSURE_STAR) : type(type) {}
@@ -111,12 +95,12 @@ class ClosureFst : public RationalFst<A> {
   }
 
   // See Fst<>::Copy() for doc.
-  ClosureFst(const ClosureFst &fst, bool safe = false)
+  ClosureFst(const ClosureFst<Arc> &fst, bool safe = false)
       : RationalFst<A>(fst, safe) {}
 
   // Gets a copy of this ClosureFst. See Fst<>::Copy() for further doc.
-  ClosureFst *Copy(bool safe = false) const override {
-    return new ClosureFst(*this, safe);
+  ClosureFst<A> *Copy(bool safe = false) const override {
+    return new ClosureFst<A>(*this, safe);
   }
 
  private:

@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -25,7 +11,6 @@
 #include <string>
 #include <vector>
 
-#include <fst/types.h>
 #include <fst/connect.h>
 #include <fst/dfs-visit.h>
 #include <fst/fst.h>
@@ -44,6 +29,8 @@ namespace fst {
 // Fst<Arc>::NumArcs, TestProperties, etc.
 class FstInfo {
  public:
+  FstInfo() {}
+
   // When info_type is "short" (or "auto" and not an ExpandedFst) then only
   // minimal info is computed and can be requested.
   template <typename Arc>
@@ -287,8 +274,6 @@ class FstInfo {
     return properties_;
   }
 
-  void Info() const;
-
  private:
   void CheckLong() const {
     if (!long_info_)
@@ -322,11 +307,7 @@ class FstInfo {
   std::string arc_type_;
 };
 
-// Prints `properties` to `ostrm` in a user-friendly multi-line format.
-void PrintProperties(std::ostream &ostrm, uint64 properties);
-
-// Prints `header` to `ostrm` in a user-friendly multi-line format.
-void PrintHeader(std::ostream &ostrm, const FstHeader &header);
+void PrintFstInfoImpl(const FstInfo &fstinfo, bool pipe = false);
 
 }  // namespace fst
 

@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -23,8 +9,6 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-
-#include <fst/types.h>
 
 #include <fst/cache.h>
 #include <fst/state-map.h>
@@ -140,11 +124,11 @@ class ArcSortFst : public StateMapFst<Arc, Arc, ArcSortMapper<Arc, Compare>> {
       : StateMapFst<Arc, Arc, Mapper>(fst, Mapper(fst, comp), opts) {}
 
   // See Fst<>::Copy() for doc.
-  ArcSortFst(const ArcSortFst &fst, bool safe = false)
+  ArcSortFst(const ArcSortFst<Arc, Compare> &fst, bool safe = false)
       : StateMapFst<Arc, Arc, Mapper>(fst, safe) {}
 
   // Gets a copy of this ArcSortFst. See Fst<>::Copy() for further doc.
-  ArcSortFst *Copy(bool safe = false) const override {
+  ArcSortFst<Arc, Compare> *Copy(bool safe = false) const override {
     return new ArcSortFst(*this, safe);
   }
 

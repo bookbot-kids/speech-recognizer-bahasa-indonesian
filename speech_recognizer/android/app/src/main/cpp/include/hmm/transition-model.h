@@ -27,7 +27,6 @@
 #include "hmm/hmm-topology.h"
 #include "itf/options-itf.h"
 #include "itf/context-dep-itf.h"
-#include "itf/transition-information.h"
 #include "matrix/kaldi-vector.h"
 
 namespace kaldi {
@@ -121,7 +120,7 @@ struct MapTransitionUpdateConfig {
   }
 };
 
-class TransitionModel: public TransitionInformation {
+class TransitionModel {
 
  public:
   /// Initialize the object [e.g. at the start of training].
@@ -157,13 +156,10 @@ class TransitionModel: public TransitionInformation {
   int32 SelfLoopOf(int32 trans_state) const;  // returns the self-loop transition-id, or zero if
   // this state doesn't have a self-loop.
 
-  bool TransitionIdsEquivalent(int32_t trans_id1, int32_t trans_id2) const final;
-  bool TransitionIdIsStartOfPhone(int32_t trans_id) const final;
-
-  // TransitionIdToPdfFast is as TransitionIdToPdfArray()[trans_id] but skips an assertion
+  inline int32 TransitionIdToPdf(int32 trans_id) const;
+  // TransitionIdToPdfFast is as TransitionIdToPdf but skips an assertion
   // (unless we're in paranoid mode).
   inline int32 TransitionIdToPdfFast(int32 trans_id) const;
-  const std::vector<int32>& TransitionIdToPdfArray() const final;
 
   int32 TransitionIdToPhone(int32 trans_id) const;
   int32 TransitionIdToPdfClass(int32 trans_id) const;
@@ -174,6 +170,9 @@ class TransitionModel: public TransitionInformation {
   bool IsFinal(int32 trans_id) const;  // returns true if this trans_id goes to the final state
   // (which is bound to be nonemitting).
   bool IsSelfLoop(int32 trans_id) const;  // return true if this trans_id corresponds to a self-loop.
+
+  /// Returns the total number of transition-ids (note, these are one-based).
+  inline int32 NumTransitionIds() const { return id2state_.size()-1; }
 
   /// Returns the number of transition-indices for a particular transition-state.
   /// Note: "Indices" is the plural of "index".   Index is not the same as "id",
@@ -324,6 +323,13 @@ class TransitionModel: public TransitionInformation {
 
   KALDI_DISALLOW_COPY_AND_ASSIGN(TransitionModel);
 };
+
+inline int32 TransitionModel::TransitionIdToPdf(int32 trans_id) const {
+  KALDI_ASSERT(
+      static_cast<size_t>(trans_id) < id2pdf_id_.size() &&
+      "Likely graph/model mismatch (graph built from wrong model?)");
+  return id2pdf_id_[trans_id];
+}
 
 inline int32 TransitionModel::TransitionIdToPdfFast(int32 trans_id) const {
   // Note: it's a little dangerous to assert this only in paranoid mode.

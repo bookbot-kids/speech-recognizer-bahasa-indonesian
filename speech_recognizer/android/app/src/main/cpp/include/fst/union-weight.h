@@ -1,35 +1,19 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
 // Union weight set and associated semiring operation definitions.
 //
-// TODO(riley): add in normalizer functor.
+// TODO(riley): add in normalizer functor
 
 #ifndef FST_UNION_WEIGHT_H_
 #define FST_UNION_WEIGHT_H_
 
+#include <cstdlib>
 #include <iostream>
 #include <list>
-#include <random>
 #include <sstream>
 #include <string>
 #include <utility>
-
-#include <fst/types.h>
 
 #include <fst/weight.h>
 
@@ -92,6 +76,8 @@ class UnionWeight {
 
   friend class UnionWeightIterator<W, O>;
   friend class UnionWeightReverseIterator<W, O>;
+  friend bool operator==
+      <>(const UnionWeight<W, O> &, const UnionWeight<W, O> &);
 
   // Sets represented as first_ weight + rest_ weights. Uses first_ as
   // NoWeight() to indicate the union weight Zero() as the empty set. Uses
@@ -102,20 +88,19 @@ class UnionWeight {
     if (!weight.Member()) rest_.push_back(W::NoWeight());
   }
 
-  static const UnionWeight &Zero() {
-    static const auto *const zero = new UnionWeight;
-    return *zero;
+  static const UnionWeight<W, O> &Zero() {
+    static const UnionWeight<W, O> zero{};
+    return zero;
   }
 
-  static const UnionWeight &One() {
-    static const auto *const one = new UnionWeight(W::One());
-    return *one;
+  static const UnionWeight<W, O> &One() {
+    static const UnionWeight<W, O> one(W::One());
+    return one;
   }
 
-  static const UnionWeight &NoWeight() {
-    static const auto *const no_weight =
-        new UnionWeight(W::Zero(), W::NoWeight());
-    return *no_weight;
+  static const UnionWeight<W, O> &NoWeight() {
+    static const UnionWeight<W, O> no_weight(W::Zero(), W::NoWeight());
+    return no_weight;
   }
 
   static const std::string &Type() {
@@ -137,7 +122,7 @@ class UnionWeight {
 
   size_t Hash() const;
 
-  UnionWeight Quantize(float delta = kDelta) const;
+  UnionWeight<W, O> Quantize(float delta = kDelta) const;
 
   ReverseWeight Reverse() const;
 
@@ -307,7 +292,7 @@ inline bool UnionWeight<W, O>::Member() const {
 
 template <class W, class O>
 inline UnionWeight<W, O> UnionWeight<W, O>::Quantize(float delta) const {
-  UnionWeight weight;
+  UnionWeight<W, O> weight;
   for (UnionWeightIterator<W, O> it(*this); !it.Done(); it.Next()) {
     weight.PushBack(it.Value().Quantize(delta), true);
   }
@@ -491,20 +476,16 @@ class WeightGenerate<UnionWeight<W, O>> {
   using Weight = UnionWeight<W, O>;
   using Generate = WeightGenerate<W>;
 
-  explicit WeightGenerate(uint64 seed = std::random_device()(),
-                          bool allow_zero = true,
+  explicit WeightGenerate(bool allow_zero = true,
                           size_t num_random_weights = kNumRandomWeights)
-      : rand_(seed),
-        allow_zero_(allow_zero),
-        num_random_weights_(num_random_weights),
-        generate_(seed, false) {}
+      : generate_(false), allow_zero_(allow_zero),
+        num_random_weights_(num_random_weights) {}
 
   Weight operator()() const {
-    const int sample = std::uniform_int_distribution<>(
-        0, num_random_weights_ + allow_zero_ - 1)(rand_);
-    if (allow_zero_ && sample == num_random_weights_) {
+    const int n = rand() % (num_random_weights_ + 1);  // NOLINT
+    if (allow_zero_ && n == num_random_weights_) {
       return Weight::Zero();
-    } else if (std::bernoulli_distribution(.5)(rand_)) {
+    } else if (n % 2 == 0) {
       return Weight(generate_());
     } else {
       return Plus(Weight(generate_()), Weight(generate_()));
@@ -512,10 +493,11 @@ class WeightGenerate<UnionWeight<W, O>> {
   }
 
  private:
-  mutable std::mt19937_64 rand_;
-  const bool allow_zero_;
+  Generate generate_;
+  // Permits Zero() and zero divisors.
+  bool allow_zero_;
+  // The number of alternative random weights.
   const size_t num_random_weights_;
-  const Generate generate_;
 };
 
 }  // namespace fst

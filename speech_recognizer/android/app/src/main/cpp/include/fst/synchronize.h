@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -25,8 +11,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-#include <fst/types.h>
 
 #include <fst/cache.h>
 #include <fst/test-properties.h>
@@ -343,17 +327,18 @@ class SynchronizeFst : public ImplToFst<internal::SynchronizeFstImpl<A>> {
   friend class ArcIterator<SynchronizeFst<A>>;
   friend class StateIterator<SynchronizeFst<A>>;
 
-  explicit SynchronizeFst(const Fst<A> &fst, const SynchronizeFstOptions &opts =
-                                                 SynchronizeFstOptions())
+  explicit SynchronizeFst(
+      const Fst<A> &fst,
+      const SynchronizeFstOptions &opts = SynchronizeFstOptions())
       : ImplToFst<Impl>(std::make_shared<Impl>(fst, opts)) {}
 
   // See Fst<>::Copy() for doc.
-  SynchronizeFst(const SynchronizeFst &fst, bool safe = false)
+  SynchronizeFst(const SynchronizeFst<Arc> &fst, bool safe = false)
       : ImplToFst<Impl>(fst, safe) {}
 
   // Gets a copy of this SynchronizeFst. See Fst<>::Copy() for further doc.
-  SynchronizeFst *Copy(bool safe = false) const override {
-    return new SynchronizeFst(*this, safe);
+  SynchronizeFst<Arc> *Copy(bool safe = false) const override {
+    return new SynchronizeFst<Arc>(*this, safe);
   }
 
   inline void InitStateIterator(StateIteratorData<Arc> *data) const override;
@@ -394,7 +379,7 @@ class ArcIterator<SynchronizeFst<Arc>>
 template <class Arc>
 inline void SynchronizeFst<Arc>::InitStateIterator(
     StateIteratorData<Arc> *data) const {
-  data->base = fst::make_unique<StateIterator<SynchronizeFst<Arc>>>(*this);
+  data->base = new StateIterator<SynchronizeFst<Arc>>(*this);
 }
 
 // Synchronizes a transducer. This version writes the synchronized result to a

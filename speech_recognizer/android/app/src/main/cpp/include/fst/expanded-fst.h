@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -25,7 +11,6 @@
 #include <istream>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <fst/log.h>
 #include <fstream>
@@ -45,10 +30,11 @@ class ExpandedFst : public Fst<A> {
   virtual StateId NumStates() const = 0;  // State count
 
   // Get a copy of this ExpandedFst. See Fst<>::Copy() for further doc.
-  ExpandedFst *Copy(bool safe = false) const override = 0;
+  ExpandedFst<Arc> *Copy(bool safe = false) const override = 0;
 
   // Read an ExpandedFst from an input stream; return NULL on error.
-  static ExpandedFst *Read(std::istream &strm, const FstReadOptions &opts) {
+  static ExpandedFst<Arc> *Read(std::istream &strm,
+                                const FstReadOptions &opts) {
     FstReadOptions ropts(opts);
     FstHeader hdr;
     if (ropts.header) {
@@ -70,20 +56,20 @@ class ExpandedFst : public Fst<A> {
     }
     auto *fst = reader(strm, ropts);
     if (!fst) return nullptr;
-    return fst::down_cast<ExpandedFst *>(fst);
+    return static_cast<ExpandedFst<Arc> *>(fst);
   }
 
   // Read an ExpandedFst from a file; return NULL on error.
-  // Empty source reads from standard input.
-  static ExpandedFst *Read(const std::string &source) {
-    if (!source.empty()) {
-      std::ifstream strm(source,
+  // Empty filename reads from standard input.
+  static ExpandedFst<Arc> *Read(const std::string &filename) {
+    if (!filename.empty()) {
+      std::ifstream strm(filename,
                               std::ios_base::in | std::ios_base::binary);
       if (!strm) {
-        LOG(ERROR) << "ExpandedFst::Read: Can't open file: " << source;
+        LOG(ERROR) << "ExpandedFst::Read: Can't open file: " << filename;
         return nullptr;
       }
-      return Read(strm, FstReadOptions(source));
+      return Read(strm, FstReadOptions(filename));
     } else {
       return Read(std::cin, FstReadOptions("standard input"));
     }
@@ -139,7 +125,7 @@ class ImplToExpandedFst : public ImplToFst<Impl, FST> {
   explicit ImplToExpandedFst(std::shared_ptr<Impl> impl)
       : ImplToFst<Impl, FST>(impl) {}
 
-  ImplToExpandedFst(const ImplToExpandedFst &fst, bool safe)
+  ImplToExpandedFst(const ImplToExpandedFst<Impl, FST> &fst, bool safe)
       : ImplToFst<Impl, FST>(fst, safe) {}
 
   static Impl *Read(std::istream &strm, const FstReadOptions &opts) {
@@ -147,16 +133,16 @@ class ImplToExpandedFst : public ImplToFst<Impl, FST> {
   }
 
   // Read FST implementation from a file; return NULL on error.
-  // Empty source reads from standard input.
-  static Impl *Read(const std::string &source) {
-    if (!source.empty()) {
-      std::ifstream strm(source,
+  // Empty filename reads from standard input.
+  static Impl *Read(const std::string &filename) {
+    if (!filename.empty()) {
+      std::ifstream strm(filename,
                               std::ios_base::in | std::ios_base::binary);
       if (!strm) {
-        LOG(ERROR) << "ExpandedFst::Read: Can't open file: " << source;
+        LOG(ERROR) << "ExpandedFst::Read: Can't open file: " << filename;
         return nullptr;
       }
-      return Impl::Read(strm, FstReadOptions(source));
+      return Impl::Read(strm, FstReadOptions(filename));
     } else {
       return Impl::Read(std::cin, FstReadOptions("standard input"));
     }
@@ -168,7 +154,7 @@ class ImplToExpandedFst : public ImplToFst<Impl, FST> {
 template <class Arc>
 typename Arc::StateId CountStates(const Fst<Arc> &fst) {
   if (fst.Properties(kExpanded, false)) {
-    const auto *efst = fst::down_cast<const ExpandedFst<Arc> *>(&fst);
+    const auto *efst = static_cast<const ExpandedFst<Arc> *>(&fst);
     return efst->NumStates();
   } else {
     typename Arc::StateId nstates = 0;
@@ -177,15 +163,6 @@ typename Arc::StateId CountStates(const Fst<Arc> &fst) {
     }
     return nstates;
   }
-}
-
-// Function to return the number of states in a vector of FSTs, counting them if
-// necessary.
-template <class Arc>
-typename Arc::StateId CountStates(const std::vector<const Fst<Arc> *> &fsts) {
-  typename Arc::StateId nstates = 0;
-  for (const auto *fst : fsts) nstates += CountStates(*fst);
-  return nstates;
 }
 
 // Function to return the number of arcs in an FST.

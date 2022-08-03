@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 //
@@ -73,16 +59,13 @@
 //  provided you also have:
 //
 //  4) A registration for your new operation, on the arc types you care about.
-//     This can be provided easily by the REGISTER_FST_OPERATION macro:
+//     This can be provided easily by the REGISTER_FST_OPERATION macro in
+//     operations.h:
 //
 //       REGISTER_FST_OPERATION(Foo, StdArc, FooArgs);
 //       REGISTER_FST_OPERATION(Foo, MyArc, FooArgs);
 //       // .. etc
 //
-//     You can also use REGISTER_FST_OPERATION_3ARCS macro to register an
-//     operation for StdArc, LogArc, and Log64Arc:
-//
-//       REGISTER_FST_OPERATION_3ARCS(Foo, FooArcs);
 //
 //  That's it! Now when you call Foo(const FstClass &, MutableFstClass *),
 //  it dispatches (in #3) via the Apply<> function to the correct
@@ -95,12 +78,9 @@
 // This file contains general-purpose templates which are used in the
 // implementation of the operations.
 
-#include <memory>
 #include <string>
 #include <utility>
-#include <vector>
 
-#include <fst/types.h>
 #include <fst/log.h>
 #include <fst/generic-register.h>
 #include <fst/script/fst-class.h>
@@ -108,19 +88,29 @@
 namespace fst {
 namespace script {
 
-enum class RandArcSelection : uint8 { UNIFORM, LOG_PROB, FAST_LOG_PROB };
+enum RandArcSelection {
+  UNIFORM_ARC_SELECTOR,
+  LOG_PROB_ARC_SELECTOR,
+  FAST_LOG_PROB_ARC_SELECTOR
+};
 
 // A generic register for operations with various kinds of signatures.
 // Needed since every function signature requires a new registration class.
 // The std::pair<std::string, std::string> is understood to be the operation
 // name and arc type; subclasses (or typedefs) need only provide the operation
 // signature.
+
 template <class OperationSignature>
 class GenericOperationRegister
     : public GenericRegister<std::pair<std::string, std::string>,
                              OperationSignature,
                              GenericOperationRegister<OperationSignature>> {
  public:
+  void RegisterOperation(const std::string &operation_name,
+                         const std::string &arc_type, OperationSignature op) {
+    this->SetEntry(std::make_pair(operation_name, arc_type), op);
+  }
+
   OperationSignature GetOperation(const std::string &operation_name,
                                   const std::string &arc_type) {
     return this->GetEntry(std::make_pair(operation_name, arc_type));
@@ -152,30 +142,27 @@ struct Operation {
   // The register (hash) type.
   using Register = GenericOperationRegister<OpType>;
 
-  // The register-er type.
+  // The register-er type
   using Registerer = GenericRegisterer<Register>;
 };
 
 // Macro for registering new types of operations.
+
 #define REGISTER_FST_OPERATION(Op, Arc, ArgPack)               \
   static fst::script::Operation<ArgPack>::Registerer       \
       arc_dispatched_operation_##ArgPack##Op##Arc##_registerer \
-      ({#Op, Arc::Type()}, Op<Arc>)
-
-// A macro that calls REGISTER_FST_OPERATION for widely-used arc types.
-#define REGISTER_FST_OPERATION_3ARCS(Op, ArgPack) \
-  REGISTER_FST_OPERATION(Op, StdArc, ArgPack);    \
-  REGISTER_FST_OPERATION(Op, LogArc, ArgPack);    \
-  REGISTER_FST_OPERATION(Op, Log64Arc, ArgPack)
+      (std::make_pair(#Op, Arc::Type()), Op<Arc>)
 
 // Template function to apply an operation by name.
+
 template <class OpReg>
 void Apply(const std::string &op_name, const std::string &arc_type,
            typename OpReg::ArgPack *args) {
-  const auto op =
-      OpReg::Register::GetRegister()->GetOperation(op_name, arc_type);
+  const auto op = OpReg::Register::GetRegister()->GetOperation(op_name,
+                                                               arc_type);
   if (!op) {
-    FSTERROR() << op_name << ": No operation found on arc type " << arc_type;
+    FSTERROR() << "No operation found for " << op_name << " on "
+               << "arc type " << arc_type;
     return;
   }
   op(args);
@@ -189,8 +176,8 @@ namespace internal {
 template <class M, class N>
 bool ArcTypesMatch(const M &m, const N &n, const std::string &op_name) {
   if (m.ArcType() != n.ArcType()) {
-    FSTERROR() << op_name << ": Arguments with non-matching arc types "
-               << m.ArcType() << " and " << n.ArcType();
+    FSTERROR() << "Arguments with non-matching arc types passed to "
+               << op_name << ":\t" << m.ArcType() << " and " << n.ArcType();
     return false;
   }
   return true;
@@ -203,7 +190,7 @@ void CopyWeights(const std::vector<WeightClass> &weights,
   typed_weights->clear();
   typed_weights->reserve(weights.size());
   for (const auto &weight : weights) {
-    typed_weights->emplace_back(*weight.GetWeight<Weight>());
+    typed_weights->push_back(*weight.GetWeight<Weight>());
   }
 }
 
@@ -219,19 +206,6 @@ void CopyWeights(const std::vector<Weight> &typed_weights,
 }
 
 }  // namespace internal
-
-// Used for Replace operations.
-inline std::vector<std::pair<int64, const FstClass *>> BorrowPairs(
-    const std::vector<std::pair<int64, std::unique_ptr<const FstClass>>>
-        &pairs) {
-  std::vector<std::pair<int64, const FstClass *>> borrowed_pairs;
-  borrowed_pairs.reserve(pairs.size());
-  for (const auto &pair : pairs) {
-    borrowed_pairs.emplace_back(pair.first, pair.second.get());
-  }
-  return borrowed_pairs;
-}
-
 }  // namespace script
 }  // namespace fst
 

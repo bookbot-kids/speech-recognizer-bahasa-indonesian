@@ -1,17 +1,3 @@
-// Copyright 2005-2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the 'License');
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // See www.openfst.org for extensive documentation on this weighted
 // finite-state transducer library.
 
@@ -22,7 +8,6 @@
 #include <utility>
 #include <vector>
 
-#include <fst/types.h>
 #include <fst/replace.h>
 #include <fst/script/fst-class.h>
 
@@ -35,8 +20,8 @@ struct ReplaceOptions {
   const ReplaceLabelType return_label_type;  // How to label return arc.
   const int64 return_label;                  // Specifies return arc label.
 
-  explicit ReplaceOptions(
-      int64 root, ReplaceLabelType call_label_type = REPLACE_LABEL_INPUT,
+  explicit ReplaceOptions(int64 root,
+      ReplaceLabelType call_label_type = REPLACE_LABEL_INPUT,
       ReplaceLabelType return_label_type = REPLACE_LABEL_NEITHER,
       int64 return_label = 0)
       : root(root),
@@ -45,16 +30,18 @@ struct ReplaceOptions {
         return_label(return_label) {}
 };
 
-using ReplaceArgs =
-    std::tuple<const std::vector<std::pair<int64, const FstClass *>> &,
-               MutableFstClass *, const ReplaceOptions &>;
+using LabelFstClassPair = std::pair<int64, const FstClass *>;
+
+using ReplaceArgs = std::tuple<const std::vector<LabelFstClassPair> &,
+                               MutableFstClass *, const ReplaceOptions &>;
 
 template <class Arc>
 void Replace(ReplaceArgs *args) {
+  using LabelFstPair = std::pair<typename Arc::Label, const Fst<Arc> *>;
   // Now that we know the arc type, we construct a vector of
   // std::pair<real label, real fst> that the real Replace will use.
   const auto &untyped_pairs = std::get<0>(*args);
-  std::vector<std::pair<typename Arc::Label, const Fst<Arc> *>> typed_pairs;
+  std::vector<LabelFstPair> typed_pairs;
   typed_pairs.reserve(untyped_pairs.size());
   for (const auto &untyped_pair : untyped_pairs) {
     typed_pairs.emplace_back(untyped_pair.first,  // Converts label.
@@ -71,12 +58,12 @@ void Replace(ReplaceArgs *args) {
     ofst->SetProperties(kError, kError);
     return;
   }
-  typed_opts.gc = true;  // Caching options to speed up batch copy.
+  typed_opts.gc = true;     // Caching options to speed up batch copy.
   typed_opts.gc_limit = 0;
   *ofst = rfst;
 }
 
-void Replace(const std::vector<std::pair<int64, const FstClass *>> &pairs,
+void Replace(const std::vector<LabelFstClassPair> &pairs,
              MutableFstClass *ofst, const ReplaceOptions &opts);
 
 }  // namespace script
