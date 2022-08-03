@@ -84,7 +84,7 @@ BookbotRecognizer::BookbotRecognizer(BookbotModel *model, float sample_frequency
                 stringstream ss(line);
                 string token;
                 while (getline(ss, token, ' ')) {
-                    int32 id = model_->word_syms_->Find(token);
+                  int32 id = model_->word_syms_->Find(token);
                     if (id == kNoSymbol) {
                         KALDI_WARN << "Ignoring word missing in vocabulary: '" << token << "'";
                     } else {
@@ -92,6 +92,7 @@ BookbotRecognizer::BookbotRecognizer(BookbotModel *model, float sample_frequency
                         KALDI_LOG << "Added symbol id " << id << " for word " + token;
                     }
                 }
+
                 estimator.AddCounts(sentence);
             }
 
@@ -589,8 +590,6 @@ const char* BookbotRecognizer::FinalResult()
     state_ = RECOGNIZER_FINALIZED;
     GetResult();
   
-  KALDI_LOG << "FINAL RESULT";
-
     // Free some memory while we are finalized, next
     // iteration will reinitialize them anyway
     delete decoder_;
