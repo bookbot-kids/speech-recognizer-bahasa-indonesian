@@ -69,8 +69,8 @@ BookbotRecognizer::BookbotRecognizer(BookbotModel *model, float sample_frequency
 
             LanguageModelOptions opts;
 
-            opts.ngram_order = 1;
-            //opts.discount = 0.5;
+            opts.ngram_order = 2;
+            opts.discount = 0.5;
 
             LanguageModelEstimator estimator(opts);
             for (int i = 0; i < obj.length(); i++) {
@@ -83,6 +83,8 @@ BookbotRecognizer::BookbotRecognizer(BookbotModel *model, float sample_frequency
                 std::vector<int32> sentence;
                 stringstream ss(line);
                 string token;
+                KALDI_LOG << "sentence";
+
                 while (getline(ss, token, ' ')) {
                   int32 id = model_->word_syms_->Find(token);
                     if (id == kNoSymbol) {
@@ -536,35 +538,33 @@ const char* BookbotRecognizer::GetResult()
 const char* BookbotRecognizer::PartialResult()
 {
   // we want all alternatives even for partial results, so here we call the regular GetResult method
-  return GetResult();
+if (state_ != RECOGNIZER_RUNNING) {
+        return StoreEmptyReturn();
+    }
 
-// if (state_ != RECOGNIZER_RUNNING) {
-//         return StoreEmptyReturn();
-//     }
-//
-//     json::JSON res;
-//
-//     if (decoder_->NumFramesDecoded() == 0) {
-//         res["partial"] = "";
-//         return StoreReturn(res.dump());
-//     }
-//
-//     Lattice lat;
-//     decoder_->GetBestPath(false, &lat);
-//     vector<kaldi::int32> alignment, words;
-//     LatticeWeight weight;
-//     GetLinearSymbolSequence(lat, &alignment, &words, &weight);
-//
-//     ostringstream text;
-//     for (size_t i = 0; i < words.size(); i++) {
-//         if (i) {
-//             text << " ";
-//         }
-//         text << model_->word_syms_->Find(words[i]);
-//     }
-//     res["partial"] = text.str();
-//
-//     return StoreReturn(res.dump());
+    json::JSON res;
+
+    if (decoder_->NumFramesDecoded() == 0) {
+        res["partial"] = "";
+        return StoreReturn(res.dump());
+    }
+
+    Lattice lat;
+    decoder_->GetBestPath(false, &lat);
+    vector<kaldi::int32> alignment, words;
+    LatticeWeight weight;
+    GetLinearSymbolSequence(lat, &alignment, &words, &weight);
+
+    ostringstream text;
+    for (size_t i = 0; i < words.size(); i++) {
+        if (i) {
+            text << " ";
+        }
+        text << model_->word_syms_->Find(words[i]);
+    }
+    res["partial"] = text.str();
+
+    return StoreReturn(res.dump());
 }
 
 const char* BookbotRecognizer::Result()
