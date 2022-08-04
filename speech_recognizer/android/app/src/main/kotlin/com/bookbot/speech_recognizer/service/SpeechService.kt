@@ -26,7 +26,7 @@ interface SpeechListener {
 interface SpeechService {
     val isRunning:Boolean
     fun initSpeech(listener: SpeechListener)
-    fun start(grammar:String)
+    fun start(grammar:String?)
     fun stop()
     fun destroy()
     fun restart(time: Long, grammar:String)
