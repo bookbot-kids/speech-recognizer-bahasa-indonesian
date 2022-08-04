@@ -71,31 +71,9 @@ class VoskSpeechService(private val context: Context, private val language:Strin
         if(!ready) {
           throw Exception("VoskSpeechService is not ready, did you wait for initModel to complete?")
         }
-        var grammarString = "["
-        val split = grammar.split(" ")
-        
-        for(i in 0..split.size - 1) {
-        //     grammarString += "["
-             val item = split[i]
-        //     var endIdx = maxOf(i+3, split.size)
-        //     for(j in i..endIdx) {
-                 grammarString += "\"${item}\""
-                
-        //         if(j != endIdx) {
-        //             grammarString += ","
-        //         }
-        //     }
-        //     grammarString += "]"
-             if(i != split.size - 1) {
-                 grammarString += ","
-             }
-        }
+        Timber.e("Using grammar " + grammar)    
 
-        grammarString += "]"
-        //val grammarString = "[\"$expected\"]";
-        Timber.e("Using grammar string " + grammarString)    
-
-        val recognizer = Recognizer(model!!, 16000.0f, grammarString)
+        val recognizer = Recognizer(model!!, 16000.0f, grammar)
         //val recognizer = Recognizer(model, 16000.0f)
         recognizer.setMaxAlternatives(numCandidates)
         
