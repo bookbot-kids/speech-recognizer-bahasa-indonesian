@@ -24,6 +24,10 @@ public class Recognizer extends PointerType implements AutoCloseable {
         super(LibBookbot.bookbot_recognizer_new_grm(model.getPointer(), sampleRate, grammar));
     }
 
+    public Recognizer(Model model, float sampleRate) {
+        super(LibBookbot.bookbot_recognizer_new(model.getPointer(), sampleRate));
+    }
+
     public void setMaxAlternatives(int maxAlternatives) {
         LibBookbot.bookbot_recognizer_set_max_alternatives(this.getPointer(), maxAlternatives);
     }

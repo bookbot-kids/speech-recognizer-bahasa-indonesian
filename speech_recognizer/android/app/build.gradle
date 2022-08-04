@@ -60,7 +60,7 @@ android {
         }
     }
 
-    ndkVersion = "23.0.7599858"
+    ndkVersion = "23.2.8568313"
 
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
