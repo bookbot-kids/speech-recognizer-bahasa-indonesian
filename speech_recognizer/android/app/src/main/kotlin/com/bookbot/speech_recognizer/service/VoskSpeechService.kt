@@ -67,14 +67,14 @@ class VoskSpeechService(private val context: Context, private val language:Strin
         initModel()
     }
 
-    override fun start(grammar:String) {
+    override fun start(grammar:String?) {
         if(!ready) {
           throw Exception("VoskSpeechService is not ready, did you wait for initModel to complete?")
         }
         Timber.e("Using grammar " + grammar)    
 
-        val recognizer = Recognizer(model!!, 16000.0f, grammar)
-        //val recognizer = Recognizer(model, 16000.0f)
+        val recognizer = grammar != null ? Recognizer(model!!, 16000.0f, grammar) : Recognizer(model!!, 16000.0f)
+
         recognizer.setMaxAlternatives(numCandidates)
         
         if(kaldiSpeechService!!.startListening(recognizer) == false) {
