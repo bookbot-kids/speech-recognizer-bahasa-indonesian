@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4.1)  # for example
 set(CMAKE_BUILD_TYPE DEBUG)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 include_directories(src/main/cpp)
 include_directories(src/main/cpp/include)
 
@@ -15,9 +15,41 @@ add_library(
         src/main/cpp/language_model.cc
 )
 
-target_link_libraries(bookbot  -landroid -llog -lvosk)
-
-#-l:libkaldi-base.so -l:libkaldi-chain.so -l:libkaldi-decoder.so -l:libkaldi-feat.so -l:libkaldi-fstext.so -l:libkaldi-gmm.so -l:libkaldi-hmm.so -l:libkaldi-ivector.so -l:libkaldi-lat.so -l:libkaldi-kws.so -l:libkaldi-lm.so -l:libkaldi-matrix.so -l:libkaldi-transform.so -l:libkaldi-tree.so -l:libkaldi-util.so -l:libkaldi-nnet.so -l:libkaldi-nnet2.so -l:libkaldi-nnet3.so -l:libkaldi-online2.so -l:libkaldi-sgmm2.so -l:libfst.so -l:libfstlookahead.so -l:libfstngram.so -l:libkaldi-rnnlm.so -l:libkaldi-cudamatrix.so
+target_link_libraries(
+  bookbot 
+  -landroid 
+  -llog 
+  -l:kaldi-base.a 
+  -l:libopenblas.a 
+  -l:libclapack.a 
+  -l:libblas.a 
+  -l:libf2c.a
+  -l:kaldi-chain.a 
+  -l:kaldi-decoder.a 
+  -l:kaldi-feat.a 
+ -l:kaldi-fstext.a 
+ -l:kaldi-gmm.a 
+ -l:kaldi-hmm.a 
+ -l:kaldi-ivector.a 
+ -l:kaldi-lat.a 
+ -l:kaldi-kws.a 
+ -l:kaldi-lm.a 
+ -l:kaldi-matrix.a 
+ -l:kaldi-transform.a 
+ -l:kaldi-tree.a 
+ -l:kaldi-util.a 
+ -l:kaldi-nnet.a 
+ -l:kaldi-nnet2.a 
+ -l:kaldi-nnet3.a 
+ -l:kaldi-online2.a 
+ -l:kaldi-sgmm2.a 
+ -l:libfst.a 
+ -l:libfstlookahead.a 
+ -l:libfstngram.a 
+ -l:olabel_lookahead-fst.a
+ -l:ngram-fst.a
+ -l:kaldi-rnnlm.a 
+ -l:kaldi-cudamatrix.a)
 
 
 
