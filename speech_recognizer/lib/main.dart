@@ -61,7 +61,11 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
             .map((x) => x['text'].trim().split(' ').cast<String>().toList())
             .toList()
             .cast<List<String>>();
-    if (candidates.isEmpty) return;
+    if (candidates.isEmpty ||
+        !candidates
+            .any((element) => element.any((element) => element.isNotEmpty))) {
+      return;
+    }
     // ignore: avoid_print
     print(candidates);
     setState(() {
@@ -85,16 +89,18 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
     if (!_isInitialized) {
       await SpeechController.shared.initSpeech('id');
       setState(() {
-        _isInitialized = true;  
+        _isInitialized = true;
       });
-      
+
       SpeechController.shared.addListener(this);
     }
   }
 
   /// Initialize the speech recognizer and start listening
   Future<void> _recognize() async {
-    await SpeechController.shared.flushSpeech(grammar:"[\"halo dunia\",\"satu dua tiga\"]");
+    // await SpeechController.shared
+    //     .flushSpeech(grammar: "[\"halo dunia\",\"satu dua tiga\"]");
+    await SpeechController.shared.flushSpeech();
     await SpeechController.shared.listen();
   }
 
@@ -119,9 +125,11 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
               height: 300,
               width: double.infinity,
               color: Colors.grey.withOpacity(0.2),
-              child: _decoded.length == 0 ? Container() : SingleChildScrollView(
-                    child: Column(children: _decoded.map((d) => Text(d)).toList())
-                  ),
+              child: _decoded.length == 0
+                  ? Container()
+                  : SingleChildScrollView(
+                      child: Column(
+                          children: _decoded.map((d) => Text(d)).toList())),
             ),
             const SizedBox(
               height: 10,

@@ -202,11 +202,12 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         do {
           recognizer = bookbot_recognizer_new_grm(m.model, self.sampleRate, self.grammar)
           print("Created recognizer with grammar")
-          //bookbot_recognizer_set_max_alternatives(recognizer, 5)
         } catch {
           print("Error generating grammar for recognizer")
         }
       }
+     
+        bookbot_recognizer_set_max_alternatives(recognizer, 5)
     }
   
     
@@ -264,7 +265,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
                 }
                 let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
                 let resultString = String(validatingUTF8: res!)!
-                //print(resultString)
+//                print(resultString)
                 self.eventSink?([resultString, endOfSpeech == 1])
             }
         }
