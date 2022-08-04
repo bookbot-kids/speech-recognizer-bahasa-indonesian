@@ -73,7 +73,7 @@ class VoskSpeechService(private val context: Context, private val language:Strin
         }
         Timber.e("Using grammar " + grammar)    
 
-        val recognizer = grammar != null ? Recognizer(model!!, 16000.0f, grammar) : Recognizer(model!!, 16000.0f)
+        val recognizer = if(grammar != null) Recognizer(model!!, 16000.0f, grammar) else Recognizer(model!!, 16000.0f)
 
         recognizer.setMaxAlternatives(numCandidates)
         

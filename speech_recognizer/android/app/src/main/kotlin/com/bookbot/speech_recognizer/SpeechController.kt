@@ -253,7 +253,7 @@ class SpeechController(context: Activity, private val lifecycle: Lifecycle): Flu
             Timber.i("speechRecognitionService is null, startSpeech is a no-op")
         }
         synchronized(lock) {
-            speechRecognitionService?.start(it)
+            speechRecognitionService?.start(grammar)
         }
     }
 
