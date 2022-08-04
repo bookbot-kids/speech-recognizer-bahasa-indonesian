@@ -49,7 +49,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
   var _isInitialized = false;
-  var _speechText = '';
+  var _listening = false;
+  List<String> _decoded = [];
 
   /// listen to speech events and print result in UI
   @override
@@ -64,12 +65,12 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
     // ignore: avoid_print
     print(candidates);
     setState(() {
-      _speechText += '${candidates.join(' ')}\n';
+      _decoded.insert(0, candidates.join(' '));
     });
   }
 
-  /// Initialize the speech recognizer and start listening
-  Future<void> _recognize() async {
+  /// Loads the speech recognition model
+  void _load() async {
     // ask for permission
     final permissions = await SpeechController.shared.permissions();
     if (permissions == AudioSpeechPermission.undetermined) {
@@ -83,12 +84,18 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
 
     if (!_isInitialized) {
       await SpeechController.shared.initSpeech('id');
-      _isInitialized = true;
+      setState(() {
+        _isInitialized = true;  
+      });
+      
       SpeechController.shared.addListener(this);
     }
+  }
 
+  /// Initialize the speech recognizer and start listening
+  Future<void> _recognize() async {
+    await SpeechController.shared.flushSpeech(grammar:"[\"halo dunia\",\"satu dua tiga\"]");
     await SpeechController.shared.listen();
-    await SpeechController.shared.flushSpeech();
   }
 
   /// Stop the speech recognizer
@@ -112,24 +119,26 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
               height: 300,
               width: double.infinity,
               color: Colors.grey.withOpacity(0.2),
-              child: Scrollbar(
-                  isAlwaysShown: true,
-                  child: SingleChildScrollView(
-                    child: Text(_speechText),
-                  )),
+              child: _decoded.length == 0 ? Container() : SingleChildScrollView(
+                    child: Column(children: _decoded.map((d) => Text(d)).toList())
+                  ),
             ),
             const SizedBox(
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () => _recognize(),
+              onPressed: !_isInitialized ? _load : null,
+              child: const Text('Load model'),
+            ),
+            ElevatedButton(
+              onPressed: _isInitialized && !_listening ? _recognize : null,
               child: const Text('Start listening'),
             ),
             const SizedBox(
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () => _stopRecognize(),
+              onPressed: _listening ? _stopRecognize : null,
               child: const Text('Stop listening'),
             ),
           ],
