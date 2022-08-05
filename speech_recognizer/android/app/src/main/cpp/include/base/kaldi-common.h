@@ -19,7 +19,6 @@
 
 #ifndef KALDI_BASE_KALDI_COMMON_H_
 #define KALDI_BASE_KALDI_COMMON_H_ 1
-
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>  // C string stuff like strcpy

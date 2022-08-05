@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.4.1)  # for example
 set(CMAKE_BUILD_TYPE DEBUG)
-set(CMAKE_CXX_STANDARD 14)
+
+set(ANDROID_STL c++_shared)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+
 include_directories(src/main/cpp)
 include_directories(src/main/cpp/include)
 
@@ -19,37 +22,34 @@ target_link_libraries(
   bookbot 
   -landroid 
   -llog 
+  -lc++ 
+  -l:kaldi-fstext.a 
+  -l:kaldi-chain.a 
+  -l:kaldi-nnet3.a 
+  -l:kaldi-online2.a 
+  -l:kaldi-feat.a 
+  -l:kaldi-ivector.a 
+  -l:kaldi-rnnlm.a 
+  -l:kaldi-lm.a 
+  -l:kaldi-decoder.a 
+  -l:kaldi-lat.a 
+  -l:kaldi-hmm.a 
+  -l:kaldi-transform.a 
+  -l:kaldi-gmm.a 
+  -l:kaldi-tree.a 
+  -l:kaldi-cudamatrix.a 
+  -l:kaldi-matrix.a 
+  -l:kaldi-util.a 
   -l:kaldi-base.a 
   -l:libopenblas.a 
   -l:libclapack.a 
   -l:libblas.a 
-  -l:libf2c.a
-  -l:kaldi-chain.a 
-  -l:kaldi-decoder.a 
-  -l:kaldi-feat.a 
- -l:kaldi-fstext.a 
- -l:kaldi-gmm.a 
- -l:kaldi-hmm.a 
- -l:kaldi-ivector.a 
- -l:kaldi-lat.a 
- -l:kaldi-kws.a 
- -l:kaldi-lm.a 
- -l:kaldi-matrix.a 
- -l:kaldi-transform.a 
- -l:kaldi-tree.a 
- -l:kaldi-util.a 
- -l:kaldi-nnet.a 
- -l:kaldi-nnet2.a 
- -l:kaldi-nnet3.a 
- -l:kaldi-online2.a 
- -l:kaldi-sgmm2.a 
- -l:libfst.a 
- -l:libfstlookahead.a 
- -l:libfstngram.a 
- -l:olabel_lookahead-fst.a
- -l:ngram-fst.a
- -l:kaldi-rnnlm.a 
- -l:kaldi-cudamatrix.a)
+  -l:libf2c.a 
+  -l:libfst.a 
+  -l:libfstlookahead.a
+  -l:libfstngram.a 
+  -l:olabel_lookahead-fst.a 
+  -l:ngram-fst.a )
 
 
 
