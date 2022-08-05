@@ -14,7 +14,7 @@
     </a>
 </p>
 
-A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
+A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter and leveraging the Kaldi framework. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
 
 !!! note
 
@@ -22,7 +22,7 @@ A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recogniz
 
 ## Features
 
-- Indonesian speech-to-text through an automatic speech recognition (ASR) model, trained on children's speech.
+- Indonesian speech-to-text through a Kaldi-based automatic speech recognition (ASR) model, trained on children's speech.
 - Train custom machine learning model with [model extractor](https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/tree/main/model_extractor).
 - Integrate speech-to-text model with mobile and desktop applications.
 
@@ -34,6 +34,8 @@ A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recogniz
 - Open the project in Visual Studio Code, navigate to `lib/main.dart`.
 - Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
 - Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
+
+Note Kaldi libraries have been compiled from commit hash 9af2c5c16389e141f527ebde7ee432a0c1df9fb9 with OpenFST v1.7.3.
 
 ### Android
 
@@ -125,3 +127,8 @@ class _MyHomePageState implements SpeechListener { // (1)
 <a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=bookbot-kids/speech-recognizer-bahasa-indonesian" />
 </a>
+
+## Credits
+
+[Alpha Cephei/Vosk](https://github.com/alphacep/vosk-api)
+
