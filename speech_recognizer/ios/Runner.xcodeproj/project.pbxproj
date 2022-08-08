@@ -33,7 +33,6 @@
 		840AC185289A522200F99787 /* kaldi-gmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEE27A156FA00715D55 /* kaldi-gmm.a */; };
 		840AC186289A522200F99787 /* kaldi-hmm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0827A156FB00715D55 /* kaldi-hmm.a */; };
 		840AC187289A522200F99787 /* kaldi-ivector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF727A156FA00715D55 /* kaldi-ivector.a */; };
-		840AC188289A522300F99787 /* kaldi-kws.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF927A156FA00715D55 /* kaldi-kws.a */; };
 		840AC189289A522300F99787 /* kaldi-lat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0A27A156FB00715D55 /* kaldi-lat.a */; };
 		840AC18A289A522300F99787 /* kaldi-lm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF327A156FA00715D55 /* kaldi-lm.a */; };
 		840AC18B289A522300F99787 /* kaldi-matrix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBEF27A156FA00715D55 /* kaldi-matrix.a */; };
@@ -41,8 +40,6 @@
 		840AC18D289A522300F99787 /* kaldi-nnet2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFB27A156FA00715D55 /* kaldi-nnet2.a */; };
 		840AC18E289A522300F99787 /* kaldi-nnet3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF627A156FA00715D55 /* kaldi-nnet3.a */; };
 		840AC18F289A522300F99787 /* kaldi-online2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0027A156FB00715D55 /* kaldi-online2.a */; };
-		840AC190289A522300F99787 /* kaldi-rnnlm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */; };
-		840AC191289A522300F99787 /* kaldi-sgmm2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF427A156FA00715D55 /* kaldi-sgmm2.a */; };
 		840AC192289A522300F99787 /* kaldi-transform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBF027A156FA00715D55 /* kaldi-transform.a */; };
 		840AC193289A522300F99787 /* kaldi-tree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0327A156FB00715D55 /* kaldi-tree.a */; };
 		840AC194289A522300F99787 /* kaldi-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BC0627A156FB00715D55 /* kaldi-util.a */; };
@@ -53,6 +50,7 @@
 		840AC19D289A522400F99787 /* libilabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC199289A522300F99787 /* libilabel_lookahead-fst.a */; };
 		840AC19E289A522400F99787 /* libarc_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC19A289A522300F99787 /* libarc_lookahead-fst.a */; };
 		840AC19F289A522400F99787 /* libolabel_lookahead-fst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840AC19B289A522400F99787 /* libolabel_lookahead-fst.a */; };
+		840AC1A028A0F17600F99787 /* kaldi-rnnlm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5203BBFF27A156FB00715D55 /* kaldi-rnnlm.a */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -162,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				840AC1A028A0F17600F99787 /* kaldi-rnnlm.a in Frameworks */,
 				840AC19C289A522400F99787 /* libngram-fst.a in Frameworks */,
 				840AC19D289A522400F99787 /* libilabel_lookahead-fst.a in Frameworks */,
 				840AC19E289A522400F99787 /* libarc_lookahead-fst.a in Frameworks */,
@@ -175,7 +174,6 @@
 				840AC185289A522200F99787 /* kaldi-gmm.a in Frameworks */,
 				840AC186289A522200F99787 /* kaldi-hmm.a in Frameworks */,
 				840AC187289A522200F99787 /* kaldi-ivector.a in Frameworks */,
-				840AC188289A522300F99787 /* kaldi-kws.a in Frameworks */,
 				840AC189289A522300F99787 /* kaldi-lat.a in Frameworks */,
 				840AC18A289A522300F99787 /* kaldi-lm.a in Frameworks */,
 				840AC18B289A522300F99787 /* kaldi-matrix.a in Frameworks */,
@@ -183,8 +181,6 @@
 				840AC18D289A522300F99787 /* kaldi-nnet2.a in Frameworks */,
 				840AC18E289A522300F99787 /* kaldi-nnet3.a in Frameworks */,
 				840AC18F289A522300F99787 /* kaldi-online2.a in Frameworks */,
-				840AC190289A522300F99787 /* kaldi-rnnlm.a in Frameworks */,
-				840AC191289A522300F99787 /* kaldi-sgmm2.a in Frameworks */,
 				840AC192289A522300F99787 /* kaldi-transform.a in Frameworks */,
 				840AC193289A522300F99787 /* kaldi-tree.a in Frameworks */,
 				840AC194289A522300F99787 /* kaldi-util.a in Frameworks */,
@@ -828,6 +824,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = 873X6R39HP;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				FRAMEWORK_SEARCH_PATHS = (
