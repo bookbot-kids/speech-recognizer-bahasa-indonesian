@@ -14,7 +14,7 @@
     </a>
 </p>
 
-A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
+A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter and leveraging the Kaldi framework. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
 
 !!! note
 
@@ -22,7 +22,7 @@ A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recogniz
 
 ## Features
 
-- Indonesian speech-to-text through an automatic speech recognition (ASR) model, trained on children's speech.
+- Indonesian speech-to-text through a Kaldi-based automatic speech recognition (ASR) model, trained on children's speech.
 - Train custom machine learning model with [model extractor](https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/tree/main/model_extractor).
 - Integrate speech-to-text model with mobile and desktop applications.
 
@@ -34,6 +34,8 @@ A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recogniz
 - Open the project in Visual Studio Code, navigate to `lib/main.dart`.
 - Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
 - Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
+
+Note Kaldi libraries have been compiled from commit hash `9af2c5c16389e141f527ebde7ee432a0c1df9fb9` with OpenFST v1.7.3.
 
 ### Android
 
@@ -56,7 +58,7 @@ Similarly on iOS/MacOS:
 
 ### Flutter Sample App
 
-- After setting up, run the app by pressing the `Start listening` button.
+- After setting up, run the app by pressing the `Load model` button and then `Start listening`
 - Speak into the microphone and the corresponding output text will be displayed in the text field.
 - Press `Stop listening` to stop the app from listening.
 
@@ -66,30 +68,41 @@ import 'package:speech_recognizer/speech_recognizer.dart';
 class _MyHomePageState implements SpeechListener { // (1)
   final recognizer = SpeechController.shared;
 
-  Future<void> _setup() async {
-    final permissions = await recognizer.permissions(); // (2)
+  void _load() async {
+    // ask for permission
+    final permissions = await SpeechController.shared.permissions(); // (2)
     if (permissions == AudioSpeechPermission.undetermined) {
-      await recognizer.authorize();
+      await SpeechController.shared.authorize();
     }
 
-    if (await recognizer.permissions() != AudioSpeechPermission.authorized) {
+    if (await SpeechController.shared.permissions() !=
+        AudioSpeechPermission.authorized) {
       return;
     }
 
-    await recognizer.initSpeech('id'); // (3)
-    recognizer.addListener(this); // (4)
-    recognizer.listen(); // (5)
+    if (!_isInitialized) {
+      await SpeechController.shared.initSpeech('id'); // (3)
+      setState(() {
+        _isInitialized = true;
+      });
+
+      SpeechController.shared.addListener(this); // (4)
+    }
   }
 
   @override
-  void onResult(Map result, bool wasEndpoint) { // (6)
-    List<List<String>> candidates = result.containsKey('partial') // (7)
+  void onResult(Map result, bool wasEndpoint) { // (5)
+    List<List<String>> candidates = result.containsKey('partial') // (6)
         ? [result['partial'].trim().split(' ')]
         : result['alternatives']
             .map((x) => x['text'].trim().split(' ').cast<String>().toList())
             .toList()
             .cast<List<String>>();
-    print(candidates); // (8)
+    if (candidates.isEmpty ||
+        !candidates
+            .any((element) => element.any((element) => element.isNotEmpty))) {
+      return;
+    }
   }
 }
 ```
@@ -98,10 +111,8 @@ class _MyHomePageState implements SpeechListener { // (1)
 2. Ask for recording permission.
 3. Initialize Indonesian recognizer model.
 4. Register listener in this class.
-5. Start to listen voice on microphone.
-6. Output text listener while speaking.
-7. Normalized result.
-8. Print recognized words.
+5. Output text listener while speaking.
+6. Normalized result.
 
 <!-- TODO: add other platforms -->
 
@@ -125,3 +136,7 @@ class _MyHomePageState implements SpeechListener { // (1)
 <a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=bookbot-kids/speech-recognizer-bahasa-indonesian" />
 </a>
+
+## Credits
+
+[Alpha Cephei/Vosk](https://github.com/alphacep/vosk-api)

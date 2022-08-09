@@ -35,7 +35,7 @@ A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recogniz
 - Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
 - Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
 
-Note Kaldi libraries have been compiled from commit hash 9af2c5c16389e141f527ebde7ee432a0c1df9fb9 with OpenFST v1.7.3.
+Note Kaldi libraries have been compiled from commit hash `9af2c5c16389e141f527ebde7ee432a0c1df9fb9` with OpenFST v1.7.3.
 
 ### Android
 
@@ -70,7 +70,7 @@ class _MyHomePageState implements SpeechListener { // (1)
 
   void _load() async {
     // ask for permission
-    final permissions = await SpeechController.shared.permissions();
+    final permissions = await SpeechController.shared.permissions(); // (2)
     if (permissions == AudioSpeechPermission.undetermined) {
       await SpeechController.shared.authorize();
     }
@@ -81,18 +81,18 @@ class _MyHomePageState implements SpeechListener { // (1)
     }
 
     if (!_isInitialized) {
-      await SpeechController.shared.initSpeech('id');
+      await SpeechController.shared.initSpeech('id'); // (3)
       setState(() {
         _isInitialized = true;
       });
 
-      SpeechController.shared.addListener(this);
+      SpeechController.shared.addListener(this); // (4)
     }
   }
 
   @override
-  void onResult(Map result, bool wasEndpoint) { // (6)
-    List<List<String>> candidates = result.containsKey('partial')
+  void onResult(Map result, bool wasEndpoint) { // (5)
+    List<List<String>> candidates = result.containsKey('partial') // (6)
         ? [result['partial'].trim().split(' ')]
         : result['alternatives']
             .map((x) => x['text'].trim().split(' ').cast<String>().toList())
@@ -111,10 +111,8 @@ class _MyHomePageState implements SpeechListener { // (1)
 2. Ask for recording permission.
 3. Initialize Indonesian recognizer model.
 4. Register listener in this class.
-5. Start to listen voice on microphone.
-6. Output text listener while speaking.
-7. Normalized result.
-8. Print recognized words.
+5. Output text listener while speaking.
+6. Normalized result.
 
 <!-- TODO: add other platforms -->
 
@@ -142,4 +140,3 @@ class _MyHomePageState implements SpeechListener { // (1)
 ## Credits
 
 [Alpha Cephei/Vosk](https://github.com/alphacep/vosk-api)
-
