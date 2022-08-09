@@ -58,7 +58,7 @@ Similarly on iOS/MacOS:
 
 ### Flutter Sample App
 
-- After setting up, run the app by pressing the `Start listening` button.
+- After setting up, run the app by pressing the `Load model` button and then `Start listening`
 - Speak into the microphone and the corresponding output text will be displayed in the text field.
 - Press `Stop listening` to stop the app from listening.
 
@@ -68,30 +68,41 @@ import 'package:speech_recognizer/speech_recognizer.dart';
 class _MyHomePageState implements SpeechListener { // (1)
   final recognizer = SpeechController.shared;
 
-  Future<void> _setup() async {
-    final permissions = await recognizer.permissions(); // (2)
+  void _load() async {
+    // ask for permission
+    final permissions = await SpeechController.shared.permissions();
     if (permissions == AudioSpeechPermission.undetermined) {
-      await recognizer.authorize();
+      await SpeechController.shared.authorize();
     }
 
-    if (await recognizer.permissions() != AudioSpeechPermission.authorized) {
+    if (await SpeechController.shared.permissions() !=
+        AudioSpeechPermission.authorized) {
       return;
     }
 
-    await recognizer.initSpeech('id'); // (3)
-    recognizer.addListener(this); // (4)
-    recognizer.listen(); // (5)
+    if (!_isInitialized) {
+      await SpeechController.shared.initSpeech('id');
+      setState(() {
+        _isInitialized = true;
+      });
+
+      SpeechController.shared.addListener(this);
+    }
   }
 
   @override
   void onResult(Map result, bool wasEndpoint) { // (6)
-    List<List<String>> candidates = result.containsKey('partial') // (7)
+    List<List<String>> candidates = result.containsKey('partial')
         ? [result['partial'].trim().split(' ')]
         : result['alternatives']
             .map((x) => x['text'].trim().split(' ').cast<String>().toList())
             .toList()
             .cast<List<String>>();
-    print(candidates); // (8)
+    if (candidates.isEmpty ||
+        !candidates
+            .any((element) => element.any((element) => element.isNotEmpty))) {
+      return;
+    }
   }
 }
 ```

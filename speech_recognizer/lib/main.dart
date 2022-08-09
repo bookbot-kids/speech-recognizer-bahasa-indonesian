@@ -50,7 +50,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
   var _isInitialized = false;
   var _listening = false;
-  List<String> _decoded = [];
+  final _decoded = <String>[];
 
   /// listen to speech events and print result in UI
   @override
@@ -102,12 +102,19 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
     //     .flushSpeech(grammar: "[\"halo dunia\",\"satu dua tiga\"]");
     await SpeechController.shared.flushSpeech();
     await SpeechController.shared.listen();
+    setState(() {
+      _listening = true;
+    });
   }
 
   /// Stop the speech recognizer
   Future<void> _stopRecognize() async {
     if (_isInitialized) {
       await SpeechController.shared.stopListening();
+
+      setState(() {
+        _listening = false;
+      });
     }
   }
 
@@ -125,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
               height: 300,
               width: double.infinity,
               color: Colors.grey.withOpacity(0.2),
-              child: _decoded.length == 0
+              child: _decoded.isEmpty
                   ? Container()
                   : SingleChildScrollView(
                       child: Column(
