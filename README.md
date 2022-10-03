@@ -12,6 +12,9 @@
     <a href="https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/blob/main/CODE_OF_CONDUCT.md">
         <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg">
     </a>
+    <a href="https://discord.gg/gqwTPyPxa6">
+        <img alt="chat on Discord" src="https://img.shields.io/discord/1001447685645148169?logo=discord">
+    </a>
 </p>
 
 A cross platform (Android/iOS/MacOS) Bahasa Indonesia children's speech recognizer library, written in Flutter and leveraging the Kaldi framework. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
