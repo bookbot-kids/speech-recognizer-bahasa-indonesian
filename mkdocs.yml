@@ -39,4 +39,5 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Contributing: contributing.md
   - Flutter API: /speech-recognizer-bahasa-indonesian/speech_recognizer/doc/api/index.html
