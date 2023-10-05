@@ -95,8 +95,9 @@ class SpeechController {
   }
 
   /// Initialize speech recognition ML model
-  Future<void> initSpeech(String language) async {
-    await methodChannel.invokeMethod('initSpeech', [language]);
+  Future<void> initSpeech(String language, {bool startSpeech = true}) async {
+    await methodChannel.invokeMethod(
+        'initSpeech', [language, startSpeech.toString().toLowerCase()]);
     eventChannel
         .receiveBroadcastStream()
         .listen(_onEvent, onError: _onEventError);
@@ -149,5 +150,9 @@ class SpeechController {
     if (Platform.isAndroid) {
       await methodChannel.invokeMethod('endSpeech');
     }
+  }
+
+  Future<List> recognizeAudio(String filePath) async {
+    return await methodChannel.invokeMethod('recognizeAudio', filePath);
   }
 }

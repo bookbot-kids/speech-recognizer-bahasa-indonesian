@@ -23,7 +23,8 @@ void main() {
 
 /// The main application
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool isTesting;
+  const MyApp({Key? key, this.isTesting = false}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -33,15 +34,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Demo speech recognize'),
+      home: MyHomePage(
+        title: 'Demo speech recognize',
+        isTesting: isTesting,
+      ),
     );
   }
 }
 
 /// The home page of the application
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, this.isTesting = false})
+      : super(key: key);
   final String title;
+  final bool isTesting;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -51,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
   var _isInitialized = false;
   var _listening = false;
   final _decoded = <String>[];
+  static const _audioPath = 'assets/sample.wav';
 
   /// listen to speech events and print result in UI
   @override
@@ -75,25 +82,36 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
 
   /// Loads the speech recognition model
   void _load() async {
-    // ask for permission
-    final permissions = await SpeechController.shared.permissions();
-    if (permissions == AudioSpeechPermission.undetermined) {
-      await SpeechController.shared.authorize();
-    }
+    if (!widget.isTesting) {
+      // ask for permission
+      final permissions = await SpeechController.shared.permissions();
+      if (permissions == AudioSpeechPermission.undetermined) {
+        await SpeechController.shared.authorize();
+      }
 
-    if (await SpeechController.shared.permissions() !=
-        AudioSpeechPermission.authorized) {
-      return;
+      if (await SpeechController.shared.permissions() !=
+          AudioSpeechPermission.authorized) {
+        return;
+      }
     }
 
     if (!_isInitialized) {
-      await SpeechController.shared.initSpeech('id');
+      await SpeechController.shared
+          .initSpeech('id', startSpeech: !widget.isTesting);
       setState(() {
         _isInitialized = true;
       });
 
       SpeechController.shared.addListener(this);
     }
+  }
+
+  Future<void> _recognizeAudio() async {
+    final result = await SpeechController.shared.recognizeAudio(_audioPath);
+    debugPrint('audio result $result');
+    setState(() {
+      _decoded.addAll(result.map((e) => e.toString()));
+    });
   }
 
   /// Initialize the speech recognizer and start listening
@@ -142,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
               height: 10,
             ),
             ElevatedButton(
+              key: const ValueKey('loadModel'),
               onPressed: !_isInitialized ? _load : null,
               child: const Text('Load model'),
             ),
@@ -155,6 +174,14 @@ class _MyHomePageState extends State<MyHomePage> implements SpeechListener {
             ElevatedButton(
               onPressed: _listening ? _stopRecognize : null,
               child: const Text('Stop listening'),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+              key: const ValueKey('recognizeAudio'),
+              onPressed: _isInitialized ? _recognizeAudio : null,
+              child: const Text('Recgonize audio file'),
             ),
           ],
         ),

@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 34
 
     externalNativeBuild {
         cmake {
@@ -51,7 +51,7 @@ android {
     defaultConfig {
         applicationId "com.bookbot.speech_recognizer"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 

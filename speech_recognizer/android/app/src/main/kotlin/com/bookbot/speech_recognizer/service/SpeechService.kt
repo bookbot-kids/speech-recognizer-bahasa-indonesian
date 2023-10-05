@@ -25,7 +25,7 @@ interface SpeechListener {
 
 interface SpeechService {
     val isRunning:Boolean
-    fun initSpeech(listener: SpeechListener)
+    fun initSpeech(listener: SpeechListener, startSpeech: Boolean = true)
     fun start(grammar:String?)
     fun stop()
     fun destroy()
@@ -33,4 +33,5 @@ interface SpeechService {
     fun pause()
     fun resume()
     val buffer: BlockingQueue<ShortArray>?
+    fun recognizeAudio(filePath: String): List<String>
 }

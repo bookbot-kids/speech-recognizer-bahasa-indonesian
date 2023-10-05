@@ -172,8 +172,21 @@ class SpeechController(context: Activity, private val lifecycle: Lifecycle): Flu
                 result.success(null)
             }
             "endSpeech" -> endSpeech(result)
+            "recognizeAudio"-> {
+                val args = call.arguments as String
+                recognizeAudio(args, result)
+            }
             else -> result.notImplemented()
         }
+    }
+
+    private fun recognizeAudio(assetFile: String, result: MethodChannel.Result) {
+        Thread{
+            val resultText = speechRecognitionService?.recognizeAudio(assetFile)
+            handler.post {
+                result.success(resultText)
+            }
+        }.start()
     }
 
     /// 
@@ -226,20 +239,24 @@ class SpeechController(context: Activity, private val lifecycle: Lifecycle): Flu
                 synchronized(lock) {
 
                     val asrLanguage = args[0] ?: ""
+                    val startSpeech = args[1] == "true"
                     if(speechRecognitionService == null || asrLanguage != this.speechRecognitionLanguage) {
                         // If a profile ID is provided, we pass exposeAudio as true when creating the VoskSpeechService and pass its buffer to a MicrophoneRecorder instance
                         speechRecognitionService?.destroy()
                         speechRecognitionService = VoskSpeechService(activity, asrLanguage, false)
                         speechRecognitionLanguage = asrLanguage
-                        speechRecognitionService?.initSpeech(this)
+                        speechRecognitionService?.initSpeech(this, startSpeech)
                     } else {
                         Timber.d("SpeechRecognitionService already exists for this language and profile ID, skipping re-creation")
                     }
                     Timber.d("Speech recognition initialization complete.")
                 }
+
+                handler.post{
+                    result?.success(null)
+                }
             }
         }.start()
-        result?.success(null)
     }
 
     /// 

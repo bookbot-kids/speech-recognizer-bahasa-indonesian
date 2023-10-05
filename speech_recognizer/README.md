@@ -27,3 +27,8 @@ Similarly on iOS/MacOS:
 - Open Xcode
 - Navigate to `Info.plist`
 - Add microphone permission `NSMicrophoneUsageDescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
+
+### Testing
+- Follow the same Installation / Setup guide
+- Launch an Android emulator or iOS simulator
+- Run `flutter test integration_test/app_test.dart` 

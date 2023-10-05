@@ -132,11 +132,48 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         // Final process of speech - for when page is turned or text line is touched
         case "flushSpeech":
           let args = call.arguments as! Array<Any?>
-          self.flushSpeech(toRead: args[0] as? String ?? "", grammar: args[1] as? String ?? "")
+          let startSpeech = args[1] as? String ?? "" == "true"
+          self.flushSpeech(toRead: args[0] as? String ?? "", grammar: args[1] as? String ?? "", startSpeech: startSpeech)
           result(nil)
+      case "recognizeAudio":
+          let args = call.arguments as! String
+          self.recognizeAudio(assetPath: args, flutterResult: result)
         default:
           result(FlutterMethodNotImplemented)
     }
+    }
+    
+    private func recognizeAudio(assetPath: String, flutterResult: @escaping FlutterResult) {
+        let key = registrar?.lookupKey(forAsset: assetPath);
+        guard let path = Bundle.main.path(forResource: key, ofType: nil) else {
+            flutterResult(nil)
+            return
+        }
+        
+        guard let fileUrl = URL(string: path) else { return }
+        let file = try! AVAudioFile(forReading: fileUrl)
+        let processingFormat = file.processingFormat
+        let frameCount = AVAudioFrameCount(file.length)
+
+        let bufferSize: AVAudioFrameCount = AVAudioFrameCount((16000 * 0.2).rounded())
+        let buffer = AVAudioPCMBuffer(pcmFormat: processingFormat, frameCapacity: bufferSize)!
+        var list = [String]()
+
+        while file.framePosition < file.length {
+            let framesToRead = min(bufferSize, AVAudioFrameCount(file.length - file.framePosition))
+            try! file.read(into: buffer, frameCount: framesToRead)
+
+            let dataLen = Int(buffer.frameLength)
+            let channels = UnsafeBufferPointer(start: buffer.int16ChannelData, count: Int(buffer.format.channelCount))
+            let endOfSpeech = channels[0].withMemoryRebound(to: Int16.self, capacity: dataLen) {
+                bookbot_recognizer_accept_waveform_s(self.recognizer!, $0, Int32(dataLen))
+            }
+            let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
+            let resultString = String(validatingUTF8: res!)!
+            list.append(resultString)
+        }
+        
+        flutterResult(list)
     }
 
     public func audioPermission(flutterResult: @escaping FlutterResult) {
@@ -300,7 +337,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     /// For example, if we expect the word "cat", then [expectedSpeech] is set to "cat" but [grammar] needs to be set to [cat, mat, sat] etc.
     /// Otherwise, the recognizer will only ever return the word "cat", no matter what was said.
     ///
-    public func flushSpeech(toRead: String, grammar:String) {
+    public func flushSpeech(toRead: String, grammar:String, startSpeech: Bool) {
         self.expectedSpeech = toRead
         
         // will immediately stop pushing audio into the recognizer

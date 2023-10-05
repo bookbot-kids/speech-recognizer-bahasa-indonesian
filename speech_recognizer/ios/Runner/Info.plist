@@ -47,5 +47,7 @@
 	<string>Bookbot uses your microphone to listen to your child read out loud.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

@@ -19,14 +19,20 @@ package com.bookbot.speech_recognizer.service
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.bookbot.vosk.StreamWritingVoskService
-import org.vosk.android.RecognitionListener
 import com.bookbot.Model
 import com.bookbot.Recognizer
 import com.bookbot.vosk.StorageService
+import com.bookbot.vosk.StreamWritingVoskService
+import io.flutter.FlutterInjector
+import org.json.JSONObject
+import org.vosk.android.RecognitionListener
 import timber.log.Timber
-import java.util.concurrent.BlockingQueue
+import java.io.InputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.BlockingQueue
+import kotlin.math.roundToInt
 
 class VoskSpeechService(private val context: Context, private val language:String, private val bufferAudio:Boolean):
     SpeechService {
@@ -35,6 +41,34 @@ class VoskSpeechService(private val context: Context, private val language:Strin
     private lateinit var listener: SpeechListener
     private var kaldiSpeechService: StreamWritingVoskService? = null
     override var buffer: BlockingQueue<ShortArray>? = null
+    override fun recognizeAudio(assetFile: String): List<String> {
+        val loader =  FlutterInjector.instance().flutterLoader()
+        val key = loader.getLookupKeyForAsset(assetFile)
+        val bufferSize = (16000 * StreamWritingVoskService.BUFFER_SIZE_SECONDS).roundToInt()
+        val buffer = ByteArray(bufferSize)
+        var bis: InputStream? = null
+        val recognizer = Recognizer(model, 16000.0f)
+        val result = mutableListOf<String>()
+        try {
+            bis =  context.applicationContext.assets.open(key)
+            while (bis.read(buffer, 0, bufferSize) != -1) {
+                if(recognizer.acceptWaveForm(byteArrayToShortArray(buffer), bufferSize)) {
+                    val json = JSONObject(recognizer.result)
+                    result.add(json.getString("text"))
+                }
+            }
+        } finally {
+            bis?.close()
+        }
+
+        return result
+    }
+
+    private fun byteArrayToShortArray(byteArray: ByteArray): ShortArray {
+        val shortArray = ShortArray(byteArray.size / 2)
+        ByteBuffer.wrap(byteArray).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shortArray)
+        return shortArray
+    }
 
     ///
     /// Whether or not the model has been loaded and is ready to be started.
@@ -57,14 +91,14 @@ class VoskSpeechService(private val context: Context, private val language:Strin
 
     private val models:Map<String,String> = mapOf("en" to "model-en-us", "id" to "model-id-id")
 
-    override fun initSpeech(listener: SpeechListener) {
+    override fun initSpeech(listener: SpeechListener, startSpeech: Boolean) {
         Timber.i("vosk initSpeech")
         if(ready) {
             return
         }
 
         this.listener = listener
-        initModel()
+        initModel(startSpeech)
     }
 
     override fun start(grammar:String?) {
@@ -133,7 +167,7 @@ class VoskSpeechService(private val context: Context, private val language:Strin
     /// For now, we just return immediately and assume that start() won't be called before this has completed. 
     /// If this causes issues, we will restructure to wait elsewhere.
     ///
-    private fun initModel() {
+    private fun initModel(startSpeech: Boolean = true) {
         ready = false
         Timber.e("Initializing model $language")
         val sourcePath =  models[language] ?: ""
@@ -143,8 +177,9 @@ class VoskSpeechService(private val context: Context, private val language:Strin
         if(bufferAudio) {
             this.buffer = ArrayBlockingQueue(1024);
         }
-        kaldiSpeechService = StreamWritingVoskService(16000.0f, this.buffer, kaldiListener)
-
+        if(startSpeech) {
+            kaldiSpeechService = StreamWritingVoskService(16000.0f, this.buffer, kaldiListener)
+        }
         ready = true
     }
 
