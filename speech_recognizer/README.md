@@ -28,7 +28,9 @@ Similarly on iOS/MacOS:
 - Navigate to `Info.plist`
 - Add microphone permission `NSMicrophoneUsageDescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
 
-### Testing
+### UI Automation Testing
 - Follow the same Installation / Setup guide
 - Launch an Android emulator or iOS simulator
-- Run `flutter test integration_test/app_test.dart` 
+- Run `flutter test integration_test/app_test.dart`  
+
+https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/assets/5583266/5fe9c78b-ffa0-45b7-9421-23bf2302f6e5
