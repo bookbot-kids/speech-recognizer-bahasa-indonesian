@@ -12,6 +12,7 @@ void main() {
     await tester.pumpWidget(const MyApp(isTesting: true));
 
     // tap on load model button
+    debugPrint('Tap on loadModel button');
     await tester.tap(find.byKey(const Key('loadModel')));
 
     // Trigger a frame.
@@ -21,11 +22,13 @@ void main() {
     await waitFor(tester, 3);
 
     // tap on recognize audio button
+    debugPrint('Tap on recognizeAudio button');
     await tester.tap(find.byKey(const Key('recognizeAudio')));
 
     await waitFor(tester, 3);
 
     // Verify the result
+    debugPrint('verify text result on screen');
     Finder textFinder = find.byType(Text);
 
     // if any text widget has recognized data

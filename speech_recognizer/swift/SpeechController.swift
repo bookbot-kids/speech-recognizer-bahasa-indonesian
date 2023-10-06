@@ -112,7 +112,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         case "initSpeech":
             let arguments = call.arguments as! [String?]
             let language = arguments[0]!
-          let startSpeech = arguments[1] ?? "" == "true"
+          let startSpeech = arguments[1] == "true"
           self.initSpeech(language:language, flutterResult: result, startSpeech: startSpeech)
         // The start of a book when it starts listening
         case "listen":
@@ -145,15 +145,21 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     
     private func recognizeAudio(assetPath: String, flutterResult: @escaping FlutterResult) {
         let key = registrar?.lookupKey(forAsset: assetPath);
+        var list = [String]()
         guard let path = Bundle.main.path(forResource: key, ofType: nil) else {
-            flutterResult(nil)
+            print("asset path is nil")
+            flutterResult(list)
             return
         }
         
         if self.recognizer == nil {
             instantiateRecognizer()
         }
-        guard let recognizer = self.recognizer else { return }
+        guard let recognizer = self.recognizer else { 
+            print("recognizer is nil")
+            flutterResult(list)
+            return
+        }
         
         self.processingQueue.async {
             guard let fileUrl = URL(string: path) else { return }
@@ -163,7 +169,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
             let sampleRate = 16000.0
             let bufferSize: AVAudioFrameCount = AVAudioFrameCount((sampleRate * bufferSizePerSecond).rounded())
             let buffer = AVAudioPCMBuffer(pcmFormat: processingFormat, frameCapacity: bufferSize)!
-            var list = [String]()
+            
             
             while file.framePosition < file.length {
                 let framesToRead = min(bufferSize, AVAudioFrameCount(file.length - file.framePosition))
@@ -184,8 +190,6 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
                     let endOfSpeech = bookbot_recognizer_accept_waveform_s(recognizer, ptr.baseAddress!, Int32(dataLen))
                     let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
                     let resultString = String(validatingUTF8: res!)!
-                    let json = resultString.convertToDictionary()!
-                    let text = json["partial"]
                     print("recognize text \(resultString)")
                     list.append(resultString)
                 }
