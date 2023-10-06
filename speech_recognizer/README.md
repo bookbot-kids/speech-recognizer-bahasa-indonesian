@@ -29,7 +29,7 @@ Similarly on iOS/MacOS:
 - Add microphone permission `NSMicrophoneUsageDescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
 
 ### UI Automation Testing
-- Follow the same Installation / Setup guide
+- Follow [Installation / Setup](#installation--setup) guide
 - Launch an Android emulator or iOS simulator
 - Run `flutter test integration_test/app_test.dart`  
 
