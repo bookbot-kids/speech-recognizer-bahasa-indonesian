@@ -112,7 +112,8 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         case "initSpeech":
             let arguments = call.arguments as! [String?]
             let language = arguments[0]!
-            self.initSpeech(language:language, flutterResult: result)
+          let startSpeech = arguments[1] ?? "" == "true"
+          self.initSpeech(language:language, flutterResult: result, startSpeech: startSpeech)
         // The start of a book when it starts listening
         case "listen":
           self.startListening()
@@ -132,8 +133,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
         // Final process of speech - for when page is turned or text line is touched
         case "flushSpeech":
           let args = call.arguments as! Array<Any?>
-          let startSpeech = args[1] as? String ?? "" == "true"
-          self.flushSpeech(toRead: args[0] as? String ?? "", grammar: args[1] as? String ?? "", startSpeech: startSpeech)
+          self.flushSpeech(toRead: args[0] as? String ?? "", grammar: args[1] as? String ?? "")
           result(nil)
       case "recognizeAudio":
           let args = call.arguments as! String
@@ -150,30 +150,52 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
             return
         }
         
-        guard let fileUrl = URL(string: path) else { return }
-        let file = try! AVAudioFile(forReading: fileUrl)
-        let processingFormat = file.processingFormat
-        let frameCount = AVAudioFrameCount(file.length)
+        if self.recognizer == nil {
+            instantiateRecognizer()
+        }
+        guard let recognizer = self.recognizer else { return }
+        
+        self.processingQueue.async {
+            guard let fileUrl = URL(string: path) else { return }
+            let file = try! AVAudioFile(forReading: fileUrl)
+            let processingFormat = file.processingFormat
+            let bufferSizePerSecond = 0.2
+            let sampleRate = 16000.0
+            let bufferSize: AVAudioFrameCount = AVAudioFrameCount((sampleRate * bufferSizePerSecond).rounded())
+            let buffer = AVAudioPCMBuffer(pcmFormat: processingFormat, frameCapacity: bufferSize)!
+            var list = [String]()
+            
+            while file.framePosition < file.length {
+                let framesToRead = min(bufferSize, AVAudioFrameCount(file.length - file.framePosition))
+                try! file.read(into: buffer, frameCount: framesToRead)
 
-        let bufferSize: AVAudioFrameCount = AVAudioFrameCount((16000 * 0.2).rounded())
-        let buffer = AVAudioPCMBuffer(pcmFormat: processingFormat, frameCapacity: bufferSize)!
-        var list = [String]()
+                let dataLen = Int(buffer.frameLength)
+                guard let floatChannelData = buffer.floatChannelData else { return }
+                
+                var int16Data = [Int16](repeating: 0, count: dataLen)
+                for channel in 0..<buffer.format.channelCount {
+                    for i in 0..<dataLen {
+                        let sample = floatChannelData[Int(channel)][i]
+                        int16Data[i] = Int16(sample * Float(Int16.max))
+                    }
+                }
 
-        while file.framePosition < file.length {
-            let framesToRead = min(bufferSize, AVAudioFrameCount(file.length - file.framePosition))
-            try! file.read(into: buffer, frameCount: framesToRead)
-
-            let dataLen = Int(buffer.frameLength)
-            let channels = UnsafeBufferPointer(start: buffer.int16ChannelData, count: Int(buffer.format.channelCount))
-            let endOfSpeech = channels[0].withMemoryRebound(to: Int16.self, capacity: dataLen) {
-                bookbot_recognizer_accept_waveform_s(self.recognizer!, $0, Int32(dataLen))
+                int16Data.withUnsafeBufferPointer { ptr in
+                    let endOfSpeech = bookbot_recognizer_accept_waveform_s(recognizer, ptr.baseAddress!, Int32(dataLen))
+                    let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
+                    let resultString = String(validatingUTF8: res!)!
+                    let json = resultString.convertToDictionary()!
+                    let text = json["partial"]
+                    print("recognize text \(resultString)")
+                    list.append(resultString)
+                }
             }
-            let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
-            let resultString = String(validatingUTF8: res!)!
-            list.append(resultString)
+            
+            DispatchQueue.main.async {
+                flutterResult(list)
+            }
         }
         
-        flutterResult(list)
     }
 
     public func audioPermission(flutterResult: @escaping FlutterResult) {
@@ -254,7 +276,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
   }
 
     /// Speech initialiser
-    public func initSpeech(language:String, flutterResult: @escaping FlutterResult) {
+    public func initSpeech(language:String, flutterResult: @escaping FlutterResult, startSpeech: Bool) {
         engine.stop()
 
         // Raw format is the format of the bus - but we need to do conversion for the input format for both Kaldi and the recorder
@@ -275,47 +297,53 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
           }
 
         }
+        
+        if startSpeech {
+            // Prepare audio buffer converter
+            let formatConverter = AVAudioConverter(from: inputFormat!, to: conversionFormat!)!
+            formatConverter.sampleRateConverterAlgorithm = AVSampleRateConverterAlgorithm_Normal
+            formatConverter.sampleRateConverterQuality = .max
+            let sampleRateRatio = inputFormat!.sampleRate / conversionFormat!.sampleRate
 
-        // Prepare audio buffer converter
-        let formatConverter = AVAudioConverter(from: inputFormat!, to: conversionFormat!)!
-        formatConverter.sampleRateConverterAlgorithm = AVSampleRateConverterAlgorithm_Normal
-        formatConverter.sampleRateConverterQuality = .max
-        let sampleRateRatio = inputFormat!.sampleRate / conversionFormat!.sampleRate
 
-
-        engine.inputNode.removeTap(onBus: 0)
-        engine.inputNode.installTap(onBus: 0, bufferSize: UInt32(rawFormat.sampleRate / 10), format: inputFormat!) { buffer, _ in
-            // add one check to prevent tasks from being added to the queue in the first place unnecessarily
-            guard self.listen, !self.isPlayingSpeech, self.recognizer != nil else {
-              return
-            }
-            self.processingQueue.async {
-                // add a second check to discard this task if needed immediately after being dequeued
+            engine.inputNode.removeTap(onBus: 0)
+            engine.inputNode.installTap(onBus: 0, bufferSize: UInt32(rawFormat.sampleRate / 10), format: inputFormat!) { buffer, _ in
+                // add one check to prevent tasks from being added to the queue in the first place unnecessarily
                 guard self.listen, !self.isPlayingSpeech, self.recognizer != nil else {
                   return
                 }
+                self.processingQueue.async {
+                    // add a second check to discard this task if needed immediately after being dequeued
+                    guard self.listen, !self.isPlayingSpeech, self.recognizer != nil else {
+                      return
+                    }
 
-                let dataLen = Int(buffer.frameLength)
-                let channels = UnsafeBufferPointer(start: buffer.int16ChannelData, count: 1)
-                let endOfSpeech = channels[0].withMemoryRebound(to: Int16.self, capacity: dataLen) {
-                  bookbot_recognizer_accept_waveform_s(self.recognizer!, $0, Int32(dataLen))
+                    let dataLen = Int(buffer.frameLength)
+                    let channels = UnsafeBufferPointer(start: buffer.int16ChannelData, count: 1)
+                    let endOfSpeech = channels[0].withMemoryRebound(to: Int16.self, capacity: dataLen) {
+                      bookbot_recognizer_accept_waveform_s(self.recognizer!, $0, Int32(dataLen))
+                    }
+                    let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
+                    let resultString = String(validatingUTF8: res!)!
+    //                print(resultString)
+                    DispatchQueue.main.async {
+                        self.eventSink?([resultString, endOfSpeech == 1])
+                    }
                 }
-                let res = endOfSpeech == 1 ? bookbot_recognizer_result(self.recognizer!) : bookbot_recognizer_partial_result(self.recognizer)
-                let resultString = String(validatingUTF8: res!)!
-//                print(resultString)
-                self.eventSink?([resultString, endOfSpeech == 1])
+            }
+            
+            engine.prepare()
+            
+            do {
+              try engine.start()
+            }
+            catch {
+              flutterResult(FlutterError(code: "audioError", message: "audioError", details: error.localizedDescription))
+              return
             }
         }
+
         
-        engine.prepare()
-        
-        do {
-          try engine.start()
-        }
-        catch {
-          flutterResult(FlutterError(code: "audioError", message: "audioError", details: error.localizedDescription))
-          return
-        }
         
         flutterResult(nil)
     }
@@ -337,7 +365,7 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     /// For example, if we expect the word "cat", then [expectedSpeech] is set to "cat" but [grammar] needs to be set to [cat, mat, sat] etc.
     /// Otherwise, the recognizer will only ever return the word "cat", no matter what was said.
     ///
-    public func flushSpeech(toRead: String, grammar:String, startSpeech: Bool) {
+    public func flushSpeech(toRead: String, grammar:String) {
         self.expectedSpeech = toRead
         
         // will immediately stop pushing audio into the recognizer
@@ -392,5 +420,12 @@ class SpeechController: NSObject, FlutterStreamHandler, FlutterPlugin {
     }
 }
 
-
+extension String {
+    func convertToDictionary() -> [String: Any]? {
+        if let data = data(using: .utf8) {
+            return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        }
+        return nil
+    }
+}
 
