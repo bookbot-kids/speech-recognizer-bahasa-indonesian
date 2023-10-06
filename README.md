@@ -131,6 +131,13 @@ class _MyHomePageState implements SpeechListener { // (1)
 | iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/blob/main/speech_recognizer/swift/SpeechController.swift)                                               | Native platform channel for speech recognizer on iOS/MacOS. It uses [Vosk](https://github.com/alphacep/vosk-api) with custom model.                           |
 | Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/speech_recognizer/SpeechController.kt) | Native platform channel for speech recognizer on android. It uses [Vosk](https://github.com/alphacep/vosk-api) with custom model.                             |
 
+## UI Automation Testing
+- Follow [Installation / Setup](#installation--setup) guide
+- Launch an Android emulator or iOS simulator
+- Run `flutter test integration_test/app_test.dart`  
+
+https://github.com/bookbot-kids/speech-recognizer-bahasa-indonesian/assets/5583266/5fe9c78b-ffa0-45b7-9421-23bf2302f6e5
+
 ## Helpful Links & Resources
 
 - [Flutter developer document](https://docs.flutter.dev/)
